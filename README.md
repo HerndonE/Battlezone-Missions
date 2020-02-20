@@ -1,7 +1,7 @@
 # Battlezone-Missions
 Welcome to my Battlezone Missions! This repo will showcase new Battlezone missions while learn Lua and providing content to the Battlezone community.    
-If you don't have Battlezone Combat Commander, you can get this game on the Steam store <a href="https://store.steampowered.com/app/624970/Battlezone_Combat_Commander//">here</a>    
-You can also check out my Steam workshop<a href="https://steamcommunity.com/profiles/76561198026325621/myworkshopfiles/">page</a> here for updates and releases!    
+If you don't have Battlezone Combat Commander, you can get this game on the Steam store <a href="https://store.steampowered.com/app/624970/Battlezone_Combat_Commander//">here</a>.    
+You can also check out my Steam workshop <a href="https://steamcommunity.com/profiles/76561198026325621/myworkshopfiles/">page</a> here for updates and releases!    
 # Mission 1: Hold Out     
 Play a "lost" mission before "WormHole"
 
