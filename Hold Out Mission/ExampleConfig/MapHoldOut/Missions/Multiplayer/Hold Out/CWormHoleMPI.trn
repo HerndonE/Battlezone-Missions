@@ -1,0 +1,36 @@
+[Size]
+MetersPerGrid = 8.0
+HeightGranularity = 0.1
+MinX = -2048.0
+MinZ = -2048.0
+Width = 4096.0
+Depth = 4096.0
+Height = 5.0
+Tile = 1
+Color = "10 32 69 255"
+
+[NormalView]
+DiffuseColor = "255 255 255"
+SpecularColor = "10 10 10"
+SpecularPower = 1024.0
+
+[World]
+MusicTrack1=7
+MusicTrack2=8
+MusicTrack3=2
+MusicTrack4=3
+MusicTrack5=4
+
+[Texture]
+TileTexture1 = "dark.tga"
+TileTexture2 = "dark2.tga"
+TileTexture3 = "dark3.tga"
+TileTexture4 = "dark4.tga"
+TileTexture5 = "dark5.tga"
+TileTexture6 = "dark6.tga"
+TileTexture7 = "dark7.tga"
+TileTexture8 = "dark8.tga"
+TileTexture9 = "dark9.tga"
+TileTexture10 = "dark10.tga"
+
+
