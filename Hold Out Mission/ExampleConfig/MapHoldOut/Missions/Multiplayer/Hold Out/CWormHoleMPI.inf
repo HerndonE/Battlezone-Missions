@@ -1,5 +1,5 @@
 [DESCRIPTION]
-missionName = "Mission: Hold Out"
+missionName = "Mission 0: Hold Out"
 mapTga = "CWormHoleMPI.bmp"
 mapDesc = "CWormHoleMPI.des"
 mySide = 0
