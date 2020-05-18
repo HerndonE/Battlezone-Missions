@@ -9,10 +9,28 @@ You are Lt. Simms and your tasked to
 hold a classified location for 1 hour until Major Manson assesses the situation.
 
 Green Squad will periodically help your situation.    
-# Mission 1 Images: 
+# Mission 1 Images:    
 <p float="left">
   <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Hold%20Out%20Mission/ExampleConfig/MapHoldOut/Images/scene6.jpg" width="400" />
   <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Hold%20Out%20Mission/ExampleConfig/MapHoldOut/Images/scene1.jpg" width="400" /> 
   <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Hold%20Out%20Mission/ExampleConfig/MapHoldOut/Images/scene2.jpg" width="400" />
   <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Hold%20Out%20Mission/ExampleConfig/MapHoldOut/Images/scene3.jpg" width="400" />
+</p>
+    
+# Mission 2: Transport         
+Play a "lost" mission after "Hold Out"    
+
+Your dropship has crashed on this Planet's surface. The area is hot.    
+
+Your team cannot contact ISDF Command, there will be no reinforcements...    
+Get to the original landing area to setup your base.    
+
+Defend Red Squad's Transport to the EVAC point.    
+    
+# Mission 2 Images:     
+<p float="left">
+  <img src="" width="400" />
+  <img src="" width="400" /> 
+  <img src="" width="400" />
+  <img src="" width="400" />
 </p>
