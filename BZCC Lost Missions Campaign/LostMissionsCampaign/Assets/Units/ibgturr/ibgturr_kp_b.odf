@@ -1,0 +1,14 @@
+[GameObjectClass]
+classLabel = "ibgturr_kp"
+geometryName = "ibgturr00_kp_b.fbx"
+animCount = 1
+animName1 = "loop"
+animFile1 = "ibgturr00_kp_b.fbx"
+RunAnimation = "loop"
+RunAnimIsLooped = true
+
+[BuildingClass]
+
+[CraftClass]
+
+[TurretCraftClass]

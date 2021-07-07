@@ -1,0 +1,84 @@
+[GameObjectClass]
+baseName = "ibcommand_kp"
+geometryName = "ibcommand00_kp.fbx"
+classLabel = "commbunker"
+collisionRadius = 11.0
+scrapCost = 75
+scrapValue = 50
+maxHealth = 10000
+maxAmmo = 0
+unitName = "Command Tower"
+aiName = "CommTowerProcess"
+aiName2 = "CommTowerProcess"
+heatSignature = 2.0
+imageSignature = 1.0
+radarSignature = 1.0
+isAssault = 1
+requireReplaceTerrainPhysics = true
+armorClass = H
+AllowUndergroundSpawn = 1
+powerCost = 1
+
+limitClass1 = "ibcommand_kp"
+limitClass1Count = 1
+limitClass1Text = "Only One Allowed"
+
+buildRequire = "B"
+buildSupport = "B"
+
+/////// REQUIREMENTS ///////////////
+requireCount = 2
+requireName1 = "ibpgen"
+requireText1 = "Build Power"
+requireName2 = "ibtcen"
+requireText2 = "Build Tech Center"
+
+/////// PROVIDES ///////////////////
+provideCount = 3
+provideName1 = "ibcommand_kp"
+provideName2 = "VIRTUAL_CLASS_COMMBUNKER"
+provideName3 = "base"
+
+///////// LIGHTS & EFFECTS /////////
+lightHard1 = "hp_light_2"
+lightName1 = "o_blue_nf"
+lightHard2 = "hp_light_3"
+lightName2 = "o_blue_nf"
+
+effectHard1 = "hp_light_1"
+effectName1 = "emit_redblink"
+effectFlags1 = "447" //447 powered  479 unpowered
+
+[BuildingClass]
+soundAmbient = "icomm01.wav"
+bldEdge = "wwww"
+
+[CommBunkerClass]
+rangeScan = 500
+periodScan = 0.0
+viewDist = 500.0
+viewZoom = 1.5
+minZoom = 1.0
+maxZoom = 3.0
+viewPitch = 1.0
+minPitch = 0.75
+maxPitch = 1.5
+nearPlane = 1
+farPlane = 1000
+disableFog = 1
+
+[PoweredBuildingClass]
+detectRange = 500
+PoweredByTaps = false
+AutoBuildTap1 = true
+AutoBuildTap2 = true
+AutoBuildTap3 = true
+AutoBuildTap4 = false
+powerTap1 = "hp_tap_1"
+powerTap2 = "hp_tap_2"
+powerTap3 = "hp_tap_3"
+powerTap4 = "hp_tap_4"
+powerName1 = "ibcommand_r1_kp"
+powerName2 = "ibcommand_r2_kp"
+powerName3 = "ibcommand_supply_kp"
+powerName4 = "ibgturr_kp_b"

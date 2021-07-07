@@ -1,38 +1,29 @@
-# Battlezone-Missions
-Welcome to my Battlezone Missions! This repo will showcase new Battlezone missions while learn Lua and providing content to the Battlezone community.    
+# Custom Battlezone Missions
+Welcome to my Battlezone Missions! This repo will showcase new Battlezone missions while learning Lua and providing content to the Battlezone community.    
 If you don't have Battlezone Combat Commander, you can get this game on the Steam store <a href="https://store.steampowered.com/app/624970/Battlezone_Combat_Commander//">here</a>.    
 You can also check out my Steam workshop <a href="https://steamcommunity.com/profiles/76561198026325621/myworkshopfiles/">page</a> here for updates and releases!    
-# Mission 1: Hold Out     
-Play a "lost" mission before "WormHole"
 
-You are Lt. Simms and your tasked to 
-hold a classified location for 1 hour until Major Manson assesses the situation.
+# Lost Missions Campaign
+Introducing 5 new missions for Battlezone Combat Commander; follow the ISDF on their pursuit to destroy the Scion. This fan made campaign branches parallel with the ISDF campaign bringing a new adventure for the game. 
 
-Green Squad will periodically help your situation.    
-# Mission 1 Images:    
-<p float="left">
-  <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Custom%20Missions/ExampleConfig/Missions/Images/scene6.jpg" width="400" />
-  <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Custom%20Missions/ExampleConfig/Missions/Images/scene1.jpg" width="400" /> 
-  <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Custom%20Missions/ExampleConfig/Missions/Images/scene2.jpg" width="400" />
-  <img src="https://github.com/HerndonE/Battlezone-Missions/blob/master/Custom%20Missions/ExampleConfig/Missions/Images/scene3.jpg" width="400" />
-</p>
-    
-# Mission 2: Transport         
-Play a "lost" mission after "Hold Out"    
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=TN3OyZyScN0&list=PLeNJbfYCDY25sbQmEPUx7OcoOhkP2ELhw&index=1&ab_channel=EthanHerndon" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
 
-Your dropship has crashed on this Planet's surface. The area is hot.    
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=E2W0pf5Qnzc&list=PLeNJbfYCDY25sbQmEPUx7OcoOhkP2ELhw&index=2&ab_channel=EthanHerndon" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
 
-Your team cannot contact ISDF Command, there will be no reinforcements...    
-Get to the original landing area to setup your base.    
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=ETvovIUJKII&list=PLeNJbfYCDY25sbQmEPUx7OcoOhkP2ELhw&index=3&ab_channel=EthanHerndon" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
 
-Defend Red Squad's Transport to the EVAC point.    
-    
-# Mission 2 Images:     
-<p float="left">
-  <img src="" width="400" />
-  <img src="" width="400" /> 
-  <img src="" width="400" />
-  <img src="" width="400" />
-</p>    
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=ybqykTgGo90&list=PLeNJbfYCDY25sbQmEPUx7OcoOhkP2ELhw&index=4&ab_channel=EthanHerndon" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
 
-# Mission 3: Night Fall    
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=k9LPQGGPdRo&list=PLeNJbfYCDY25sbQmEPUx7OcoOhkP2ELhw&index=5&ab_channel=EthanHerndon" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
+
+-Steam Workshop link- [<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2537486778">here</a>]  

@@ -1,0 +1,84 @@
+[GameObjectClass]
+baseName = "lm_ibarmo"
+geometryName = "ibarmo00.fbx"
+classLabel = "armory"
+collisionRadius = 1.0
+scrapCost = 60
+scrapValue = 20
+maxHealth = 5000
+maxAmmo = 0
+powerCost = 0
+unitName = "Armory"
+aiName = "ArmoryProcess"
+aiName2 = "ArmoryProcess"
+heatSignature = 2.0
+imageSignature = 1.0
+radarSignature = 1.0
+isAssault = 1
+AllowUndergroundSpawn = 1
+
+armorClass = H
+
+/////// REQUIREMENTS ///////////////
+
+
+
+////////////////////////////////////
+
+
+/////// PROVIDES ///////////////////
+
+provideCount = 3
+provideName1 = "ibarmo"
+provideName2 =  "VIRTUAL_CLASS_ARMORY"
+provideName3 = "base"
+
+///////// LIGHTS & EFFECTS /////////
+lightHard1 = "hp_light_1"
+lightName1 = "spotorange"
+
+effectHard1 = "hp_emit_1"
+effectName1 = "emit_redstay"
+effectFlags1 = "447" //447 powered  479 unpowered
+effectHard2 = "hp_emit_2"
+effectName2 = "emit_redstay"
+effectFlags2 = "447" //447 powered  479 unpowered
+effectHard3 = "hp_emit_3"
+effectName3 = "emit_redstay"
+effectFlags3 = "447" //447 powered  479 unpowered
+effectHard4 = "hp_emit_4"
+effectName4 = "emit_redstay"
+effectFlags4 = "447" //447 powered  479 unpowered
+effectHard5 = "hp_emit_0"
+effectName5 = "ibarmo.steam"
+effectFlags5 = "447" //447 powered  479 unpowered
+
+[BuildingClass]
+soundAmbient = "iarm01.wav"
+
+[PoweredBuildingClass]
+detectRange = 100
+
+[ArmoryClass]
+soundBuild = "ibrecy02.wav"
+soundFinish = "iapc04.wav"
+
+[ArmoryGroup1]
+buildLabel = "Maintenance"
+buildItem1 = "apammo"
+buildItem2 = "aprepa"
+buildItem3 = "apcserv"
+
+[steam]
+renderBase = "draw_twirl_trail"
+textureName = "flame.tga"
+textureBlend = "one one modulate"
+startColor = "255 100 0 150"
+finishColor = "255 0 0 0"
+startRadius = 0.5
+finishRadius = 5.0
+animateTime = 0.5
+emitDelay = 0.03
+emitVelocity = "0.5 6.0 0.5"
+emitVariance = "1.0 0.0 1.0"
+emitLife = 0.5

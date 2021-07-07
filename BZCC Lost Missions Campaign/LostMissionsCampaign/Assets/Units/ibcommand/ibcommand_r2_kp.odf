@@ -1,0 +1,53 @@
+[GameObjectClass]
+mrmFactor = 0
+baseName = "ibcommand_r2_kp"
+geometryName = "ibcommand00_r2_kp.fbx"
+animCount = 1
+animName1 = "loop"
+animFile1 = "ibcommand00_r2_kp.fbx"
+RunAnimation = "loop"
+RunAnimIsLooped = true
+classLabel = "sensor"
+collisionRadius = 1.0
+scrapCost = 20
+scrapValue = 0
+maxHealth = 5000
+addHealth = 25
+powerCost = 1
+unitName = "Radar"
+heatSignature = 1.0
+imageSignature = 1.0
+radarSignature = 1.0
+AllowUndergroundSpawn = 1
+isAssault = 1
+canSelect = 0
+Tuggable = 0
+canDetect = 1
+isStealth = 0
+armorClass = H
+canInteract = 1
+ownsTerrain = 0
+canCollide = 1
+
+/////// REQUIREMENTS ///////////////
+
+requireCount = 0
+
+////////////////////////////////////
+
+/////// PROVIDES ///////////////////
+
+provideCount = 3
+provideName1 = "ibcommand_r2_kp"
+provideName2 = "VIRTUAL_CLASS_COMMBUNKER"
+provideName3 = "DefendUnit"
+
+////////////////////////////////////
+
+[MotionSensorClass]
+rangeScan = 500.0f
+MaxCraft = 10
+MaxBuildings = 5
+
+[PoweredBuildingClass]
+detectRange = 2000

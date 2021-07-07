@@ -1,0 +1,62 @@
+[GameObjectClass]
+baseName = "ibcommand_supply_kp"
+geometryName = "null.fbx"
+classLabel = "supplydepot"
+collisionRadius = 1.0
+scrapCost = 20
+scrapValue = 0
+canSelect = 0
+canCollide = 0
+isAssault = 0
+AllowUndergroundSpawn = 0
+// explosionName = "xbldxpl"
+Tuggable = 0
+canDetect = 0
+isStealth = 1
+powerCost = 1
+maxHealth = 80000
+addHealth = 500
+maxAmmo = 0
+unitName = "Service Component"
+heatSignature = 2.0
+imageSignature = 1.0
+radarSignature = 1.0
+armorClass = H
+canInteract = 0
+ownsTerrain = 0
+ClearBuildZone = 0 // -1 = auto, 0 = never, 1 = always. If 0/1, overrides collideable setting
+
+/////// REQUIREMENTS ///////////////
+requireCount = 2
+requireName1 = "ibsbay"
+requireText1 = "Build Service Bay"
+requireName2 = "ibfact"
+requireText2 = "Build Factory"
+
+/////// PROVIDES ///////////////////
+provideCount = 0
+
+[PoweredBuildingClass]
+detectRange = 500
+
+[BuildingClass]
+DoBettyLost = false
+ReplacesObject = false
+AlignsToObject = true
+tunnelCount = 1
+tunnel01X0 = 1
+tunnel01Z0 = 1
+tunnel01Dx = 4
+tunnel01Dz = 4
+tunnel01Edge = "twwt"
+
+[SupplyDepotClass]
+supplyRange = 50.0
+supplyRate = 120.0
+supplySound = "mnu_empt.wav"
+
+serviceSTs = 1
+serviceCraft = 1
+serviceBuildings = 0
+servicePilots = 1
+serviceOther = 0

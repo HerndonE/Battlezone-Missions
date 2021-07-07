@@ -1,0 +1,20 @@
+[GameObjectClass]
+classLabel = "ivstasM3"
+
+canSnipe = 0
+
+provideCount = 2
+provideName2 = "ivstas3"
+
+[CraftClass]
+canRescue = 0
+CanRecycle = 0
+CanBailout = 0
+
+[HoverCraftClass]
+velocForward = 10.0
+velocReverse = 10.0
+velocStrafe = 10.0
+
+[WingmanClass]
+canRescue = 0

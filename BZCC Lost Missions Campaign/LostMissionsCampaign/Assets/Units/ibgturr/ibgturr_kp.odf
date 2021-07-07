@@ -1,0 +1,85 @@
+[GameObjectClass]
+mrmFactor = 0
+baseName = "ibgturr_kp"
+geometryName = "ibgturr00_kp.fbx"
+animCount = 1
+animName1 = "loop"
+animFile1 = "ibgturr00_kp.fbx"
+RunAnimation = "loop"
+RunAnimIsLooped = true
+classLabel = "turret"
+collisionRadius = 1.0
+scrapCost = 20
+scrapValue = 0
+maxHealth = 3000
+addHealth = 15
+maxAmmo = 10000
+addAmmo = 10000
+powerCost = 0
+unitName = "Defense Turret"
+aiName = "SupportProcess"
+aiName2 = "SupportProcess"
+heatSignature = 2.0
+imageSignature = 1.0
+radarSignature = 1.0
+AllowUndergroundSpawn = 1
+isAssault = 1
+canSelect = 0
+armorClass = H
+
+/////// REQUIREMENTS ///////////////
+
+requireCount = 0
+
+////////////////////////////////////
+
+/////// PROVIDES ///////////////////
+
+provideCount = 3
+provideName1 = "ibgturr_kp"
+provideName2 = "VIRTUAL_CLASS_GUNTOWER"
+provideName3 = "defender"
+
+////////////////////////////////////
+
+///// WEAPON ///////////////////////
+
+weaponMask = 00111
+weaponHard1 = "hp_gun_1"
+weaponName1 = "gibgturr_kp"
+weaponAssault1 = 1
+weaponHard2 = "hp_gun_2"
+weaponName2 = "gibgturr_kp"
+weaponAssault2 = 1
+weaponHard3 = "hp_gun_3"
+weaponName3 = "gibgturr_kp"
+weaponAssault3 = 1
+
+////////////////////////////////////
+turretCount = 2
+turretName1 = "turret_y"
+turretName2 = "turret_x"
+
+lightHard1 = "hp_light_1"
+lightName1 = "spotblue2"
+lightHard2 = "hp_light_2"
+lightName2 = "spotblue2" 
+
+[BuildingClass]
+soundAmbient = "igtow01.wav"
+
+[CraftClass]
+rangeScan = 250
+periodScan = 1.0
+velocJam = 0.0
+weaponPitch = 1.5
+steerFactor = 1.0
+engageRange = 250
+
+attackTask = "AssaultTankAttack"
+subAttackTask = "SupportSubAttack"
+subAttackClass = "ANS"
+
+[TurretCraftClass]
+omegaTurret = 3.0
+detectRange = 250
