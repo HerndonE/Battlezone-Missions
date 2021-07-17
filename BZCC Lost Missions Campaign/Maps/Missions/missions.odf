@@ -1,0 +1,145 @@
+[MissionInfo]
+countISDF = 5
+countScion = 0
+
+[ISDF 1]
+missionTitle = "Hold Out"
+missionInfo = "HoldOut.des"
+missionFile = "HoldOut.bzn"
+planetName = "Dark Planet"
+planetInfo = "dark.des"
+planetGeom = "dark.fbx"
+
+techCount = 2
+techName1 = "ISDF Sabre Tank"
+techInfo1 = "ivtank.inf"
+techGeom1 = "ivtank00.fbx"
+techName2 = "ISDF Recycler"
+techInfo2 = "ivrecy.inf"
+techGeom2 = "ivrecy00.fbx"
+
+mailCount = 2
+mailName1 = "Major Collins"
+mailInfo1 = "holdout1.des"
+mailGeom1 = ""
+mailWave1 = "mail1Fix.wav"
+mailName2 = "Major Collins"
+mailInfo2 = "holdout2.des"
+mailGeom2 = ""
+mailWave2 = "mail2Fix.wav"
+
+briefInfo = "HoldOutBrf.brf"
+
+launchMessage = ""
+launchBackground = "Dark_Load.tga"
+
+[ISDF 2]
+missionTitle = "Transport"
+missionInfo = "Transport-SP.des"
+missionFile = "Transport-SP.bzn"
+planetName = "Siwa"
+planetInfo = "siwa.des"
+planetGeom = "desertplanet.fbx"
+
+techCount = 2
+techName1 = "ISDF Turret"
+techInfo1 = "ivturr.inf"
+techGeom1 = "ivturr00.fbx"
+techName2 = "ISDF Transport"
+techInfo2 = "ivstas1.inf"
+techGeom2 = "ivstas00.fbx"
+
+mailCount = 2
+mailName1 = "Major Collins"
+mailInfo1 = "transport1.des"
+mailGeom1 = ""
+mailWave1 = "mail3Fix.wav"
+mailName2 = "Major Collins"
+mailInfo2 = "transport2.des"
+mailGeom2 = ""
+mailWave2 = "mail4Fix.wav"
+briefInfo = "Transport-SPBrf.brf"
+
+launchBackground = "Dune_Load_N.tga"
+
+[ISDF 3]
+missionTitle = "Night Fall"
+missionInfo = "NightFall.des"
+missionFile = "NightFall.bzn"
+planetName = "Siwa"
+planetInfo = "siwa.des"
+planetGeom = "desertplanet.fbx"
+
+techCount = 3
+techName1 = "ISDF Tank"
+techInfo1 = "ivtank.inf"
+techGeom1 = "ivtank00.fbx"
+techName2 = "ISDF Constructor"
+techInfo2 = "ivcons.inf"
+techGeom2 = "ivcons_skel.fbx"
+techView2 = 3
+techName3 = "ISDF Transmitter"
+techInfo3 = "bbtran00.inf"
+techGeom3 = "pbtran00.fbx"
+
+mailCount = 1
+mailName1 = "Major Collins"
+mailInfo1 = "diary.des"
+mailGeom1 = ""
+mailWave1 = "mail5Fix.wav"
+
+briefInfo = "nightfallbrf.brf"
+
+launchMessage = ""
+launchBackground = "Dune_Load_N.tga"
+
+[ISDF 4]
+missionTitle = "Recon"
+missionInfo = "Recon.des"
+missionFile = "Recon.bzn"
+planetName = "Hecate"
+planetInfo = "hecate.des"
+planetGeom = "toxicplanet.fbx"
+
+techCount = 1
+techName1 = "Sonar Surveyor Vessel"
+techInfo1 = "ivstasM3.inf"
+techGeom1 = "ivstas00.fbx"
+
+mailCount = 1
+mailName1 = "Major Collins"
+mailInfo1 = "diary.des"
+mailGeom1 = ""
+mailWave1 = "mail6Fix.wav"
+
+briefInfo = "Reconbrf.brf"
+
+launchMessage = ""
+launchBackground = "Toxic_Load_N.tga"
+
+[ISDF 5]
+missionTitle = "Final Stand"
+missionInfo = "FinalStand.des"
+missionFile = "FinalStand.bzn"
+planetName = "Hecate"
+planetInfo = "hecate.des"
+planetGeom = "toxicplanet.fbx"
+
+techCount = 1
+techName1 = "ISDF COMMAND TOWER"
+techInfo1 = "ibcommand_kp.inf"
+techGeom1 = "ibcommand00_kp.fbx"
+
+mailCount = 1
+mailName1 = "Major Collins"
+mailInfo1 = "diary.des"
+mailGeom1 = ""
+mailWave1 = "mail7Fix.wav"
+
+briefInfo = "FinalStandbrf.brf"
+
+launchMessage = ""
+launchBackground = "Toxic_Load_N.tga"
+
+
+
