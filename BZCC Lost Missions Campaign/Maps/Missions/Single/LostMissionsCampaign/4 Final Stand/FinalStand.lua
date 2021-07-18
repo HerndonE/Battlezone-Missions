@@ -441,7 +441,7 @@ function SurvivalLogic()
 
       local AttackUnits = 1 --attackrun3
       for i = 1, AttackUnits  do
-         Goto(BuildObject("fvtank",6, GetPositionNear("w5spawn", 0 , 10, 50)), "attackrun3");
+         Goto(BuildObject("fvtank",6, GetPositionNear("w1spawn", 0 , 10, 50)), "attackrun3"); --Original was w5spawn -EH
          Goto(BuildObject("fvwalk",6, GetPositionNear("m1spawn", 0 , 10, 50)), "attackrun3");
          print("5 min marker");
       end
