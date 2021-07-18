@@ -17,3 +17,8 @@ Click each picture to watch missions
 
 This mod is available on to play on Steam <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2537486778">here</a>.
 
+# Lua Mission Demo
+This demo is designed to help people who have never made a battlezone mission before. This demo will concentrate on using the basic functions and actions to you help start your own lua based missions.
+
+In order to play this demo in Battlezone Combat Commander, you must log out, enter a new pilot name, and then play the single player campaign.    
+This mod is available on to play on Steam <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2550917282">here</a>.

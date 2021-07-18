@@ -1,0 +1,24 @@
+[MissionInfo]
+countISDF = 1
+countScion = 0
+
+[ISDF 1]
+missionTitle = "Moon Lua Mission"
+missionInfo = "SHound.des"
+missionFile = "SHound.bzn"
+planetName = "Moon"
+planetInfo = "moon.des"
+planetGeom = "damoon00.fbx"
+
+techCount = 2
+techName1 = "ISDF Sabre Tank"
+techInfo1 = "ivtank.inf"
+techGeom1 = "ivtank00.fbx"
+techName2 = "ISDF Recycler"
+techInfo2 = "ivrecy.inf"
+techGeom2 = "ivrecy00.fbx"
+
+briefInfo = ""
+
+launchMessage = ""
+launchBackground = "Moon.dds"
