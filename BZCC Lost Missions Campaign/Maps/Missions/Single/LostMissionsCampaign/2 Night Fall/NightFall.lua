@@ -246,7 +246,7 @@ function RecyclerSetup()
 
    if((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(15))then --15 Seconds
       print("Player is in phase 1 on Night Fall Mission");
-	  print("play audio 2");
+	  --print("play audio 2");
 	  AudioMessage("FIX_NF_002_MajCollins.wav");
       Mission.nav1=BuildObject("ibnav",1,"nav1");
       SetObjectiveName(Mission.nav1, "ISDF base");
@@ -262,7 +262,7 @@ function BaseSetup()
       ClearObjectives();
 	  AudioMessage("FIX_NF_003.wav");
       AddObjective(Mission._Text2, "yellow", 15.0);
-      print( Mission.HumanRecycler);
+      --print( Mission.HumanRecycler);
       SetObjectiveOff(Mission.nav1)
       SetObjectiveOn(Mission.Higgs)
       SetObjectiveOn(Mission.Covell)
@@ -283,7 +283,7 @@ function GreenSquadRescue()
 
    if(Mission.TurnCounter == (SecondsToTurns(600)))then --10 minutes 900 600
       print("Player is in phase 3 on Night Fall Mission");
-      print ("play audio 3");
+      --print ("play audio 3");
 	  AudioMessage("R_NFPhase4higgs3.wav");
       ClearObjectives();
       AddObjective(Mission._Text3, "yellow", 15.0);
@@ -306,7 +306,7 @@ function GreenSquadRescue()
 
 
    if((Mission.clearTwo == true) and (Mission.clearOne == true) and ((GetDistance(Mission.Covell,"nav2") < 400.0))and ((GetDistance(Mission.Higgs,"nav2") < 400.0)))then
-      print("play audio 4");
+      --print("play audio 4");
       ClearObjectives();
       Mission.nav2=BuildObject("ibnav",1,"nav2");
       SetObjectiveName(Mission.nav2, "Meetup Point");
@@ -327,7 +327,7 @@ function GreenSquadRescue()
 	Mission.PlayerH = GetPlayerHandle();
    if((Mission.ObjectiveThree == false) and((GetDistance(Mission.Covell,"nav2") < 40.0))and ((GetDistance(Mission.Covell,"nav2") < 40.0)) and ((GetDistance(Mission.PlayerH,"nav2") < 40.0)))then
    --if((Mission.ObjectiveThree == false) and((GetDistance(Mission.Covell,"nav2") < 40.0))and ((GetDistance(Mission.Covell,"nav2") < 40.0)) and ((GetDistance(hostPlayer,"nav2") < 40.0)))then
-      print("play audio 5")
+      --print("play audio 5")
 	   ClearObjectives();
 	  AddObjective(Mission._Text10, "white", 15.0);
       SetObjectiveOff(Mission.nav2)
@@ -335,7 +335,7 @@ function GreenSquadRescue()
    end
 
    if(Mission.TurnCounter == (SecondsToTurns(1020))) then --17 minutes 1500 1200 1020
-      print("play audio 6");
+      --print("play audio 6");
 	  AudioMessage("R_NFPhase5higgs4.wav");
       SetObjectiveOff(Mission.nav2)
       ClearObjectives();
@@ -369,7 +369,7 @@ function GreenSquadRescue()
       AddObjective(Mission._Text5, "yellow", 15.0);
       ClearObjectives();
       AddObjective(Mission._Text6, "yellow", 15.0);
-      print("play audio 7");
+      --print("play audio 7");
 	  AudioMessage("R_Line1.wav");
       Goto(Mission.Cons1,"consPath",1); --consPath
       Goto(Mission.Cons2,"consPath",1);
@@ -392,7 +392,7 @@ function TransmitterProblem()
 
    if((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1,"nav1") <= 600.0) and(GetDistance(Mission.Cons2,"nav1") <= 600.0))--and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
    then
-      print("play audio 9");
+      --print("play audio 9");
 	  AudioMessage("R_NFPhase7higgs6.wav");
       print("Player is in phase 5 on Night Fall Mission");
       Mission.ObjectiveSeven = true;
@@ -470,7 +470,7 @@ function TransmitterProblem()
       Mission.GunSpire = BuildObject("fbspir",6,"gunSL_spawn");
       Mission.RelaySpecial = BuildObject("fbover",6,"specialSL_spawn"); --specialSL_spawn  fbover
       SetObjectiveOn(Mission.RelaySpecial)
-      print ("play audio 10");
+      --print ("play audio 10");
 	  AudioMessage("R_NFPhase8higgs7.wav");
       ClearObjectives();
       AddObjective(Mission._Text8, "yellow", 15.0);
@@ -492,7 +492,7 @@ function AttackScionSpecial()
          ClearObjectives();
          --AddObjective(Mission._Text8, "green", 15.0);
          Mission.ObjectiveEleven = true;
-         print("play audio 11");
+         --print("play audio 11");
 		 AudioMessage("R_NFPhase9higgs8.wav");
          Mission.ObjectiveTen = false;
       end
@@ -519,7 +519,7 @@ function TransmitterSuccess()
             ClearObjectives();
             AddObjective(Mission._Text7 .. Mission._Text9, "green", 15.0);
             print("Player is in that last phase of Night Fall Mission");
-            print("play audio 12");
+            --print("play audio 12");
 			AudioMessage("NF_010.wav");
             SucceedMission(GetTime() + 15.0, "night.des")
             Mission.ObjectiveEleven = false
@@ -558,7 +558,7 @@ function FailConditions()
          print("Transmitter Died");
          AudioMessage("failmessage.wav");
          AddObjective(Mission._Text14, "red", 15.0);
-         FailMission(GetTime() + 15.0, "transmitter.des")
+         FailMission(GetTime() + 15.0, "transm.des")
          Mission.notAroundBool = true;
       end
 
@@ -595,7 +595,7 @@ function SurvivalLogic()
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
-         print("2 min marker");
+         --print("Enemy spawned to attack at 2 minute marker");
       end
 
       local AttackUnits = 1
@@ -610,7 +610,7 @@ function SurvivalLogic()
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b");
-         print("2 min green marker");
+         --print("Enemy spawned to attack at 2 minute marker");
       end
 
    end

@@ -18,7 +18,7 @@ local Mission = {
    TPS = 0,
    MissionTimer = 0,
    TurnCounter = 0,
-   
+
    hour = 1200; --3600
    _text1 = "OBJECTIVE: You and or your crew MUST hold out for until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
 
@@ -31,9 +31,9 @@ local Mission = {
    minion4;
    Collins;
    Shabayev;
-   
+
    missionSucceed = false;
-  
+
 }
 
 function Save()
@@ -46,30 +46,30 @@ function Load(...)
    end
 end
 
-function AddObject(h) 
-  
+function AddObject(h)
+
 end
 
 function DeleteObject(h) --This function is called when an object is deleted in the game.
 end
 
 function InitialSetup()
-Mission.TPS = EnableHighTPS()
-AllowRandomTracks(true)
+   Mission.TPS = EnableHighTPS()
+   AllowRandomTracks(true)
 end
 
 function Start() --This function is called upon the first frame
-SetAutoGroupUnits(false)
+   SetAutoGroupUnits(false)
 
-AddScrap(1, 40)
-AddScrap(6, 40)
-SetAIP("stock_fi1.aip", 6)
+   AddScrap(1, 40)
+   AddScrap(6, 40)
+   SetAIP("stock_fi1.aip", 6)
 
-print("Hold Out mission by F9bomber");
-print("Special thanks to SirBramley and Tasia Valenza (Commander Shabayev) for voice acting");
+   print("Hold Out mission by F9bomber");
+   print("Special thanks to SirBramley and Tasia Valenza (Commander Shabayev) for voice acting");
 
-StartCockpitTimer(Mission.hour, 420,  300) --StartCockpitTimer(Mission.hour, 900,  300)
-AddObjective( Mission._text1, "yellow", 15.0);
+   StartCockpitTimer(Mission.hour, 420,  300) --StartCockpitTimer(Mission.hour, 900,  300)
+   AddObjective( Mission._text1, "yellow", 15.0);
 
    --------------------------------------------------------
    ------------Colors Done by Ethan Herndon-----1/13/20----
@@ -94,7 +94,7 @@ AddObjective( Mission._text1, "yellow", 15.0);
    Ally(2, 15)
    Ally(2, 14)
    Ally(14, 15)
-   
+
    local SpawnScavUnits = 6
    local SpawnConsUnits = 1
    for i = 1, SpawnScavUnits  do
@@ -104,7 +104,7 @@ AddObjective( Mission._text1, "yellow", 15.0);
    for i = 1, SpawnConsUnits  do
       local spawnScavs = BuildObject("fvcons",6, "RecyclerEnemy");
    end
-   
+
    Mission.Zdarko=BuildObject("ivtank",2,"Zdarko_start");
    SetObjectiveName(Mission.Zdarko, "Sgt. Zdarko");
    Mission.minion1=BuildObject("ivscout",2,"Zdarko_escort1");
@@ -126,18 +126,18 @@ AddObjective( Mission._text1, "yellow", 15.0);
    Mission.Collins=BuildObject("ivtank",14,"Collins_start");
    SetObjectiveName(Mission.Collins, "Mjr. Collins");
    SetObjectiveOn(Mission.Collins)
-   
+
    Mission.Shabayev=BuildObject("ivtank",14,"spawnNav");
    SetObjectiveName(Mission.Shabayev, "Cmdr. Shabayev");
    SetObjectiveOn(Mission.Shabayev)
-   
-  
+
+
 end
 
 function Update() --This function runs on every frame.
-Mission.TurnCounter = Mission.TurnCounter + 1;
+   Mission.TurnCounter = Mission.TurnCounter + 1;
 
-if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
+   if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
       local blah3 = BuildObject("ivdrop_land",2,"landpoint");
       SetAngle(blah3, 90)
       StartEmitter(blah3, 1)
@@ -152,7 +152,7 @@ if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
       for i = 1, AttackUnits  do
          local foo = GetHandle("unnamed_ivdrop_land")
          RemoveObject(foo)
-         print("1214 sec marker ");
+         --print("1214 sec marker ");
       end
       blah4 = BuildObject("ivdrop",0,"spawnpoint");
       SetAngle(blah4, 90)
@@ -162,6 +162,7 @@ if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
    end
 
    if (Mission.TurnCounter == SecondsToTurns(1213.5)) then --- 3613.5 secs --1213.5
+      print("Player(s) is at the last phase of Hold Out Mission");
       local nav = BuildObject("ibnav",1,"spawnNav");
       SetObjectiveName(nav, "Meet Up");
       SetObjectiveOn(nav)
@@ -169,8 +170,8 @@ if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
       SetObjectiveOn(blah5)
       Goto(blah5,"spawnNav");
       AudioMessage("m_CatchUpHereProceed.wav");
-      print("1213.5 sec marker ");
-	  Mission.missionSucceed = true;
+      --print("1213.5 sec marker ");
+      Mission.missionSucceed = true;
       SucceedMission(GetTime() + 18.0, "holdingon.des")
    end
 
@@ -190,9 +191,9 @@ end
 
 function GreenSquadSetup()
    if (Mission.TurnCounter == SecondsToTurns(1)) then
-   
-	  Patrol(Mission.Collins, "cpatrol", 1)
-	  Patrol(Mission.Shabayev, "cpatrol", 1)
+      print("Player(s) is at phase 1 of Hold Out Mission");
+      Patrol(Mission.Collins, "cpatrol", 1)
+      Patrol(Mission.Shabayev, "cpatrol", 1)
       local cons = BuildObject("ivcons",15, "spawnpoint");
       SetLabel(cons, "GreenSquadCons");
       Goto(cons,"buildFact");
@@ -200,11 +201,11 @@ function GreenSquadSetup()
       Goto(BuildObject("ivturr",15, "spawnpoint"), "turret2Deploy");
       Goto(BuildObject("ivturr",15, "spawnpoint"), "turret3Deploy");
    end
-   
+
    if(Mission.TurnCounter == SecondsToTurns(2))then
-    AudioMessage("shabeyevCameo_fix1.wav");
+      AudioMessage("shabeyevCameo_fix1.wav");
    end
-   
+
    if (Mission.TurnCounter == SecondsToTurns(25)) then --- 20 secs
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
@@ -230,9 +231,9 @@ function GreenSquadSetup()
    if (Mission.TurnCounter == SecondsToTurns(50)) then
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         print("G Handle ");
+         --print("G Handle ");
          Build(cons,"ibcbun_gs",1)
-         print("build ");
+         --print("build ");
       end
    end
 
@@ -282,7 +283,7 @@ function GreenSquadDeployment()
       StartEmitter(green1, 1)
       StartEmitter(green1, 2)
       SetAnimation(green1, "land", 1)
-      print("Green Squad has landed at 2 minutes");
+      --print("Green Squad has landed at 2 minutes");
    end
 
    local green2;
@@ -341,7 +342,7 @@ function GreenSquadDeployment()
       StartEmitter(green1, 1)
       StartEmitter(green1, 2)
       SetAnimation(green1, "land", 1)
-      print("Green Squad has landed at 7 minutes");
+      --print("Green Squad has landed at 7 minutes");
    end
 
    if (Mission.TurnCounter == SecondsToTurns(434)) then
@@ -390,12 +391,13 @@ function GreenSquadDeployment()
    --Wave 3
    -------
    if (Mission.TurnCounter == SecondsToTurns(660)) then --- 11 minute
+      print("Player(s) is at phase 2 of Hold Out Mission");
       local green1 = BuildObject("ivdrop_land",15,"landpoint");
       SetAngle(green1, 90)
       StartEmitter(green1, 1)
       StartEmitter(green1, 2)
       SetAnimation(green1, "land", 1)
-      print("Green Squad has landed at 11 minutes");
+      --print("Green Squad has landed at 11 minutes");
    end
 
    if (Mission.TurnCounter == SecondsToTurns(674)) then
@@ -440,7 +442,7 @@ function GreenSquadDeployment()
       green2 = GetHandle("unnamed_ivdrop")
       RemoveObject(green2)
    end
-   
+
    if (Mission.TurnCounter == SecondsToTurns(2820)) then
       AudioMessage("isdf1027.wav");
    end
@@ -449,23 +451,23 @@ end
 
 function SurvivalLogic()
 
-	if (GetHealth(Mission.Collins) < 0.7) then
-        AddHealth(Mission.Collins, 100);
-    end
-	
-	if (GetHealth(Mission.Shabayev) < 0.7) then
-        AddHealth(Mission.Shabayev, 100);
-    end
+   if (GetHealth(Mission.Collins) < 0.7) then
+      AddHealth(Mission.Collins, 100);
+   end
+
+   if (GetHealth(Mission.Shabayev) < 0.7) then
+      AddHealth(Mission.Shabayev, 100);
+   end
 
    if (Mission.TurnCounter == SecondsToTurns(10)) then --- 10 secs
-	  SetObjectiveOff(Mission.Collins)
-	  SetObjectiveOff(Mission.Shabayev)
+      SetObjectiveOff(Mission.Collins)
+      SetObjectiveOff(Mission.Shabayev)
       local AttackUnits = 1
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
          AudioMessage("isdf0614.wav");
-         print("10 sec marker ");
+         --print("Enemy spawned to attack at 10 minute marker.");
       end
 
    end
@@ -474,7 +476,6 @@ function SurvivalLogic()
       AudioMessage("b_WeMustHoldThisPosition.wav");
    end
 
-   ------------------------------------------------------------------------
    if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
 
       local AttackUnits = 2
@@ -482,28 +483,25 @@ function SurvivalLogic()
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawnT", 0 , 10, 50)), "spawnT.1");
-         print("2 min marker ");
+         --print("Enemy spawned to attack at 2 minute marker.");
       end
    end
 
-
-   ------------------------------------------------------------------------
    if (Mission.TurnCounter == SecondsToTurns(180)) then --- 3 minutes
       local AttackUnits = 3
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b");
-         print("3 min marker ");
+         --print("Enemy spawned to attack at 3 minute marker.");
       end
    end
 
-   ------------------------------------------------------------------------
    if (math.fmod(Mission.TurnCounter, SecondsToTurns(180)) == 0) then --- 3 minutes
       local AttackUnits = 5
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn3", 0 , 10, 50)), "spawn3a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn3.1", 0 , 10, 50)), "spawn3b");
-         print("3 wave min marker");
+         --print("Enemy spawned to attack at 3 minute marker.");
       end
    end
 
@@ -514,7 +512,7 @@ function SurvivalLogic()
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a");
          Goto(BuildObject("fvatank",6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn4.1", 0 , 10, 50)), "spawn4b");
-         print("10 min marker ");
+         --print("Enemy spawned to attack at 10 minute marker.");
       end
    end
 

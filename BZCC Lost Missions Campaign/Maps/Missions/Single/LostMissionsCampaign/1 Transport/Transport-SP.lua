@@ -176,8 +176,6 @@ SetAutoGroupUnits(false)
    SetObjectiveOn(Mission.HumanMinion1)
    SetObjectiveOn(Mission.HumanMinion2)
 
-
-
    local SpawnScavUnits = 6
    local SpawnConsUnits = 1
    for i = 1, SpawnScavUnits  do
@@ -210,7 +208,7 @@ end
 function TransportMissionSetup()
 
    if(Mission.TurnCounter == SecondsToTurns(1))then
-      print("play audio 1");
+      --print("play audio 1");
       AudioMessage("audio1.wav");
    end
 
@@ -222,13 +220,13 @@ function TransportMissionSetup()
       SetObjectiveName(Mission.nav1, "Landing area");
       SetObjectiveOn(Mission.nav1)
       AddObjective(Mission._Text1, "yellow", 15.0);
-      print("play audio 2");
+      --print("play audio 2");
       AudioMessage("audio2.wav");
 	  
 	    SetLabel(Mission.HumanRecycler, "HumanRec");
       SetObjectiveName(Mission.HumanRecycler, "Surviving Recycler");
       SetObjectiveOn(Mission.HumanRecycler)
-   print("recycler is " .. tostring(Mission.HumanRecycler));
+	--print("recycler is " .. tostring(Mission.HumanRecycler));
    
 
       if(Mission.testBool == false)then
@@ -241,7 +239,7 @@ function TransportMissionSetup()
          for i = 1, AttackUnits  do
             Goto(BuildObject("fvscout",6, "spawn1"), "spawn1a");
             Goto(BuildObject("fvscout",6, "spawn1.1"), "spawn1b");
-            print("10 sec marker ");
+            --print("10 sec marker ");
          end
 
          Mission.testBool = true;
@@ -254,9 +252,9 @@ function TransportMissionSetup()
 
       ClearObjectives();
       AddObjective(Mission._Text2, "yellow", 15.0);
-      print("play audio 3");
+      --print("play audio 3");
       AudioMessage("audio3.wav");
-      print( Mission.HumanRecycler);
+      --print( Mission.HumanRecycler);
       SetObjectiveOff(Mission.nav1)
       Defend2(Mission.HumnanMinion1, Mission.HumanRecycler, 1)
       Defend2(Mission.HumanMinion2, Mission.HumanRecycler, 1)
@@ -271,7 +269,7 @@ function TransportMissionSetup()
       SetObjectiveName(Mission.BioNav3, "Biometal Pool 3");
 
       Mission.ObjectiveOne = true;
-      print("Player is in base location");
+      --print("Player is in base location");
       print("Player(s) is at phase 1 of Transport Mission");
    end
 
@@ -281,7 +279,7 @@ function TransportMissionSetup()
       SetObjectiveOn(Mission.nav2)
       ClearObjectives();
       AddObjective(Mission._Text3, "white", 15.0);
-      print("play audio 4");
+      --print("play audio 4");
       AudioMessage("audio4.wav");
 
       Mission.redTurretLeader = BuildObject("ivturr",15,"redTurretLeader");
@@ -350,7 +348,7 @@ function RedSquadArrival()
       ClearObjectives();
       AddObjective(Mission._Text5, "yellow", 15.0);
       SetObjectiveOff(Mission.nav2)
-      print("play audio 5");
+      --print("play audio 5");
       AudioMessage("audio5.wav");
    end
 
@@ -359,8 +357,8 @@ end
 function RedSquadDeployment()
 
    if(Mission.TurnCounter == (SecondsToTurns(960) + SecondsToTurns(400)))then --600 old
-      print("26 minutes has past");
-      print ("play audio 6");
+      --print("26 minutes has past");
+      --print ("play audio 6");
       AudioMessage("audio6.wav");
       ClearObjectives();
       AddObjective(Mission._Text6, "yellow", 15.0);
@@ -383,7 +381,7 @@ function RedSquadDeployment()
 
    if ((Mission.ObjectiveFour == false) and (GetDistance(Mission.redTurretLeader,"nav7") < 100.0))then
 
-      print ("play audio 7");
+      --print ("play audio 7");
       AudioMessage("audio7.wav");
       ClearObjectives();
       SetObjectiveOff(Mission.nav7)
@@ -418,7 +416,7 @@ end
 function TransportArrival()
 
    if(Mission.TurnCounter == (SecondsToTurns(1800)))then --30 -- old 2220 37 minutes
-      print ("play audio 8");
+      --print ("play audio 8");
       AudioMessage("audio8.wav");
       print("Player(s) is at phase 4 of Transport Mission");
       ClearObjectives();
@@ -451,7 +449,7 @@ function TransportArrival()
 	Mission.PlayerH = GetPlayerHandle();
    if ((Mission.ObjectiveFive == false) and (GetDistance(Mission.PlayerH,"Transport_start") < 80.0)) then
    --if ((Mission.ObjectiveFive == false) and (GetDistance(hostPlayer,"Transport_start") < 80.0)) then
-      print ("play audio 9");
+      --print ("play audio 9");
       AudioMessage("audio9.wav");
       Mission.ObjectiveFive = true;
       SetObjectiveOff(Mission.redLeader)
@@ -474,12 +472,12 @@ function TransportArrival()
    end
 
    if ((Mission.ObjectiveSix == false) and (GetDistance(Mission.transport,"nav1") < 80.0)) then
-      print ("play audio 10");
+      --print ("play audio 10");
       AudioMessage("audio10.wav");
       Mission.ObjectiveSix = true;
       ClearObjectives();
       AddObjective(Mission._Text9, "yellow", 15.0);
-      print ("play audio 11");
+      --print ("play audio 11");
       AudioMessage("audio11.wav");
       --ClearObjectives();
       --AddObjective(Mission._Text9, "green", 15.0);
@@ -501,7 +499,7 @@ end
 function TransportDeparture()
 
    if ((Mission.ObjectiveSeven == false) and (GetDistance(Mission.redLeader,Mission.DropShip) < 50.0)) then
-      print ("play audio 12");
+      --print ("play audio 12");
       AudioMessage("audio12.wav");
       if (IsAround(Mission.transport)) then
          RemoveObject(Mission.transport);
@@ -550,7 +548,7 @@ function FailConditions()
          print("Transport is Dead");
          AudioMessage("failmessage.wav");
          AddObjective(Mission._Text14, "red", 15.0);
-         FailMission(GetTime() + 15.0, "transporter.des")
+         FailMission(GetTime() + 15.0, "transp.des")
          Mission.notAroundBool = true;
       end
    end
@@ -565,7 +563,7 @@ function SurvivalLogic()
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
          Goto(BuildObject("fvtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
-         --print("2 min marker");
+         --print("Enemy spawned to attack at  2 minute marker");
       end
    end
 end

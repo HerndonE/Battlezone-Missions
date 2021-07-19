@@ -601,7 +601,7 @@ function objectiveSetup()
 
    if((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(3))then --5 Seconds
       print("Player is in phase 1 on Recon Mission");
-      print("play audio 1");
+      --print("play audio 1");
 	  AudioMessage("RC_001.wav");
       SetObjectiveOn(Mission.transport)
       AddObjective(Mission._Text1, "yellow", 15.0);
@@ -640,7 +640,7 @@ function SurvivalLogic()
 
    if((Mission.ObjectiveOne == false) and GetDistance(Mission.transport,"check1") < 80.0)then
       ClearObjectives();
-      print("play audio 2");
+      --print("play audio 2");
 	  AudioMessage("RC_001_MajCollins.wav");
       print("Player is in phase 2 on Recon Mission");
       Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
@@ -658,7 +658,7 @@ function SurvivalLogic()
 
    if((Mission.ObjectiveTwo == false) and GetDistance(Mission.transport,"check2") < 100.0)then
       ClearObjectives();
-      print("play audio 3");
+      --print("play audio 3");
       print("Player is in phase 3 on Recon Mission");
 	  Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
       Mission.Scout=BuildObject("fvscout",6,"attack1_1");
@@ -674,7 +674,7 @@ function SurvivalLogic()
 
    if((Mission.ObjectiveThree == false) and GetDistance(Mission.transport,"check3") < 80.0)then
       ClearObjectives();
-      print("play audio 4");
+      --print("play audio 4");
 	  AudioMessage("R_recon_harper_3.wav");
       print("Player is in phase 4 on Recon Mission");
       Mission.Warrior=BuildObject("fvtank",6,"attack2_0");
@@ -693,7 +693,7 @@ function SurvivalLogic()
 
    if((Mission.ObjectiveFour == false) and GetDistance(Mission.transport,"check4") < 30.0)then
       ClearObjectives();
-      print("play audio 5");
+      --print("play audio 5");
       print("Player is in phase 5 on Recon Mission");
 	  AudioMessage("R_recon_harper_4.wav");
 	  Mission.Warrior=BuildObject("fvtank",6,"attack2_0");
@@ -712,7 +712,7 @@ function SurvivalLogic()
 
    if((Mission.ObjectiveFive == false) and GetDistance(Mission.transport,"check5") < 60.0)then
       ClearObjectives();
-      print("play audio 6");
+      --print("play audio 6");
 	  AudioMessage("R_Line3.wav")
       print("Player is in phase 6 on Recon Mission");
       SetObjectiveOff(Mission.AlienStructure)

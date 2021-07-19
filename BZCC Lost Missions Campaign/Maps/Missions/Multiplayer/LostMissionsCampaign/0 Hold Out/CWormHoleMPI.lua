@@ -581,12 +581,12 @@ function Update()
 
    local blah4;
    if (Mission.TurnCounter == SecondsToTurns(1214)) then --- 3614 secs
-
+      print("Player(s) is at the last phase of Hold Out Mission");
       local AttackUnits = 1
       for i = 1, AttackUnits  do
          local foo = GetHandle("unnamed_ivdrop_land")
          RemoveObject(foo)
-         print("1214 sec marker ");
+         --print("1214 sec marker ");
       end
       blah4 = BuildObject("ivdrop",0,"spawnpoint");
       SetAngle(blah4, 90)
@@ -596,7 +596,7 @@ function Update()
    end
 
    if (Mission.TurnCounter == SecondsToTurns(1213.5)) then --- 3613.5 secs
-
+      
       local nav = BuildObject("ibnav",1,"spawnNav");
       SetObjectiveName(nav, "Meet Up");
       SetObjectiveOn(nav)
@@ -604,7 +604,7 @@ function Update()
       SetObjectiveOn(blah5)
       Goto(blah5,"spawnNav");
       AudioMessage("m_CatchUpHereProceed.wav");
-      print("1213.5 sec marker ");
+      --print("1213.5 sec marker ");
       DoGameover(18.0);
    end
 
@@ -622,7 +622,7 @@ end
 
 function GreenSquadSetup()
    if (Mission.TurnCounter == SecondsToTurns(1)) then
-   
+      print("Player(s) is at phase 1 of Hold Out Mission");
 	  Patrol(Mission.Collins, "cpatrol", 1)
 	  Patrol(Mission.Shabayev, "cpatrol", 1)
       local cons = BuildObject("ivcons",15, "spawnpoint");
@@ -640,9 +640,9 @@ function GreenSquadSetup()
    if (Mission.TurnCounter == SecondsToTurns(30)) then --- 20 secs
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         print("G Handle ");
+         --print("G Handle ");
          Build(cons,"ibpgen_gs",1)
-         print("build ");
+         --print("build ");
       end
    end
    if (Mission.TurnCounter == SecondsToTurns(35)) then --- 20 secs
@@ -662,9 +662,9 @@ function GreenSquadSetup()
    if (Mission.TurnCounter == SecondsToTurns(50)) then
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         print("G Handle ");
+         --print("G Handle ");
          Build(cons,"ibcbun_gs",1)
-         print("build ");
+         --print("build ");
       end
    end
 
@@ -714,7 +714,7 @@ function GreenSquadDeployment()
       StartEmitter(green1, 1)
       StartEmitter(green1, 2)
       SetAnimation(green1, "land", 1)
-      print("Green Squad has landed at 2 minutes");
+      --print("Green Squad has landed at 2 minutes");
    end
 
    local green2;
@@ -773,7 +773,7 @@ function GreenSquadDeployment()
       StartEmitter(green1, 1)
       StartEmitter(green1, 2)
       SetAnimation(green1, "land", 1)
-      print("Green Squad has landed at 7 minutes");
+      --print("Green Squad has landed at 7 minutes");
    end
 
    if (Mission.TurnCounter == SecondsToTurns(434)) then
@@ -822,12 +822,13 @@ function GreenSquadDeployment()
    --Wave 3
    -------
    if (Mission.TurnCounter == SecondsToTurns(660)) then --- 11 minute
+      print("Player(s) is at phase 2 of Hold Out Mission");
       local green1 = BuildObject("ivdrop_land",15,"landpoint");
       SetAngle(green1, 90)
       StartEmitter(green1, 1)
       StartEmitter(green1, 2)
       SetAnimation(green1, "land", 1)
-      print("Green Squad has landed at 11 minutes");
+      --print("Green Squad has landed at 11 minutes");
    end
 
    if (Mission.TurnCounter == SecondsToTurns(674)) then
@@ -897,7 +898,7 @@ function SurvivalLogic()
          Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
          Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
          AudioMessage("isdf0614.wav");
-         print("10 sec marker ");
+         --print("10 second marker ");
       end
 
    end
@@ -914,7 +915,7 @@ function SurvivalLogic()
          Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
          Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
          Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawnT", 0 , 10, 50)), "spawnT.1");
-         print("2 min marker ");
+         --print("Enemy spawned to attack at 2 minute marker ");
       end
    end
 
@@ -925,7 +926,7 @@ function SurvivalLogic()
       for i = 1, AttackUnits  do
          Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a");
          Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b");
-         print("3 min marker ");
+         --print("Enemy spawned to attack at 3 minute marker ");
       end
    end
 
@@ -935,7 +936,7 @@ function SurvivalLogic()
       for i = 1, AttackUnits  do
          Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn3", 0 , 10, 50)), "spawn3a");
          Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn3.1", 0 , 10, 50)), "spawn3b");
-         print("3 wave min marker");
+         --print("Enemy spawned to attack at 3 minute marker");
       end
    end
 
@@ -946,7 +947,7 @@ function SurvivalLogic()
          Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a");
          Goto(BuildObject(Mission.CPUTeamRace .. "vatank",6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a");
          Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn4.1", 0 , 10, 50)), "spawn4b");
-         print("10 min marker ");
+         --print("Enemy spawned to attack at 10 minute marker ");
       end
    end
 

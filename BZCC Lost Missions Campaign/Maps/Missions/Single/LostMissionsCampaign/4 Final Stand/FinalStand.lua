@@ -228,7 +228,7 @@ function objectiveSetup()
 
    if((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(3))then --5 Seconds
       print("Player is in phase 1 on Final Stand Mission");
-      print("play audio 1");
+      --print("play audio 1");
 	  AudioMessage("FS_finalstand_harper_1a.wav");
       AddObjective(Mission._Text1, "yellow", 15.0);
       Patrol(Mission.covell, "cpatrol", 1)
@@ -243,7 +243,7 @@ function objectiveSetup()
 
    if((Mission.ObjectiveOne == false) and Mission.TurnCounter == SecondsToTurns(900))then
       print("Player is in phase 2 on Final Stand Mission");
-      print("play audio 2");
+      --print("play audio 2");
 	  AudioMessage("FS_Line4.wav");
       ClearObjectives();
       AddObjective(Mission._Text2, "yellow", 15.0);
@@ -257,7 +257,7 @@ function objectiveSetup()
       print("Player is in phase 4 on Final Stand Mission");
       ClearObjectives();
       AddObjective(Mission._Text4, "green", 15.0);
-      print("play audio 4");
+      --print("play audio 4");
 	  AudioMessage("FS_finalstand_harper_4c.wav");
       Mission.ObjectiveThree = true;
    end
@@ -272,7 +272,7 @@ function objectiveSetup()
       SetObjectiveName(Mission.navpoint, "Evac Site");
       SetObjectiveOn(Mission.navpoint)
       AddObjective(Mission._Text5, "yellow", 15.0);
-      print("play audio 5");
+      --print("play audio 5");
 	  AudioMessage("FS_010.wav");
 	  SucceedMission(GetTime() + 35.0, "final.des")
       Mission.ObjectiveFour = true;
@@ -296,10 +296,10 @@ function GreenSquadSetup()
       cons = GetHandle("GreenSquadCons")
       cons2 = GetHandle("GreenSquadCons1")
       if (cons ~= nil) then
-         print("G Handle ");
+         --print("G Handle ");
          Build(cons,"ibgtoww2",1)
          Build(cons2,"ibgtoww2",1)
-         print("build ");
+         --print("build ");
       end
    end
    if (Mission.TurnCounter == SecondsToTurns(35)) then --- 35 secs
@@ -338,7 +338,7 @@ function createForwardPosition()
          BuildObject("ivtank",14, "fodder3");
 		 BuildObject("ivscout",14, "fodder4");
 		 BuildObject("ivscout",14, "fodder5");
-         print("15 min marker");
+         --print("15 minute marker");
       end
    
 	  local cons = Mission.cons;
@@ -352,9 +352,9 @@ function createForwardPosition()
       local cons = Mission.cons;
       cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         print("G Handle ");
+         --print("G Handle ");
          Build(cons,"ibgtoww2",1)
-         print("build ");
+         --print("build ");
       end
    end
    
@@ -366,7 +366,7 @@ function createForwardPosition()
 	  
 	  if(Mission.testBool==false) then
 	  
-		 print("play audio 3");
+		 --print("play audio 3");
 		 AudioMessage("FS_finalstand_harper_3a.wav");
          print("Player is in phase 3 on Final Stand Mission");
 		 Mission.testBool = true;
@@ -424,7 +424,7 @@ function SurvivalLogic()
          Goto(BuildObject("fvarch",6, GetPositionNear("l1spawn", 0 , 10, 50)), "attackrun1");
          Goto(BuildObject("fvtank",6, GetPositionNear("w1spawn", 0 , 10, 50)), "attackrun1");
          Goto(BuildObject("fvtank",6, GetPositionNear("w2spawn", 0 , 10, 50)), "attackrun1");
-         print("2 min marker");
+         --print("Enemy spawned to attack at 2 min marker");
       end
 
       local AttackUnits = 1 --attackrun2
@@ -432,7 +432,7 @@ function SurvivalLogic()
          Goto(BuildObject("fvarch",6, GetPositionNear("l2spawn", 0 , 10, 50)), "attackrun2");
          Goto(BuildObject("fvtank",6, GetPositionNear("w3spawn", 0 , 10, 50)), "attackrun2");
          Goto(BuildObject("fvtank",6, GetPositionNear("w4spawn", 0 , 10, 50)), "attackrun2");
-         print("2 min marker");
+         --print("Enemy spawned to attack at 2 minute marker");
       end
 
    end
@@ -443,7 +443,7 @@ function SurvivalLogic()
       for i = 1, AttackUnits  do
          Goto(BuildObject("fvtank",6, GetPositionNear("w1spawn", 0 , 10, 50)), "attackrun3"); --Original was w5spawn -EH
          Goto(BuildObject("fvwalk",6, GetPositionNear("m1spawn", 0 , 10, 50)), "attackrun3");
-         print("5 min marker");
+         --print("Enemy spawned to attack at 5 minute marker");
       end
    end
 
