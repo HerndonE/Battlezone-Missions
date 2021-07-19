@@ -513,7 +513,7 @@ function TransportDeparture()
       ClearObjectives();
       AddObjective(Mission._Text10, "green", 15.0);
       SetObjectiveOff(Mission.nav8)
-      SucceedMission(GetTime() + 15.0, "transportDES.des")
+      SucceedMission(GetTime() + 15.0, "transp.des")
       print("Player(s) has completed the mission");
       Mission.ObjectiveSeven = true;
       Mission.checkTrans = true;

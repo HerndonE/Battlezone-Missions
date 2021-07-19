@@ -521,7 +521,7 @@ function TransmitterSuccess()
             print("Player is in that last phase of Night Fall Mission");
             print("play audio 12");
 			AudioMessage("NF_010.wav");
-            SucceedMission(GetTime() + 15.0, "nightfalldes.des")
+            SucceedMission(GetTime() + 15.0, "night.des")
             Mission.ObjectiveEleven = false
 
 

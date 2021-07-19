@@ -674,7 +674,7 @@ function objectiveSetup()
    end
 
    if ((Mission.ObjectiveThree == false) and (not IsAlive(Mission.AlienStructure)))then -- Key alien structure
-      print("Player is in phase 4 on Night Fall Mission");
+      print("Player is in phase 4 on Final Stand Mission");
       ClearObjectives();
       AddObjective(Mission._Text4, "green", 15.0);
       print("play audio 4");
@@ -683,7 +683,7 @@ function objectiveSetup()
    end
 
    if ((Mission.ObjectiveThree == true) and (Mission.ObjectiveFour == false)  and (not IsAlive(Mission.AlienStructure)))then -- Key alien structure
-      print("Player is in last phase on Night Fall Mission");
+      print("Player is in last phase on Final Stand Mission");
       ClearObjectives();
       Mission.dabombdotcom=BuildObject("dabomb",1,"kspawn");
       SetObjectiveName(Mission.dabombdotcom, "The Bomb");

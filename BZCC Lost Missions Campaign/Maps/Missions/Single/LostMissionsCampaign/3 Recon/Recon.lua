@@ -357,7 +357,7 @@ function SurvivalLogic()
       print("Player is in last phase on Recon Mission");
 	  AudioMessage("R_recon_harper_6.wav");
       AddObjective(Mission._Text6, "green", 15.0);
-      SucceedMission(GetTime() + 10.0, "ReconDes.des")
+      SucceedMission(GetTime() + 10.0, "Reco.des")
       Mission.ObjectiveEight = true;
    end
 

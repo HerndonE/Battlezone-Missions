@@ -31,6 +31,8 @@ local Mission = {
    minion4;
    Collins;
    Shabayev;
+   
+   missionSucceed = false;
   
 }
 
@@ -90,6 +92,7 @@ AddObjective( Mission._text1, "yellow", 15.0);
    Ally(1, 14)
    Ally(1, 15)
    Ally(2, 15)
+   Ally(2, 14)
    Ally(14, 15)
    
    local SpawnScavUnits = 6
@@ -120,11 +123,11 @@ AddObjective( Mission._text1, "yellow", 15.0);
    SetObjectiveName(Mission.minion4, "Lt. Durango");
    Follow(Mission.minion4,Mission.Masiker);
 
-   Mission.Collins=BuildObject("ivtank",1,"Collins_start");
+   Mission.Collins=BuildObject("ivtank",14,"Collins_start");
    SetObjectiveName(Mission.Collins, "Mjr. Collins");
    SetObjectiveOn(Mission.Collins)
    
-   Mission.Shabayev=BuildObject("ivtank",1,"spawnNav");
+   Mission.Shabayev=BuildObject("ivtank",14,"spawnNav");
    SetObjectiveName(Mission.Shabayev, "Cmdr. Shabayev");
    SetObjectiveOn(Mission.Shabayev)
    
@@ -158,8 +161,7 @@ if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
       StartSoundEffect("dropdoor.wav", blah4)
    end
 
-   if (Mission.TurnCounter == SecondsToTurns(1213.5)) then --- 3613.5 secs
-
+   if (Mission.TurnCounter == SecondsToTurns(1213.5)) then --- 3613.5 secs --1213.5
       local nav = BuildObject("ibnav",1,"spawnNav");
       SetObjectiveName(nav, "Meet Up");
       SetObjectiveOn(nav)
@@ -168,7 +170,8 @@ if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
       Goto(blah5,"spawnNav");
       AudioMessage("m_CatchUpHereProceed.wav");
       print("1213.5 sec marker ");
-      SucceedMission(GetTime() + 18.0, "HoldOutDes.des")
+	  Mission.missionSucceed = true;
+      SucceedMission(GetTime() + 18.0, "holdingon.des")
    end
 
    if (Mission.TurnCounter == SecondsToTurns(1215)) then --- 3615 secs

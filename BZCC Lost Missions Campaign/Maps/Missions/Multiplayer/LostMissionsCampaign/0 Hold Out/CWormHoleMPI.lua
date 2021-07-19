@@ -501,6 +501,8 @@ function Start()
    Ally(3, 14)
    Ally(4, 14)
    
+   Ally(14,15)
+   
 
    StartCockpitTimer(Mission.hour, 420,  300) --StartCockpitTimer(Mission.hour, 900,  300)
    AddObjective( Mission._text1, "yellow", 15.0);
@@ -533,11 +535,11 @@ function Start()
    SetObjectiveName(Mission.minion4, "Lt. Durango");
    Follow(Mission.minion4,Mission.Masiker);
 
-   Mission.Collins=BuildObject("ivtank",1,"Collins_start");
+   Mission.Collins=BuildObject("ivtank",14,"Collins_start");
    SetObjectiveName(Mission.Collins, "Mjr. Collins");
    SetObjectiveOn(Mission.Collins)
    
-   Mission.Shabayev=BuildObject("ivtank",1,"spawnNav");
+   Mission.Shabayev=BuildObject("ivtank",14,"spawnNav");
    SetObjectiveName(Mission.Shabayev, "Cmdr. Shabayev");
    SetObjectiveOn(Mission.Shabayev)
 end
