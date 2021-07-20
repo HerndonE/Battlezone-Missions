@@ -202,7 +202,7 @@ function objectiveSetup()
          print("Transport is Dead");
          AudioMessage("failmessage.wav");
          AddObjective(Mission._Text8, "red", 15.0);
-         FailMission(GetTime() + 15.0, "transp.des") -- Does not load this message
+         FailMission(GetTime() + 15.0, "transpo.des") -- Does not load this message
          Mission.notAroundBool = true;
       end
 

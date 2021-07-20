@@ -548,7 +548,7 @@ function FailConditions()
          print("Transport is Dead");
          AudioMessage("failmessage.wav");
          AddObjective(Mission._Text14, "red", 15.0);
-         FailMission(GetTime() + 15.0, "transp.des")
+         FailMission(GetTime() + 15.0, "transpo.des")
          Mission.notAroundBool = true;
       end
    end
