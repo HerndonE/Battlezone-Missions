@@ -12,6 +12,7 @@ radarSignature = 0.0
 AllowUnderGroundSpawn = 1
 canCollide = 0
 scanTeamLimit = 3
+canInteract = 0
 ignoreMissingInf = true
 
 effectHard1 = " "
