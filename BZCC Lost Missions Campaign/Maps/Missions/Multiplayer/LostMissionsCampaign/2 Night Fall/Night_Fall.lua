@@ -588,9 +588,9 @@ function Start()
    Ally(14, 15)
 
    --[[Spawn Local Red Squad Units]]--
-   Mission.Higgs=BuildObject("ivtank",15,"higgs_spawn");
+   Mission.Higgs=BuildObject("ivtank_h",15,"higgs_spawn");
    SetObjectiveName(Mission.Higgs, "Cpt. Higgs");
-   Mission.Covell=BuildObject("ivtank",15,"covell_spawn");
+   Mission.Covell=BuildObject("ivtank_c",15,"covell_spawn");
    SetObjectiveName(Mission.Covell, "Cmdr. Covell");
    Mission.Transmitter=BuildObject("bbtran00",15,"transmitter_spawn");
    SetObjectiveName(Mission.transmitter, "transmitter");
@@ -757,7 +757,7 @@ function GreenSquadRescue()
       SetObjectiveOff(Mission.Covell)
 
       --[[Spawn Local Green Squad Units]]--
-      Mission.Mates = BuildObject("ivtank",14,"mates_spawn");
+      Mission.Mates = BuildObject("ivtank_mates",14,"mates_spawn");
       SetObjectiveName(Mission.Mates, "Sgt. Mates");
       SetObjectiveOn(Mission.Mates)
       Mission.Cons1 = BuildObject("ivcons",14,"cons1_spawn"); --ivcons

@@ -290,7 +290,7 @@ function TransportMissionSetup()
       Mission.redTurret3 = BuildObject("ivturr",15,"redTurret3");
       Mission.redTurret4 = BuildObject("ivturr",15,"redTurret4");
       Mission.redTurret5 = BuildObject("ivturr",15,"redTurret5");
-      Mission.redTankLeader = BuildObject("ivtank",15,"redTankLeader");
+      Mission.redTankLeader = BuildObject("ivtank_h",15,"redTankLeader");
       SetObjectiveName(Mission.redTankLeader, "Cpt. Higgs");
       Mission.redTankMinion1 = BuildObject("ivscout",15,"redMinion1");
       SetObjectiveName(Mission.redTankMinion1, "Lt. Panko");
@@ -426,7 +426,7 @@ function TransportArrival()
       SetObjectiveOn(Mission.transport)
       --Follow(Mission.redLeader,Mission.transport);
 
-      Mission.redLeader=BuildObject("ivtank",15,"Wilmot_start");
+      Mission.redLeader=BuildObject("ivtank_c",15,"Wilmot_start");
       SetObjectiveName(Mission.redLeader, "Comdr. Covell");
       SetObjectiveOn(Mission.redLeader)
       Mission.minion1=BuildObject("ivscout",15,"Wilmot_escort1");

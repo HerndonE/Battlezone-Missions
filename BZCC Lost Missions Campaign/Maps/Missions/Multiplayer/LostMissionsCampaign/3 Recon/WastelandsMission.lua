@@ -556,9 +556,9 @@ function Start()
    --[[Spawn Local Units]]--
    Mission.transport=BuildObject("ivstasM3",15,"tspawn");
    SetObjectiveName(Mission.transport, "Sonar Surveyor Vessel");
-   Mission.covell=BuildObject("ivtank",15,"cspawn");
+   Mission.covell=BuildObject("ivtank_c",15,"cspawn");
    SetObjectiveName(Mission.covell, "Cmdr. Covell");
-   Mission.mates=BuildObject("ivtank",14,"mspawn");
+   Mission.mates=BuildObject("ivtank_mates",14,"mspawn");
    SetObjectiveName(Mission.mates, "Sgt. Mates");
    Mission.turret=BuildObject("ivturr",15,"t1spawn");
    Mission.turret=BuildObject("ivturr",15,"t2spawn");
