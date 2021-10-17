@@ -202,6 +202,7 @@ local Mission = {
    Scout;
    Sentry;
    AlienStructure;
+   EnemyRecycler = GetHandle("Matriarch");
    ---------------
 
    --Blue Squad--
@@ -220,6 +221,18 @@ function InitialSetup()
    GameTPS = EnableHighTPS();
 
    WantBotKillMessages();
+
+	local preloadODF = {
+		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
+	}
+
+	for k,v in pairs(preloadODF) do
+		PreloadODF(v)
+	end
+	
 
    CreateObjectives();
 end
@@ -252,6 +265,16 @@ function AddObject(h, IsStartingVehicles)
    local ObjClass = GetClassLabel(h);
 
    local fRandomNum = GetRandomFloat(1.0);
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
+
 
    if (Mission.TurnCounter < 2) then
       if (GetTeamNum(h) == 1) then
@@ -629,6 +652,15 @@ function objectiveSetup()
          DoGameover(15.0);
          Mission.notAroundBool = true;
       end
+
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text7, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
 
 
    end

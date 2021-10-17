@@ -135,6 +135,7 @@ local Mission = {
    SiegeOn = false,
    setFirstAIP = false,
    AntiAssault = false,
+   notAroundBool = false;
 
    LastCPUPlan = 0,
    CustomAIPNameBase = nil,
@@ -155,6 +156,7 @@ local Mission = {
    CPUReinforcementTime = 2000;
 
    _text1 = "OBJECTIVE: You and or your crew MUST hold out for until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
+   _Text7 = "You disobeyed a direct order. Consider the mission a failure.";
 
    --Squad Units--
    Zdarko;
@@ -165,6 +167,9 @@ local Mission = {
    minion4;
    Collins;
    Shabayev;
+   
+   --Scions--
+   EnemyRecycler = GetHandle("Matriarch");
 
 }
 
@@ -173,6 +178,16 @@ local debug = false;
 
 function InitialSetup()
    GameTPS = EnableHighTPS();
+local preloadODF = {
+		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
+	}
+
+	for k,v in pairs(preloadODF) do
+		PreloadODF(v)
+	end
 
    WantBotKillMessages();
 
@@ -206,6 +221,15 @@ function AddObject(h, IsStartingVehicles)
    local ObjClass = GetClassLabel(h);
 
    local fRandomNum = GetRandomFloat(1.0);
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
 
    if (Mission.TurnCounter < 2) then
       if (GetTeamNum(h) == 1) then
@@ -881,6 +905,18 @@ function GreenSquadDeployment()
 end
 
 function SurvivalLogic()
+
+	if(Mission.TurnCounter > SecondsToTurns(5))then
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text7, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+	end 
+
 
 	if (GetHealth(Mission.Collins) < 0.7) then
         AddHealth(Mission.Collins, 100);

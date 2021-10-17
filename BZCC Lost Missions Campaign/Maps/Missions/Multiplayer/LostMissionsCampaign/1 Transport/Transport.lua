@@ -164,7 +164,7 @@ local Mission = {
    --_Text8 = "OBJECTIVE: Await further instructions. Ensure the transport survives!";
    _Text9 = "OBJECTIVE: Escort Red Squad Transport to the dropship";
    _Text10 = "Congratulations Commander!";
-   --_Text11 = "Mission Failed! Consider the objective scrubbed";
+   _Text11 = "Mission Failed! Consider the objective scrubbed";
    _Text12 = "Mission Failed! Consider the objective scrubbed.\n\nCpt. Higgs has died.";
    _Text13 = "Mission Failed! Consider the objective scrubbed.\n\nLt. Miller has died.";
    _Text14 = "Mission Failed! Consider the objective scrubbed.\n\nTransport has died.";
@@ -213,7 +213,10 @@ local Mission = {
    redLeader;
    minion1;
    minion2;
-   ---------------------
+   
+   --Scions--
+    EnemyRecycler = GetHandle("Matriarch");
+   
    ---------------------
 
 
@@ -226,6 +229,17 @@ function InitialSetup()
    GameTPS = EnableHighTPS();
 
    WantBotKillMessages();
+
+	local preloadODF = {
+		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
+	}
+
+	for k,v in pairs(preloadODF) do
+		PreloadODF(v)
+	end
 
    CreateObjectives();
 end
@@ -258,6 +272,21 @@ function AddObject(h, IsStartingVehicles)
    local ObjClass = GetClassLabel(h);
 
    local fRandomNum = GetRandomFloat(1.0);
+   
+   if (IsOdf(h, "ibrecy")) then
+   Mission.Recycler = h
+   
+end
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
+   
 
    if (Mission.TurnCounter < 2) then
       if (GetTeamNum(h) == 1) then
@@ -954,6 +983,17 @@ function FailConditions()
          Mission.notAroundBool = true;
       end
    end
+
+	if(Mission.TurnCounter > SecondsToTurns(5))then
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text11, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+	end
 
 end
 

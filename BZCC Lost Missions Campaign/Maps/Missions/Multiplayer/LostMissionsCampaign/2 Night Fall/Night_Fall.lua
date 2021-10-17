@@ -164,7 +164,7 @@ local Mission = {
    _Text8 = "OBJECTIVE: Destroy that building at all costs!";
    _Text9 = "Congratulations! Await for dropships and leave your base";
    _Text10 = "Cpt. Higgs and Cmdr. Covell will gather information to find Green Squad. \n\nStandby for now";
-   --_Text11 = "Mission Failed! Consider the objective scrubbed";
+   _Text11 = "Mission Failed! Consider the objective scrubbed";
    _Text12 = "Mission Failed! Consider the objective scrubbed.\n\nCpt. Higgs has died.";
    _Text13 = "Mission Failed! Consider the objective scrubbed.\n\nCmdr. Covell has died.";
    _Text14 = "Mission Failed! Consider the objective scrubbed.\n\nConstructor has died.";
@@ -216,6 +216,7 @@ local Mission = {
    RelaySpecial;
    Mine1;
    Mine2;
+   EnemyRecycler = GetHandle("Matriarch");
    ----------
 
    --Red Squad--
@@ -255,6 +256,18 @@ function InitialSetup()
 
    WantBotKillMessages();
 
+local preloadODF = {
+		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
+	}
+
+	for k,v in pairs(preloadODF) do
+		PreloadODF(v)
+	end
+
+
    CreateObjectives();
 end
 
@@ -286,6 +299,15 @@ function AddObject(h, IsStartingVehicles)
    local ObjClass = GetClassLabel(h);
 
    local fRandomNum = GetRandomFloat(1.0);
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
 
    if (Mission.TurnCounter < 2) then
       if (GetTeamNum(h) == 1) then
@@ -974,6 +996,16 @@ function FailConditions()
          DoGameover(15.0);
          Mission.notAroundBool = true;
       end
+
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text11, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+
 
    end
 
