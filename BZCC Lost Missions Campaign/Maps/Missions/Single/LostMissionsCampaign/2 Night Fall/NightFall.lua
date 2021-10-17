@@ -31,7 +31,7 @@ local Mission = {
    _Text8 = "OBJECTIVE: Destroy that building at all costs!";
    _Text9 = "Congratulations! Await for dropships and leave your base";
    _Text10 = "Cpt. Higgs and Cmdr. Covell will gather information to find Green Squad. \n\nStandby for now";
-   --_Text11 = "Mission Failed! Consider the objective scrubbed";
+   _Text11 = "Mission Failed! Consider the objective scrubbed";
    _Text12 = "Mission Failed! Consider the objective scrubbed.\n\nCpt. Higgs has died.";
    _Text13 = "Mission Failed! Consider the objective scrubbed.\n\nCmdr. Covell has died.";
    _Text14 = "Mission Failed! Consider the objective scrubbed.\n\nConstructor has died.";
@@ -84,6 +84,7 @@ local Mission = {
    RelaySpecial;
    Mine1;
    Mine2;
+   EnemyRecycler = GetHandle("Matriarch");
    ----------
 
    --Red Squad--
@@ -134,6 +135,15 @@ if (IsOdf(h, "ibrecy")) then
    Mission.Recycler = h
    
 end
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
 end
 
 function DeleteObject(h) --This function is called when an object is deleted in the game.
@@ -145,6 +155,9 @@ AllowRandomTracks(true)
 
 	local preloadODF = {
 		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
 	}
 
 	for k,v in pairs(preloadODF) do
@@ -584,6 +597,16 @@ function FailConditions()
       end
    end
 
+if(Mission.TurnCounter > SecondsToTurns(5))then -- Destroyed Enemy Recycler
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text11, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+	end
 
 end
 

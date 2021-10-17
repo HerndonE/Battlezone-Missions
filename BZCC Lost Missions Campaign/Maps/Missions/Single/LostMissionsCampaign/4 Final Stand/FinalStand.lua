@@ -28,6 +28,7 @@ local Mission = {
    _Text5 = "Go to the evacuation site!";
    _Text6 = "OBJECTIVE Failed: Consider the mission scrubbed.\n\nConstructor is dead.";
    _Text7 = "OBJECTIVE Failed: Consider the mission scrubbed.\n\nHQ is dead.";
+   _Text8 = "You disobeyed a direct order. Consider the mission a failure.";
 
    SurvivalWaveTime30 = 0;
    SurvivalWaveTime33 = 0;
@@ -67,6 +68,7 @@ local Mission = {
    Scout;
    Sentry;
    AlienStructure;
+   EnemyRecycler = GetHandle("Matriarch");
    ---------------
 
    --Orange Squad--
@@ -101,6 +103,15 @@ if (IsOdf(h, "ibrecy")) then
    Mission.Recycler = h
    
 end
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
 end
 
 function DeleteObject(h) --This function is called when an object is deleted in the game.
@@ -112,6 +123,9 @@ AllowRandomTracks(true)
 
 	local preloadODF = {
 		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
 	}
 
 	for k,v in pairs(preloadODF) do
@@ -413,6 +427,19 @@ function failConditions()
       end
 
    end
+   
+   if(Mission.TurnCounter > SecondsToTurns(5))then -- Destroyed Enemy Recycler
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text8, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+	end
+
+   
 end
 
 function SurvivalLogic()

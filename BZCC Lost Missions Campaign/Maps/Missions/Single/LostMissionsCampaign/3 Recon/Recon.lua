@@ -71,6 +71,7 @@ local Mission = {
    Scout;
    Sentry;
    AlienStructure;
+   EnemyRecycler = GetHandle("Matriarch");
    ---------------
 
    --Blue Squad--
@@ -101,6 +102,16 @@ if (IsOdf(h, "ibrecy")) then
    Mission.Recycler = h
    
 end
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
+
 end
 
 function DeleteObject(h) --This function is called when an object is deleted in the game.
@@ -111,6 +122,9 @@ Mission.TPS = EnableHighTPS()
 AllowRandomTracks(true)
 	local preloadODF = {
 		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
 	}
 
 	for k,v in pairs(preloadODF) do
@@ -215,6 +229,14 @@ function objectiveSetup()
          Mission.notAroundBool = true;
       end
 
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text7, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
 
    end
 

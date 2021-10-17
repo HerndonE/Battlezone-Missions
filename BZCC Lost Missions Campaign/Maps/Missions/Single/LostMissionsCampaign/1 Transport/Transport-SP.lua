@@ -35,6 +35,7 @@ local Mission = {
    _Text12 = "Mission Failed! Consider the objective scrubbed.\n\nCpt. Higgs has died.";
    _Text13 = "Mission Failed! Consider the objective scrubbed.\n\nLt. Miller has died.";
    _Text14 = "Mission Failed! Consider the objective scrubbed.\n\nTransport has died.";
+   _Text15 = "You disobeyed a direct order. Consider the mission a failure.";
    hour = 3600;
    ObjectiveOne = false;
    ObjectiveTwo = false;
@@ -81,7 +82,9 @@ local Mission = {
    redLeader;
    minion1;
    minion2;
-   ---------------------
+   
+   --Scions--
+   EnemyRecycler = GetHandle("Matriarch");
    ---------------------
 
   
@@ -108,6 +111,15 @@ if (IsOdf(h, "ibrecy")) then
    Mission.Recycler = h
    
 end
+
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
+
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
          
 end
 
@@ -121,6 +133,9 @@ AllowRandomTracks(true)
 
 	local preloadODF = {
 		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
 	}
 
 	for k,v in pairs(preloadODF) do
@@ -552,6 +567,17 @@ function FailConditions()
          Mission.notAroundBool = true;
       end
    end
+   
+   if(Mission.TurnCounter > SecondsToTurns(5))then -- Destroyed Enemy Recycler
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text15, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+	end
 
 end
 

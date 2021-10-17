@@ -21,6 +21,7 @@ local Mission = {
 
    hour = 1200; --3600
    _text1 = "OBJECTIVE: You and or your crew MUST hold out for until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
+   _Text7 = "You disobeyed a direct order. Consider the mission a failure.";
 
    --Squad Units--
    Zdarko;
@@ -31,8 +32,12 @@ local Mission = {
    minion4;
    Collins;
    Shabayev;
+   
+   --Scions--
+   EnemyRecycler = GetHandle("Matriarch");
 
    missionSucceed = false;
+   notAroundBool = false;
 
 }
 
@@ -47,7 +52,14 @@ function Load(...)
 end
 
 function AddObject(h)
+ if (IsOdf(h, "fvrecy")) then
+   Mission.EnemyRecycler = h
+end
 
+if (IsOdf(h, "fbrecy")) then
+   Mission.EnemyRecycler = h
+   
+end
 end
 
 function DeleteObject(h) --This function is called when an object is deleted in the game.
@@ -56,6 +68,16 @@ end
 function InitialSetup()
    Mission.TPS = EnableHighTPS()
    AllowRandomTracks(true)
+   local preloadODF = {
+		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy",
+	}
+
+	for k,v in pairs(preloadODF) do
+		PreloadODF(v)
+	end
 end
 
 function Start() --This function is called upon the first frame
@@ -136,6 +158,18 @@ end
 
 function Update() --This function runs on every frame.
    Mission.TurnCounter = Mission.TurnCounter + 1;
+
+
+	if(Mission.TurnCounter > SecondsToTurns(5))then -- Destroyed Enemy Recycler
+	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then
+		ClearObjectives();
+         print("The player destroyed enemy recycler");
+         AudioMessage("failmessage.wav");
+         AddObjective(Mission._Text7, "red", 15.0);
+         FailMission(GetTime() + 5.0)
+         Mission.notAroundBool = true;
+	end
+	end
 
    if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
       local blah3 = BuildObject("ivdrop_land",2,"landpoint");
