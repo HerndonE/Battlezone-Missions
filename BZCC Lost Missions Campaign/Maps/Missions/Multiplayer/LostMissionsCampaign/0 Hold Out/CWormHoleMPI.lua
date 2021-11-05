@@ -155,7 +155,7 @@ local Mission = {
    CPUNonTurretAISkill = 0,
    CPUReinforcementTime = 2000;
 
-   _text1 = "OBJECTIVE: You and or your crew MUST hold out for until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
+   _text1 = "OBJECTIVE: You and or your crew MUST hold out until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
    _Text7 = "You disobeyed a direct order. Consider the mission a failure.";
 
    --Squad Units--
