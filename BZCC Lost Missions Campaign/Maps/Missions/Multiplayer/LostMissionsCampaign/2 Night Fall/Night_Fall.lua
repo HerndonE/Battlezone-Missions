@@ -167,8 +167,8 @@ local Mission = {
    _Text11 = "Mission Failed! Consider the objective scrubbed";
    _Text12 = "Mission Failed! Consider the objective scrubbed.\n\nCpt. Higgs has died.";
    _Text13 = "Mission Failed! Consider the objective scrubbed.\n\nCmdr. Covell has died.";
-   _Text14 = "Mission Failed! Consider the objective scrubbed.\n\nConstructor has died.";
-   _Text15 = "Mission Failed! Consider the objective scrubbed.\n\nTransmitter has died.";
+   _Text14 = "Mission Failed! Consider the objective scrubbed.\n\nTransmitter has died.";
+   _Text15 = "Mission Failed! Consider the objective scrubbed.\n\nConstructor has died.";
       
    ObjectiveZero = false;
    ObjectiveOne = false;

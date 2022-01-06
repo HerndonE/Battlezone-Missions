@@ -157,7 +157,7 @@ local Mission = {
    _Text1 = "OBJECTIVE: Escort your forces to the 'landing area'. ";
    _Text2 = "OBJECTIVE: Setup a base and await further instruction.";
    _Text3 = "Incoming Transmission...";
-   _Text4 = "OBJECTIVE: Goto and protect Red Squad, their support is vital!";
+   _Text4 = "OBJECTIVE: Goto and protect Red Squad, their support is vital!\n\nEnsure the team leaders survive.";
    _Text5 = "OBJECTIVE: Heal Red Squad and await their assessment.";
    _Text6 = "OBJECTIVE: Escort Red Squad to the buffer zone.";
    _Text7 = "OBJECTIVE: Escort Red Squad Transport back to base!";
@@ -726,6 +726,7 @@ function TransportMissionSetup()
       Mission.redTurret5 = BuildObject("ivturr",15,"redTurret5");
       Mission.redTankLeader = BuildObject("ivtank_h",15,"redTankLeader");
       SetObjectiveName(Mission.redTankLeader, "Cpt. Higgs");
+	  SetObjectiveOn(Mission.redTankLeader);
       Mission.redTankMinion1 = BuildObject("ivscout",15,"redMinion1");
       SetObjectiveName(Mission.redTankMinion1, "Lt. Panko");
       Mission.redTankMinion2 = BuildObject("ivscout",15,"redMinion2");
@@ -818,7 +819,7 @@ function RedSquadDeployment()
       AudioMessage("audio7.wav");
       ClearObjectives();
       SetObjectiveOff(Mission.nav7)
-      SetObjectiveOff(Mission.redTurretLeader)
+    --SetObjectiveOff(Mission.redTurretLeader) -- Commented out 1.5.22 EH
       Goto(Mission.redTurretLeader,"redleaderd");
       Goto(Mission.redTurret1,"redturr1d");
       Goto(Mission.redTurret2,"redturr2d");
