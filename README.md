@@ -31,3 +31,10 @@ This mod is available on to play on Steam <a href="https://steamcommunity.com/sh
 ![](https://img.shields.io/steam/views/2550917282) ![](https://img.shields.io/steam/subscriptions/2550917282)
 ![](https://img.shields.io/steam/favorites/2550917282)
 ![](https://img.shields.io/steam/downloads/2550917282)
+
+# Operation Zeus     
+A short mission demonstration of dropships deploying ISDF Sabre tanks in a "Normandy" style invasion. Implementations of this will be in future missions.
+
+Click this picture to watch mission.       
+
+[![](https://i.ytimg.com/an_webp/OkigEPNHm8I/mqdefault_6s.webp?du=3000&sqp=CNqsmY8G&rs=AOn4CLACD33xeZ8t52U62yzUE2IE5ns2Pg)](https://www.youtube.com/watch?v=OkigEPNHm8I&ab_channel=EthanHerndon) 
