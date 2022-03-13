@@ -37,4 +37,4 @@ A short mission demonstration of dropships deploying ISDF Sabre tanks in a "Norm
 
 Click this picture to watch mission.       
 
-[![](https://i.ytimg.com/an_webp/OkigEPNHm8I/mqdefault_6s.webp?du=3000&sqp=CNqsmY8G&rs=AOn4CLACD33xeZ8t52U62yzUE2IE5ns2Pg)](https://www.youtube.com/watch?v=OkigEPNHm8I&ab_channel=EthanHerndon) 
+[![](https://i.ytimg.com/an_webp/OkigEPNHm8I/mqdefault_6s.webp?du=3000&sqp=CICTuZEG&rs=AOn4CLDGOQc_PRA46KdNjvCEzdofkQIQZQ)](https://www.youtube.com/watch?v=OkigEPNHm8I&t=134s&ab_channel=EthanHerndon) 
