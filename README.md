@@ -17,9 +17,9 @@ Click each picture to watch missions
 
 This mod is available on to play on Steam <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2537486778">here</a>.
 
-![](https://img.shields.io/steam/views/2537486778) ![](https://img.shields.io/steam/subscriptions/2537486778)
-![](https://img.shields.io/steam/favorites/2537486778)
-![](https://img.shields.io/steam/downloads/2537486778)
+![](https://img.shields.io/steam/views/2537486778?logo=steam) ![](https://img.shields.io/steam/subscriptions/2537486778?logo=steam)
+![](https://img.shields.io/steam/favorites/2537486778?logo=steam)
+![](https://img.shields.io/steam/downloads/2537486778?logo=steam)
 
 
 # Lua Mission Demo
@@ -28,13 +28,14 @@ This demo is designed to help people who have never made a battlezone mission be
 In order to play this demo in Battlezone Combat Commander, you must log out, enter a new pilot name, and then play the single player campaign.    
 This mod is available on to play on Steam <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2550917282">here</a>.
 
-![](https://img.shields.io/steam/views/2550917282) ![](https://img.shields.io/steam/subscriptions/2550917282)
-![](https://img.shields.io/steam/favorites/2550917282)
-![](https://img.shields.io/steam/downloads/2550917282)
+![](https://img.shields.io/steam/views/2550917282?logo=steam) ![](https://img.shields.io/steam/subscriptions/2550917282?logo=steam)
+![](https://img.shields.io/steam/favorites/2550917282?logo=steam)
+![](https://img.shields.io/steam/downloads/2550917282?logo=steam)
 
 # Operation Zeus     
 A short mission demonstration of dropships deploying ISDF Sabre tanks in a "Normandy" style invasion. Implementations of this will be in future missions.
 
-Click this picture to watch mission.       
+![](https://img.shields.io/youtube/views/OkigEPNHm8I?style=social)![](https://img.shields.io/youtube/likes/OkigEPNHm8I?style=social)     
+Click this picture to watch mission.
 
-[![](https://i.ytimg.com/an_webp/OkigEPNHm8I/mqdefault_6s.webp?du=3000&sqp=CICTuZEG&rs=AOn4CLDGOQc_PRA46KdNjvCEzdofkQIQZQ)](https://www.youtube.com/watch?v=OkigEPNHm8I&t=134s&ab_channel=EthanHerndon) 
+[![](https://i.ytimg.com/an_webp/OkigEPNHm8I/mqdefault_6s.webp?du=3000&sqp=CPSAwJEG&rs=AOn4CLC_aj146fmvRJnjv0R2hGuM7ZEo3g)](https://www.youtube.com/watch?v=OkigEPNHm8I&t=1s) 
