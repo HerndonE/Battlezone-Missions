@@ -926,6 +926,10 @@ function SurvivalLogic()
         AddHealth(Mission.Shabayev, 100);
     end
 
+	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
+        AddHealth(Mission.EnemyRecycler, 100);
+	end
+
    if (Mission.TurnCounter == SecondsToTurns(10)) then --- 10 secs
 	  SetObjectiveOff(Mission.Collins)
 	  SetObjectiveOff(Mission.Shabayev)

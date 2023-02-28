@@ -592,7 +592,6 @@ function Start()
    SetObjectiveOn(Mission.HumanMinion2)
 
 
-
    local SpawnScavUnits = 6
    local SpawnConsUnits = 1
    for i = 1, SpawnScavUnits  do
@@ -682,8 +681,7 @@ function TransportMissionSetup()
    end
 
 
-   if ((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler,"nav1") < 100.0)) then
-
+   if ((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler,"nav1") < 150.0)) then
       ClearObjectives();
       AddObjective(Mission._Text2, "yellow", 15.0);
       --print("play audio 3");
@@ -999,6 +997,10 @@ function FailConditions()
 end
 
 function SurvivalLogic()
+
+	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
+        AddHealth(Mission.EnemyRecycler, 100);
+	end
 
    if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
 

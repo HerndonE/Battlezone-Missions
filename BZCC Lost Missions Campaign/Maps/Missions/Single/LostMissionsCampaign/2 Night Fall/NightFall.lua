@@ -64,8 +64,8 @@ local Mission = {
    i = 0;
 
    --ISDF--
-    PlayerH = GetPlayerHandle();
-	HumanRecycler = GetHandle("Recycler");
+   PlayerH = GetPlayerHandle();
+   HumanRecycler = GetHandle("Recycler");
    nav1;
    nav2;
    nav3;
@@ -169,78 +169,77 @@ AddScrap(6, 40)
 end
 
 function Start() --This function is called upon the first frame
-SetAutoGroupUnits(false)
+	SetAutoGroupUnits(false)
 
-AddScrap(1, 40)
-AddScrap(6, 40)
-SetAIP("stock_fi1.aip", 6)
+	AddScrap(1, 40)
+	AddScrap(6, 40)
+	SetAIP("stock_fi1.aip", 6)
 
-   print("Nigh Fall mission by F9bomber");
-   print("Special thanks to SirBramley for making the map");
-   print("Special thanks to Ken Miller, Nathan Mates, FireRock, and SirBramley for voice acting");
+	print("Nigh Fall mission by F9bomber");
+	print("Special thanks to SirBramley for making the map");
+	print("Special thanks to Ken Miller, Nathan Mates, FireRock, and SirBramley for voice acting");
 
 
-   --------------------------------------------------------
-   ------------Colors Done by Ethan Herndon-----5/17/20----
-   --Coronavirus
-   --------------------------------------------------------
+	--------------------------------------------------------
+	------------Colors Done by Ethan Herndon-----5/17/20----
+	--Coronavirus
+	--------------------------------------------------------
 
-   --[[Orange Squad]]--
-   SetTeamColor(1, SetVector(230, 92, 0));
- 
-   --[[Red Squad]]--
-   SetTeamColor(15, SetVector(171, 0, 0));
+	--[[Orange Squad]]--
+	SetTeamColor(1, SetVector(230, 92, 0));
 
-   --[[Green Squad]]--
-   SetTeamColor(14, SetVector(0, 153, 0));
+	--[[Red Squad]]--
+	SetTeamColor(15, SetVector(171, 0, 0));
 
-   --[[Gray Enemy Color]]--
-   SetTeamColor(6, SetVector(128, 128, 128));
+	--[[Green Squad]]--
+	SetTeamColor(14, SetVector(0, 153, 0));
 
-   --------------------------------------------------------
-   Ally(1, 14)
-   Ally(1, 15)
-   Ally(14, 15)
-   
-   Mission.HumanRecycler=BuildObject("ivrecy",1,"rec");
-   --print("recycler is " .. tostring(Mission.HumanRecycler));
-   --print("my handle is " .. tostring(Mission.PlayerH));
+	--[[Gray Enemy Color]]--
+	SetTeamColor(6, SetVector(128, 128, 128));
 
-   --[[Spawn Local Red Squad Units]]--
-   Mission.Higgs=BuildObject("ivtank_h",15,"higgs_spawn");
-   SetObjectiveName(Mission.Higgs, "Cpt. Higgs");
-   Mission.Covell=BuildObject("ivtank_c",15,"covell_spawn");
-   SetObjectiveName(Mission.Covell, "Cmdr. Covell");
-   Mission.Transmitter=BuildObject("bbtran00",15,"transmitter_spawn");
-   SetObjectiveName(Mission.transmitter, "transmitter");
-   Mission.Tank=BuildObject("ivtank",15,"tank1_spawn");
-   Mission.Tank=BuildObject("ivtank",15,"tank2_spawn");
-   Mission.Tank=BuildObject("ivtank",15,"tank3_spawn");
-   Mission.ISDFScout=BuildObject("ivscout",15,"scout2_spawn");
-   Mission.ISDFScout=BuildObject("ivscout",15,"scout3_spawn");
-   Mission.Turret=BuildObject("ivturr",15,"turret1_spawn");
-   Mission.Turret=BuildObject("ivturr",15,"turret2_spawn");
-   Mission.Turret=BuildObject("ivturr",15,"turret3_spawn");
-   Mission.MissileScout=BuildObject("ivmisl",15,"ivmisl1_spawn");
-   Mission.MissileScout=BuildObject("ivmisl",15,"ivmisl2_spawn");
+	--------------------------------------------------------
+	Ally(1, 14)
+	Ally(1, 15)
+	Ally(14, 15)
 
-   local SpawnScavUnits = 6
-   local SpawnConsUnits = 1
-   for i = 1, SpawnScavUnits  do
-      local spawnScavs = BuildObject("fvscav",6, "RecyclerEnemy");
-   end
+	Mission.HumanRecycler=BuildObject("ivrecy",1,"rec");
+	--print("recycler is " .. tostring(Mission.HumanRecycler));
+	--print("my handle is " .. tostring(Mission.PlayerH));
 
-   for i = 1, SpawnConsUnits  do
-      local spawnScavs = BuildObject("fvcons",6, "RecyclerEnemy");
-   end
+	--[[Spawn Local Red Squad Units]]--
+	Mission.Higgs=BuildObject("ivtank_h",15,"higgs_spawn");
+	SetObjectiveName(Mission.Higgs, "Cpt. Higgs");
+	Mission.Covell=BuildObject("ivtank_c",15,"covell_spawn");
+	SetObjectiveName(Mission.Covell, "Cmdr. Covell");
+	Mission.Transmitter=BuildObject("bbtran00",15,"transmitter_spawn");
+	SetObjectiveName(Mission.transmitter, "transmitter");
+	Mission.Tank=BuildObject("ivtank",15,"tank1_spawn");
+	Mission.Tank=BuildObject("ivtank",15,"tank2_spawn");
+	Mission.Tank=BuildObject("ivtank",15,"tank3_spawn");
+	Mission.ISDFScout=BuildObject("ivscout",15,"scout2_spawn");
+	Mission.ISDFScout=BuildObject("ivscout",15,"scout3_spawn");
+	Mission.Turret=BuildObject("ivturr",15,"turret1_spawn");
+	Mission.Turret=BuildObject("ivturr",15,"turret2_spawn");
+	Mission.Turret=BuildObject("ivturr",15,"turret3_spawn");
+	Mission.MissileScout=BuildObject("ivmisl",15,"ivmisl1_spawn");
+	Mission.MissileScout=BuildObject("ivmisl",15,"ivmisl2_spawn");
 
-   AudioMessage("FIX_NF_001_MajCollins.wav");
+	local SpawnScavUnits = 6
+	local SpawnConsUnits = 1
+	for i = 1, SpawnScavUnits  do
+	  local spawnScavs = BuildObject("fvscav",6, "RecyclerEnemy");
+	end
+
+	for i = 1, SpawnConsUnits  do
+	  local spawnScavs = BuildObject("fvcons",6, "RecyclerEnemy");
+	end
+
+	AudioMessage("FIX_NF_001_MajCollins.wav");
 
 end
 
 function Update() --This function runs on every frame.
-Mission.TurnCounter = Mission.TurnCounter + 1
-
+   Mission.TurnCounter = Mission.TurnCounter + 1
 
    -- Call your custom method here
    SurvivalLogic(); -- Ethan Herndon
@@ -259,6 +258,7 @@ function RecyclerSetup()
 
    if((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(15))then --15 Seconds
       print("Player is in phase 1 on Night Fall Mission");
+	  ClearObjectives();
 	  --print("play audio 2");
 	  AudioMessage("FIX_NF_002_MajCollins.wav");
       Mission.nav1=BuildObject("ibnav",1,"nav1");
@@ -279,17 +279,34 @@ function BaseSetup()
       SetObjectiveOff(Mission.nav1)
       SetObjectiveOn(Mission.Higgs)
       SetObjectiveOn(Mission.Covell)
-
+	  
+	  Patrol(Mission.Higgs, "aipatrol", 1);
+	  Patrol(Mission.Covell, "aipatrol", 1);
+	   
       --[[Spawn Local Enemy Units]]--
       Mission.Warrior=BuildObject("fvtank",6,"warrior1_spawn");
       Mission.Warrior=BuildObject("fvtank",6,"warrior2_spawn");
       Mission.Warrior=BuildObject("fvtank",6,"warrior3_spawn");
       Mission.Scout=BuildObject("fvscout",6,"scout1_spawn");
       Mission.Sentry=BuildObject("fvsent",6,"sent1_spawn");
-
       Mission.ObjectiveOne = true;
+	  
+   end
+   
+
+   if (IsOdf(Mission.HumanRecycler, "ibrecy")) and Mission.TurnCounter <= (SecondsToTurns(600)) then
+   
+	if (GetHealth(Mission.Higgs) < 0.7) then 
+	  AddHealth(Mission.Higgs, 100);
+	end
+
+	if (GetHealth(Mission.Covell) < 0.7) then
+	  AddHealth(Mission.Covell, 100);
+	end
 
    end
+   
+   
 end
 
 function GreenSquadRescue()
@@ -403,7 +420,7 @@ end
 function TransmitterProblem()
 
 
-   if((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1,"nav1") <= 600.0) and(GetDistance(Mission.Cons2,"nav1") <= 600.0))--and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
+   if((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1,"nav1") <= 500.0) and(GetDistance(Mission.Cons2,"nav1") <= 500.0))--and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
    then
       --print("play audio 9");
 	  AudioMessage("R_NFPhase7higgs6.wav");
@@ -491,9 +508,6 @@ function TransmitterProblem()
       Mission.ObjectiveTen = true;
    end
 
-
-
-
 end
 
 function AttackScionSpecial()
@@ -516,8 +530,6 @@ end
 function TransmitterSuccess()
 
    if(Mission.ObjectiveEleven == true)then
-
-
       if (Mission.counter3 == false) and (Mission.TurnCounter >= SecondsToTurns(4)) then --- iterates every 4 seconds
 
          Mission.TurnCounter = 0;
@@ -536,8 +548,6 @@ function TransmitterSuccess()
 			AudioMessage("NF_010.wav");
             SucceedMission(GetTime() + 15.0, "night.des")
             Mission.ObjectiveEleven = false
-
-
          end
          --ClearObjectives();
          --AddObjective(Mission._Text9, "green", 15.0);
@@ -611,6 +621,10 @@ if(Mission.TurnCounter > SecondsToTurns(5))then -- Destroyed Enemy Recycler
 end
 
 function SurvivalLogic()
+
+	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
+        AddHealth(Mission.EnemyRecycler, 100);
+	end
 
    if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
 

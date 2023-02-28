@@ -670,6 +670,10 @@ end
 
 function SurvivalLogic()
 
+	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
+        AddHealth(Mission.EnemyRecycler, 100);
+	end
+
    if((Mission.ObjectiveOne == false) and GetDistance(Mission.transport,"check1") < 80.0)then
       ClearObjectives();
       --print("play audio 2");

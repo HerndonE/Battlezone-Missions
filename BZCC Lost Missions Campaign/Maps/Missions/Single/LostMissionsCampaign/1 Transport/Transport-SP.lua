@@ -20,7 +20,7 @@ local Mission = {
    MissionTimer = 0,
    TurnCounter = 0,
    
---Mission Variables--
+	--Mission Variables--
    _Text1 = "OBJECTIVE: Escort your forces to the 'landing area'. ";
    _Text2 = "OBJECTIVE: Setup a base and await further instruction.";
    _Text3 = "Incoming Transmission...";
@@ -238,10 +238,10 @@ function TransportMissionSetup()
       --print("play audio 2");
       AudioMessage("audio2.wav");
 	  
-	    SetLabel(Mission.HumanRecycler, "HumanRec");
+	  SetLabel(Mission.HumanRecycler, "HumanRec");
       SetObjectiveName(Mission.HumanRecycler, "Surviving Recycler");
       SetObjectiveOn(Mission.HumanRecycler)
-	--print("recycler is " .. tostring(Mission.HumanRecycler));
+	  --print("recycler is " .. tostring(Mission.HumanRecycler));
    
 
       if(Mission.testBool == false)then
@@ -263,7 +263,7 @@ function TransportMissionSetup()
    end
 
 
-   if ((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler,"nav1") < 100.0)) then
+   if ((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler,"nav1") < 150.0)) then --was 100 now 150
 
       ClearObjectives();
       AddObjective(Mission._Text2, "yellow", 15.0);
@@ -583,6 +583,10 @@ function FailConditions()
 end
 
 function SurvivalLogic()
+
+	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
+        AddHealth(Mission.EnemyRecycler, 100);
+	end
 
    if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
 

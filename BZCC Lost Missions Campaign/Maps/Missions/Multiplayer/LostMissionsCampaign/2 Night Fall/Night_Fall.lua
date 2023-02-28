@@ -101,7 +101,7 @@ local Mission = {
    TimeCount = 0,
 
    -- Handles
-   HumanRecycler =  nil,
+   HumanRecycler =  GetHandle("Recycler");
 
    -- Ints
    SiegeCounter = 0,
@@ -696,25 +696,40 @@ end
 
 function BaseSetup()
    if((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler,"nav1") < 200.0))then
-      print("Player is in phase 2 on Night Fall Mission");
-      ClearObjectives();
-	  AudioMessage("FIX_NF_003.wav");
-      AddObjective(Mission._Text2, "yellow", 15.0);
-      --print( Mission.HumanRecycler);
-      SetObjectiveOff(Mission.nav1)
-      SetObjectiveOn(Mission.Higgs)
-      SetObjectiveOn(Mission.Covell)
+	print("Player is in phase 2 on Night Fall Mission");
+	ClearObjectives();
+	AudioMessage("FIX_NF_003.wav");
+	AddObjective(Mission._Text2, "yellow", 15.0);
+	--print( Mission.HumanRecycler);
+	SetObjectiveOff(Mission.nav1)
+	SetObjectiveOn(Mission.Higgs)
+	SetObjectiveOn(Mission.Covell)
 
-      --[[Spawn Local Enemy Units]]--
-      Mission.Warrior=BuildObject("fvtank",6,"warrior1_spawn");
-      Mission.Warrior=BuildObject("fvtank",6,"warrior2_spawn");
-      Mission.Warrior=BuildObject("fvtank",6,"warrior3_spawn");
-      Mission.Scout=BuildObject("fvscout",6,"scout1_spawn");
-      Mission.Sentry=BuildObject("fvsent",6,"sent1_spawn");
+	Patrol(Mission.Higgs, "aipatrol", 1);
+	Patrol(Mission.Covell, "aipatrol", 1);
 
-      Mission.ObjectiveOne = true;
-
+	--[[Spawn Local Enemy Units]]--
+	Mission.Warrior=BuildObject("fvtank",6,"warrior1_spawn");
+	Mission.Warrior=BuildObject("fvtank",6,"warrior2_spawn");
+	Mission.Warrior=BuildObject("fvtank",6,"warrior3_spawn");
+	Mission.Scout=BuildObject("fvscout",6,"scout1_spawn");
+	Mission.Sentry=BuildObject("fvsent",6,"sent1_spawn");
+	Mission.ObjectiveOne = true;
+	  
    end
+   
+
+   if (IsOdf(Mission.HumanRecycler, "ibrecy_m")) and Mission.TurnCounter <= (SecondsToTurns(600)) then
+	print("YES")
+		if (GetHealth(Mission.Higgs) < 0.7) then 
+		  AddHealth(Mission.Higgs, 100);
+		end
+
+		if (GetHealth(Mission.Covell) < 0.7) then
+		  AddHealth(Mission.Covell, 100);
+		end
+   end
+   
 end
 
 function GreenSquadRescue()
@@ -825,7 +840,7 @@ end
 function TransmitterProblem()
 
 
-   if((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1,"nav1") <= 600.0) and(GetDistance(Mission.Cons2,"nav1") <= 600.0))--and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
+   if((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1,"nav1") <= 500.0) and(GetDistance(Mission.Cons2,"nav1") <= 500.0))--and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
    then
       --print("play audio 9");
 	  AudioMessage("R_NFPhase7higgs6.wav");
@@ -912,9 +927,6 @@ function TransmitterProblem()
       Mission.ObjectiveNine = false;
       Mission.ObjectiveTen = true;
    end
-
-
-
 
 end
 
@@ -1033,6 +1045,10 @@ function FailConditions()
 end
 
 function SurvivalLogic()
+
+	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
+        AddHealth(Mission.EnemyRecycler, 100);
+	end
 
    if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
 

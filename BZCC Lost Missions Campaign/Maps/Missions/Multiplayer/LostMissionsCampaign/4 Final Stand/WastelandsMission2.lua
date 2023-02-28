@@ -175,6 +175,8 @@ local Mission = {
    ObjectiveFour = false;
    notAroundBool = false;
    testBool = false;
+   setRumble = false;
+   setExplosion = false;
 
    --ISDF--
    PlayerH;
@@ -715,10 +717,23 @@ function objectiveSetup()
       AddObjective(Mission._Text5, "yellow", 15.0);
       --print("play audio 5");
 	  AudioMessage("FS_010.wav");
-      DoGameover(35.0);
-      Mission.ObjectiveFour = true;
-   end
+      DoGameover(30.0);
+      rumbleTime = GetTime() + 25.0
+      explosionTime = GetTime() + 29.35
+      Mission.setExplosion = true
+      Mission.setRumble = true
+      Mission.ObjectiveFour = true
+    end
 
+    if Mission.setRumble == true and Mission.TurnCounter == SecondsToTurns(rumbleTime) then
+        StartEarthQuake(30.0)
+        Mission.setRumble = false
+    end
+
+    if Mission.setExplosion == true and Mission.TurnCounter == SecondsToTurns(rumbleTime) then
+        SetColorFade(1, 0.1, "white")
+        Mission.setRumble = false
+    end
 
 end
 
@@ -832,7 +847,7 @@ end
 
 
 function failConditions()
-   if((Mission.TurnCounter > SecondsToTurns(100))and (Mission.TurnCounter == SecondsToTurns(1000)) )then
+   if((Mission.TurnCounter > SecondsToTurns(100))and (Mission.TurnCounter <= SecondsToTurns(1000)) )then
       Mission.cons = GetHandle("GreenSquadCons")
       if ( (Mission.notAroundBool == false) and not IsAlive(Mission.cons))then -- Cons1
          ClearObjectives();
@@ -843,7 +858,7 @@ function failConditions()
          Mission.notAroundBool = true;
       end
    end
-   if((Mission.TurnCounter > SecondsToTurns(5)) and (Mission.TurnCounter == SecondsToTurns(900))  )then
+   if((Mission.TurnCounter > SecondsToTurns(5)) and (Mission.TurnCounter <= SecondsToTurns(900))  )then
       if ( (Mission.notAroundBool == false) and not IsAlive(Mission.commTower))then -- HQ
          ClearObjectives();
          print("HQ is Dead");
@@ -869,6 +884,7 @@ function failConditions()
 end
 
 function SurvivalLogic()
+
 
    if (Mission.ObjectiveTwo == false) and (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
 
