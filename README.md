@@ -1,5 +1,5 @@
 # Custom Battlezone Missions
-Welcome to my Battlezone Missions! This repo will showcase new Battlezone missions while learning Lua and providing content to the Battlezone community.    
+Welcome to my Battlezone Missions! This repo will showcase new Battlezone missions while utilizing Lua and providing content to the Battlezone community.    
 If you don't have Battlezone Combat Commander, you can get this game on the Steam store <a href="https://store.steampowered.com/app/624970/Battlezone_Combat_Commander//">here</a>.    
 You can also check out my Steam workshop <a href="https://steamcommunity.com/profiles/76561198026325621/myworkshopfiles/">page</a> here for updates and releases!    
 
@@ -38,4 +38,4 @@ A short mission demonstration of dropships deploying ISDF Sabre tanks in a "Norm
 ![](https://img.shields.io/youtube/views/OkigEPNHm8I?style=social)![](https://img.shields.io/youtube/likes/OkigEPNHm8I?style=social)     
 Click this picture to watch mission.
 
-[![](https://i.ytimg.com/an_webp/OkigEPNHm8I/mqdefault_6s.webp?du=3000&sqp=CPSAwJEG&rs=AOn4CLC_aj146fmvRJnjv0R2hGuM7ZEo3g)](https://www.youtube.com/watch?v=OkigEPNHm8I&t=1s) 
+[![](https://i.ytimg.com/vi/OkigEPNHm8I/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDzR8WzTsd4BRnAXk-x_banGBi-bA)](https://www.youtube.com/watch?v=OkigEPNHm8I) 
