@@ -11,8 +11,15 @@ Battlezone Lost Missions Campaign | Mission 3: Night Fall
 Event Scripting: Ethan Herndon "F9bomber"
 Map Design and SFX: SirBramley
 Voice Acting: Ken Miller, Nathan Mates, FireRock, and SirBramley
-
 ]]--
+
+local ai = require("ai_functions");
+
+local unitList = {
+	function() return Goto(BuildObject("fvscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a") end,
+	function() return Goto(BuildObject("fvtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b") end,
+	function() return Goto(BuildObject("fvarch",6, GetPositionNear("spawn1.2", 0 , 10, 50)), "spawn1c") end,
+}
 
 local Mission = {
    --Integers--
@@ -63,7 +70,7 @@ local Mission = {
    SurvivalWaveTime33 = 0;
    i = 0;
 
-   --ISDF--
+   -- ISDF
    PlayerH = GetPlayerHandle();
    HumanRecycler = GetHandle("Recycler");
    nav1;
@@ -71,32 +78,18 @@ local Mission = {
    nav3;
    nav4;
    nav5;
-   --------
 
-   --Scions--
-   Warrior;
-   Scout;
-   Sentry;
-   Lancer;
-   Titan;
-   Gaurdian;
-   GunSpire;
+   -- Scions
    RelaySpecial;
    Mine1;
    Mine2;
    EnemyRecycler = GetHandle("Matriarch");
-   ----------
 
-   --Red Squad--
+   -- Red Squad
    Higgs;
    Covell;
    Transmitter;
-   Tank;
-   ISDFScout;
-   Turret;
-   MissileScout;
-   -------------
-
+ 
    --Green Squad--
    Mates;
    Cons1;
@@ -108,50 +101,44 @@ local Mission = {
    greenPower;
    greenGun1;
    greenGun2;
-   greenExtractor;
-   ---------------
-
-   ---------------------
-  
+   greenExtractor;  
 }
 
 function Save()
-   return Mission
+	return Mission
 end
 
 function Load(...)
-   if select("#", ...) > 0 then
-      Mission = ...
-   end
+	if select("#", ...) > 0 then
+	  Mission = ...
+	end
 end
 
 function AddObject(h) 
- if (IsOdf(h, "ivrecy")) then
-   Mission.Recycler = h
-   AddScrap(1, 40)
+	if (IsOdf(h, "ivrecy")) then
+		Mission.Recycler = h
+		AddScrap(1, 40)
+	end
+
+	if (IsOdf(h, "ibrecy")) then
+		Mission.Recycler = h
+	end
+
+	if (IsOdf(h, "fvrecy")) then
+		Mission.EnemyRecycler = h
+	end
+
+	if (IsOdf(h, "fbrecy")) then
+		Mission.EnemyRecycler = h
+	end
 end
 
-if (IsOdf(h, "ibrecy")) then
-   Mission.Recycler = h
-   
-end
-
- if (IsOdf(h, "fvrecy")) then
-   Mission.EnemyRecycler = h
-end
-
-if (IsOdf(h, "fbrecy")) then
-   Mission.EnemyRecycler = h
-   
-end
-end
-
-function DeleteObject(h) --This function is called when an object is deleted in the game.
+function DeleteObject(h) -- This function is called when an object is deleted in the game.
 end
 
 function InitialSetup()
-Mission.TPS = EnableHighTPS()
-AllowRandomTracks(true)
+	Mission.TPS = EnableHighTPS()
+	AllowRandomTracks(true)
 
 	local preloadODF = {
 		"ivrecy",
@@ -163,12 +150,12 @@ AllowRandomTracks(true)
 	for k,v in pairs(preloadODF) do
 		PreloadODF(v)
 	end
-	
-AddScrap(1, 40)
-AddScrap(6, 40) 
+
+	AddScrap(1, 40)
+	AddScrap(6, 40) 
 end
 
-function Start() --This function is called upon the first frame
+function Start() -- This function is called upon the first frame
 	SetAutoGroupUnits(false)
 
 	AddScrap(1, 40)
@@ -179,66 +166,47 @@ function Start() --This function is called upon the first frame
 	print("Special thanks to SirBramley for making the map");
 	print("Special thanks to Ken Miller, Nathan Mates, FireRock, and SirBramley for voice acting");
 
-
-	--------------------------------------------------------
-	------------Colors Done by Ethan Herndon-----5/17/20----
-	--Coronavirus
-	--------------------------------------------------------
-
-	--[[Orange Squad]]--
+	-- Orange Squad 
 	SetTeamColor(1, SetVector(230, 92, 0));
 
-	--[[Red Squad]]--
+	-- Red Squad 
 	SetTeamColor(15, SetVector(171, 0, 0));
 
-	--[[Green Squad]]--
+	-- Green Squad
 	SetTeamColor(14, SetVector(0, 153, 0));
 
-	--[[Gray Enemy Color]]--
-	SetTeamColor(6, SetVector(128, 128, 128));
-
-	--------------------------------------------------------
 	Ally(1, 14)
 	Ally(1, 15)
 	Ally(14, 15)
 
-	Mission.HumanRecycler=BuildObject("ivrecy",1,"rec");
-	--print("recycler is " .. tostring(Mission.HumanRecycler));
-	--print("my handle is " .. tostring(Mission.PlayerH));
+	Mission.HumanRecycler = BuildObject("ivrecy", 1, "rec");
 
-	--[[Spawn Local Red Squad Units]]--
-	Mission.Higgs=BuildObject("ivtank_h",15,"higgs_spawn");
+	-- Spawn Local Red Squad Units
+	Mission.Higgs = BuildObject("ivtank_h", 15, "higgs_spawn");
 	SetObjectiveName(Mission.Higgs, "Cpt. Higgs");
-	Mission.Covell=BuildObject("ivtank_c",15,"covell_spawn");
+	Mission.Covell = BuildObject("ivtank_c", 15, "covell_spawn");
 	SetObjectiveName(Mission.Covell, "Cmdr. Covell");
-	Mission.Transmitter=BuildObject("bbtran00",15,"transmitter_spawn");
+	Mission.Transmitter = BuildObject("bbtran00", 15, "transmitter_spawn");
 	SetObjectiveName(Mission.transmitter, "transmitter");
-	Mission.Tank=BuildObject("ivtank",15,"tank1_spawn");
-	Mission.Tank=BuildObject("ivtank",15,"tank2_spawn");
-	Mission.Tank=BuildObject("ivtank",15,"tank3_spawn");
-	Mission.ISDFScout=BuildObject("ivscout",15,"scout2_spawn");
-	Mission.ISDFScout=BuildObject("ivscout",15,"scout3_spawn");
-	Mission.Turret=BuildObject("ivturr",15,"turret1_spawn");
-	Mission.Turret=BuildObject("ivturr",15,"turret2_spawn");
-	Mission.Turret=BuildObject("ivturr",15,"turret3_spawn");
-	Mission.MissileScout=BuildObject("ivmisl",15,"ivmisl1_spawn");
-	Mission.MissileScout=BuildObject("ivmisl",15,"ivmisl2_spawn");
-
-	local SpawnScavUnits = 6
-	local SpawnConsUnits = 1
-	for i = 1, SpawnScavUnits  do
-	  local spawnScavs = BuildObject("fvscav",6, "RecyclerEnemy");
-	end
-
-	for i = 1, SpawnConsUnits  do
-	  local spawnScavs = BuildObject("fvcons",6, "RecyclerEnemy");
-	end
+	
+	ai.buildUnitsAtStart("ivtank", 15, "tank1_spawn", 1);
+	ai.buildUnitsAtStart("ivtank", 15, "tank2_spawn", 1);
+	ai.buildUnitsAtStart("ivtank", 15, "tank3_spawn", 1);	
+	ai.buildUnitsAtStart("ivscout", 15, "scout2_spawn", 1);
+	ai.buildUnitsAtStart("ivscout", 15, "scout3_spawn", 1);
+	ai.buildUnitsAtStart("ivturr", 15, "turret1_spawn", 1);
+	ai.buildUnitsAtStart("ivturr", 15, "turret2_spawn", 1);
+	ai.buildUnitsAtStart("ivturr", 15, "turret3_spawn", 1);
+	ai.buildUnitsAtStart("ivmisl", 15, "ivmisl1_spawn", 1);
+	ai.buildUnitsAtStart("ivmisl", 15, "ivmisl2_spawn", 1);
+	
+	ai.buildUnitsAtStart("fvscav", 6, "RecyclerEnemy", 6);
+	ai.buildUnitsAtStart("fvcons", 6, "RecyclerEnemy", 1);
 
 	AudioMessage("FIX_NF_001_MajCollins.wav");
-
 end
 
-function Update() --This function runs on every frame.
+function Update() -- This function runs on every frame.
    Mission.TurnCounter = Mission.TurnCounter + 1
 
    -- Call your custom method here
@@ -250,18 +218,14 @@ function Update() --This function runs on every frame.
    AttackScionSpecial(); -- Ethan Herndon
    TransmitterSuccess(); -- Ethan Herndon
    FailConditions(); -- Ethan Herndon
-
 end
 
-
 function RecyclerSetup()
-
-   if((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(15))then --15 Seconds
+   if ((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(15)) then -- 15 Seconds
       print("Player is in phase 1 on Night Fall Mission");
 	  ClearObjectives();
-	  --print("play audio 2");
 	  AudioMessage("FIX_NF_002_MajCollins.wav");
-      Mission.nav1=BuildObject("ibnav",1,"nav1");
+      Mission.nav1 = BuildObject("ibnav", 1, "nav1");
       SetObjectiveName(Mission.nav1, "ISDF base");
       SetObjectiveOn(Mission.nav1)
       AddObjective(Mission._Text1, "yellow", 15.0);
@@ -270,387 +234,275 @@ function RecyclerSetup()
 end
 
 function BaseSetup()
-   if((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler,"nav1") < 200.0))then
-      print("Player is in phase 2 on Night Fall Mission");
-      ClearObjectives();
-	  AudioMessage("FIX_NF_003.wav");
-      AddObjective(Mission._Text2, "yellow", 15.0);
-      --print( Mission.HumanRecycler);
-      SetObjectiveOff(Mission.nav1)
-      SetObjectiveOn(Mission.Higgs)
-      SetObjectiveOn(Mission.Covell)
-	  
-	  Patrol(Mission.Higgs, "aipatrol", 1);
-	  Patrol(Mission.Covell, "aipatrol", 1);
-	   
-      --[[Spawn Local Enemy Units]]--
-      Mission.Warrior=BuildObject("fvtank",6,"warrior1_spawn");
-      Mission.Warrior=BuildObject("fvtank",6,"warrior2_spawn");
-      Mission.Warrior=BuildObject("fvtank",6,"warrior3_spawn");
-      Mission.Scout=BuildObject("fvscout",6,"scout1_spawn");
-      Mission.Sentry=BuildObject("fvsent",6,"sent1_spawn");
-      Mission.ObjectiveOne = true;
-	  
-   end
-   
+	if ((Mission.ObjectiveOne == false) and (GetDistance(Mission.HumanRecycler, "nav1") < 200.0)) then
+		print("Player is in phase 2 on Night Fall Mission");
+		ClearObjectives();
+		AudioMessage("FIX_NF_003.wav");
+		AddObjective(Mission._Text2, "yellow", 15.0);
+		SetObjectiveOff(Mission.nav1)
+		SetObjectiveOn(Mission.Higgs)
+		SetObjectiveOn(Mission.Covell)
 
-   if (IsOdf(Mission.HumanRecycler, "ibrecy")) and Mission.TurnCounter <= (SecondsToTurns(600)) then
-   
-	if (GetHealth(Mission.Higgs) < 0.7) then 
-	  AddHealth(Mission.Higgs, 100);
+		Patrol(Mission.Higgs, "aipatrol", 1);
+		Patrol(Mission.Covell, "aipatrol", 1);
+
+		-- Spawn Local Enemy Units
+		ai.buildUnits("fvtank", 6, "warrior1_spawn", 1);
+		ai.buildUnits("fvtank", 6, "warrior2_spawn", 1);
+		ai.buildUnits("fvtank", 6, "warrior3_spawn", 1);	
+		ai.buildUnits("fvscout", 6, "scout1_spawn", 1);
+		ai.buildUnits("fvsent", 6, "sent1_spawn", 1);
+	
+		Mission.ObjectiveOne = true;
 	end
 
-	if (GetHealth(Mission.Covell) < 0.7) then
-	  AddHealth(Mission.Covell, 100);
-	end
+	if (IsOdf(Mission.HumanRecycler, "ibrecy")) and Mission.TurnCounter <= (SecondsToTurns(600)) then
+		if (GetHealth(Mission.Higgs) < 0.7) then 
+			AddHealth(Mission.Higgs, 100);
+		end
 
-   end
-   
-   
+		if (GetHealth(Mission.Covell) < 0.7) then
+			AddHealth(Mission.Covell, 100);
+		end
+	end
 end
 
 function GreenSquadRescue()
-
-   if(Mission.TurnCounter == (SecondsToTurns(600)))then --10 minutes 900 600
-      print("Player is in phase 3 on Night Fall Mission");
-      --print ("play audio 3");
-	  AudioMessage("R_NFPhase4higgs3.wav");
-      ClearObjectives();
-      AddObjective(Mission._Text3, "yellow", 15.0);
-      Goto(Mission.Higgs,"higgsPath",1);
-      Goto(Mission.Covell,"covellPath",1);
-      Mission.Mine1=BuildObject("proxmine",6,"mine1spawn");
-      Mission.Mine2=BuildObject("proxmine",6,"mine2spawn");
-   end
-
-
-   if((GetDistance(Mission.Covell,"mine1spawn") < 20.0))then
-      Mission.clearOne = true;
-      --print("m1");
-   end
-
-   if((GetDistance(Mission.Higgs,"mine2spawn") < 20.0))then
-      Mission.clearTwo = true;
-      --print("m2");
-   end
-
-
-   if((Mission.clearTwo == true) and (Mission.clearOne == true) and ((GetDistance(Mission.Covell,"nav2") < 400.0))and ((GetDistance(Mission.Higgs,"nav2") < 400.0)))then
-      --print("play audio 4");
-      ClearObjectives();
-      Mission.nav2=BuildObject("ibnav",1,"nav2");
-      SetObjectiveName(Mission.nav2, "Meetup Point");
-      SetObjectiveOn(Mission.nav2)
-      AddObjective(Mission._Text4, "yellow", 15.0);
-      Mission.clearOne = false;
-      Mission.clearTwo = false;
-
-   end
-
---[[
-	local hostPlayer;
-	if(ImServer()) then
-	hostPlayer = GetPlayerHandle(Mission.PlayerH)
+	if (Mission.TurnCounter == (SecondsToTurns(600))) then -- 10 minutes 900 600
+		print("Player is in phase 3 on Night Fall Mission");
+		AudioMessage("R_NFPhase4higgs3.wav");
+		ClearObjectives();
+		AddObjective(Mission._Text3, "yellow", 15.0);
+		Goto(Mission.Higgs, "higgsPath", 1);
+		Goto(Mission.Covell, "covellPath", 1);
+		Mission.Mine1 = BuildObject("proxmine", 6, "mine1spawn");
+		Mission.Mine2 = BuildObject("proxmine", 6, "mine2spawn");
 	end
---]]
+
+	if ((GetDistance(Mission.Covell,"mine1spawn") < 20.0)) then
+		Mission.clearOne = true;
+	end
+
+	if ((GetDistance(Mission.Higgs,"mine2spawn") < 20.0)) then
+		Mission.clearTwo = true;
+	end
+
+	if ((Mission.clearTwo == true) and (Mission.clearOne == true) and ((GetDistance(Mission.Covell,"nav2") < 400.0)) and ((GetDistance(Mission.Higgs,"nav2") < 400.0))) then
+		ClearObjectives();
+		Mission.nav2=BuildObject("ibnav", 1, "nav2");
+		SetObjectiveName(Mission.nav2, "Meetup Point");
+		SetObjectiveOn(Mission.nav2)
+		AddObjective(Mission._Text4, "yellow", 15.0);
+		Mission.clearOne = false;
+		Mission.clearTwo = false;
+	end
 	
 	Mission.PlayerH = GetPlayerHandle();
-   if((Mission.ObjectiveThree == false) and((GetDistance(Mission.Covell,"nav2") < 40.0))and ((GetDistance(Mission.Covell,"nav2") < 40.0)) and ((GetDistance(Mission.PlayerH,"nav2") < 40.0)))then
-   --if((Mission.ObjectiveThree == false) and((GetDistance(Mission.Covell,"nav2") < 40.0))and ((GetDistance(Mission.Covell,"nav2") < 40.0)) and ((GetDistance(hostPlayer,"nav2") < 40.0)))then
-      --print("play audio 5")
-	   ClearObjectives();
-	  AddObjective(Mission._Text10, "white", 15.0);
-      SetObjectiveOff(Mission.nav2)
-      Mission.ObjectiveThree = true;
-   end
+	if ((Mission.ObjectiveThree == false) and ((GetDistance(Mission.Covell, "nav2") < 40.0)) and ((GetDistance(Mission.Covell, "nav2") < 40.0)) and ((GetDistance(Mission.PlayerH, "nav2") < 40.0))) then
+	--if((Mission.ObjectiveThree == false) and((GetDistance(Mission.Covell,"nav2") < 40.0))and ((GetDistance(Mission.Covell,"nav2") < 40.0)) and ((GetDistance(hostPlayer,"nav2") < 40.0)))then
+		ClearObjectives();
+		AddObjective(Mission._Text10, "white", 15.0);
+		SetObjectiveOff(Mission.nav2)
+		Mission.ObjectiveThree = true;
+	end
 
-   if(Mission.TurnCounter == (SecondsToTurns(1020))) then --17 minutes 1500 1200 1020
-      --print("play audio 6");
-	  AudioMessage("R_NFPhase5higgs4.wav");
-      SetObjectiveOff(Mission.nav2)
-      ClearObjectives();
-      AddObjective(Mission._Text5, "yellow", 15.0);
-      SetObjectiveOff(Mission.Higgs)
-      SetObjectiveOff(Mission.Covell)
+	if (Mission.TurnCounter == (SecondsToTurns(1020))) then -- 17 minutes 1500 1200 1020
+		AudioMessage("R_NFPhase5higgs4.wav");
+		SetObjectiveOff(Mission.nav2)
+		ClearObjectives();
+		AddObjective(Mission._Text5, "yellow", 15.0);
+		SetObjectiveOff(Mission.Higgs)
+		SetObjectiveOff(Mission.Covell)
 
-      --[[Spawn Local Green Squad Units]]--
-      Mission.Mates = BuildObject("ivtank_mates",14,"mates_spawn");
-      SetObjectiveName(Mission.Mates, "Sgt. Mates");
-      SetObjectiveOn(Mission.Mates)
-      Mission.Cons1 = BuildObject("ivcons",14,"cons1_spawn"); --ivcons
-      Mission.Cons2 = BuildObject("ivcons",14,"cons2_spawn"); --ivcons
-      Mission.greenTank1 = BuildObject("ivtank",14,"gtank1_spawn");
-      Mission.greenTank2 = BuildObject("ivtank",14,"gtank2_spawn");
-      Mission.greenTurret = BuildObject("ivturr",14,"greenTurret_spawn");
-      Mission.greenScout = BuildObject("ivscout",14,"greenScout_spawn");
-      Mission.greenPower = BuildObject("ibpgen",14,"oower_spawn");
-      Mission.greenGun1 = BuildObject("ibgtow",14,"greenGun1_spawn");
-      Mission.greenGun2 = BuildObject("ibgtow",14,"greenGun2_spawn");
-      Mission.greenExtractor = BuildObject("ibscup",14,"greenPool_spawn");
+		-- Spawn Local Green Squad Units
+		Mission.Mates = BuildObject("ivtank_mates", 14, "mates_spawn");
+		SetObjectiveName(Mission.Mates, "Sgt. Mates");
+		SetObjectiveOn(Mission.Mates)
+		Mission.Cons1 = BuildObject("ivcons", 14, "cons1_spawn"); 
+		Mission.Cons2 = BuildObject("ivcons", 14, "cons2_spawn"); 
+		Mission.greenTank1 = BuildObject("ivtank", 14, "gtank1_spawn");
+		Mission.greenTank2 = BuildObject("ivtank", 14, "gtank2_spawn");
+		Mission.greenTurret = BuildObject("ivturr", 14, "greenTurret_spawn");
+		Mission.greenScout = BuildObject("ivscout", 14, "greenScout_spawn");
+		Mission.greenPower = BuildObject("ibpgen", 14, "oower_spawn");
+		Mission.greenGun1 = BuildObject("ibgtow", 14, "greenGun1_spawn");
+		Mission.greenGun2 = BuildObject("ibgtow", 14, "greenGun2_spawn");
+		Mission.greenExtractor = BuildObject("ibscup", 14, "greenPool_spawn");
 
-      Mission.ObjectiveFour = true;
-      attackGreenSquad = true;
-      Mission.checkConStatus = true;
-   end
+		Mission.ObjectiveFour = true;
+		attackGreenSquad = true;
+		Mission.checkConStatus = true;
+	end
 
     Mission.PlayerH = GetPlayerHandle();
-   if((Mission.ObjectiveFive == false) and (GetDistance(Mission.PlayerH,Mission.Mates) <= 150.0))then
-   --if((Mission.ObjectiveFive == false) and (GetDistance(hostPlayer,Mission.Mates) <= 150.0))then
-      AddObjective(Mission._Text5, "yellow", 15.0);
-      ClearObjectives();
-      AddObjective(Mission._Text6, "yellow", 15.0);
-      --print("play audio 7");
-	  AudioMessage("R_Line1.wav");
-      Goto(Mission.Cons1,"consPath",1); --consPath
-      Goto(Mission.Cons2,"consPath",1);
-      Defend2(Mission.greenTank1,Mission.Cons2,1);
-      Defend2(Mission.greenTank2,Mission.Cons2,1);
-      Goto(Mission.greenTurret,"consPath",1);
-      Goto(Mission.greenScout,"consPath",1);
-      Defend2(Mission.Mates,Mission.Cons1,1);
-      SetObjectiveOff(Mission.Mates)
-      SetObjectiveOn(Mission.Cons1)
-      SetObjectiveOn(Mission.Cons2)
-      Mission.ObjectiveFive = true;
-   end
-
+	if ((Mission.ObjectiveFive == false) and (GetDistance(Mission.PlayerH,Mission.Mates) <= 150.0)) then
+		--if((Mission.ObjectiveFive == false) and (GetDistance(hostPlayer,Mission.Mates) <= 150.0))then
+		AddObjective(Mission._Text5, "yellow", 15.0);
+		ClearObjectives();
+		AddObjective(Mission._Text6, "yellow", 15.0);
+		AudioMessage("R_Line1.wav");
+		Goto(Mission.Cons1, "consPath", 1);
+		Goto(Mission.Cons2, "consPath", 1);
+		Defend2(Mission.greenTank1, Mission.Cons2, 1);
+		Defend2(Mission.greenTank2, Mission.Cons2, 1);
+		Goto(Mission.greenTurret, "consPath", 1);
+		Goto(Mission.greenScout, "consPath", 1);
+		Defend2(Mission.Mates, Mission.Cons1, 1);
+		SetObjectiveOff(Mission.Mates)
+		SetObjectiveOn(Mission.Cons1)
+		SetObjectiveOn(Mission.Cons2)
+		Mission.ObjectiveFive = true;
+	end
 end
 
 
 function TransmitterProblem()
+	if ((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1, "nav1") <= 500.0) and (GetDistance(Mission.Cons2, "nav1") <= 500.0)) then -- and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
+		AudioMessage("R_NFPhase7higgs6.wav");
+		print("Player is in phase 5 on Night Fall Mission");
+		Mission.ObjectiveSeven = true;
+	end
 
+	if (((Mission.ObjectiveEight and Mission.audiobool) == false) and (GetDistance(Mission.Cons1,"nav1") < 250.0))then
+		Mission.audiobool = true;
 
-   if((Mission.ObjectiveSeven == false)and(GetDistance(Mission.Cons1,"nav1") <= 500.0) and(GetDistance(Mission.Cons2,"nav1") <= 500.0))--and(GetDistance(Mission.Cons1,"gbnav1") < 300.0))
-   then
-      --print("play audio 9");
-	  AudioMessage("R_NFPhase7higgs6.wav");
-      print("Player is in phase 5 on Night Fall Mission");
-      Mission.ObjectiveSeven = true;
-   end
+		if (Mission.counter == false) and (Mission.TurnCounter >= SecondsToTurns(2)) then -- iterates every 2 seconds
+			Mission.TurnCounter = 0;
+			Mission.i = Mission.i + 1;
+				if(Mission.i >= 42)then --58
+					Mission._Text7 = "Establishing Connection: Failed";
+					Mission.counter = true;
+					Mission.counter2 = true;
+					Mission.i = 0;
+				else
+					Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
+				end
+			ClearObjectives();
+			AddObjective(Mission._Text7, "white", 15.0);
+		end
 
-   if(((Mission.ObjectiveEight and Mission.audiobool) == false)and(GetDistance(Mission.Cons1,"nav1") < 250.0))then
-      --print("play audio 10"); --need to fix
-      Mission.audiobool = true;
+		if (Mission.counter2 == true) and (Mission.TurnCounter >= SecondsToTurns(2)) then -- iterates every 3 seconds
+			Mission.TurnCounter = 0;
+			Mission.i = Mission.i + 1;
+			--print("i = " .. Mission.i);
+			if (Mission.i >= 70)then
+				Mission._Text7 = "Establishing Connection: Failed";
+				Mission.counter2 = false;
+				Mission.ObjectiveNine = true;
+				Mission.i = 0;
+				Mission.ObjectiveEight = true;
+				--print("OBJ 9: " .. Mission.ObjectiveNine)
+			else
+				Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
+			end
+			ClearObjectives();
+			AddObjective(Mission._Text7, "white", 15.0);
+		end
+		--[[
+		Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
+		if(Mission.counter == false)then
+		 if (Mission.SurvivalWaveTime30 >= SecondsToTurns(2)) then --- iterates every 2 seconds
+			Mission.SurvivalWaveTime30 = 0;
+			Mission.i = Mission.i + 1;
+			print("i = " .. Mission.i);
+			if(Mission.i >= 8)then
+			   ClearObjectives();
+			   Mission._Text7 = "Establishing Connection: Failed";
+			   AddObjective(Mission._Text7, "white", 15.0)
+			   Mission.counter = true;
+			end
+			ClearObjectives();
+			AddObjective(Mission._Text7, "white", 15.0);
+		 end
+		end
+		]]--
+	end
 
-
-      if (Mission.counter == false) and (Mission.TurnCounter >= SecondsToTurns(2)) then --- iterates every 2 seconds
-         Mission.TurnCounter = 0;
-         Mission.i = Mission.i + 1;
-         --print("i = " .. Mission.i);
-         if(Mission.i >= 42)then --58
-            Mission._Text7 = "Establishing Connection: Failed";
-            Mission.counter = true;
-            Mission.counter2 = true;
-            Mission.i = 0;
-         else
-            Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
-         end
-         ClearObjectives();
-         AddObjective(Mission._Text7, "white", 15.0);
-      end
-
-      if (Mission.counter2 == true) and (Mission.TurnCounter >= SecondsToTurns(2)) then --- iterates every 3 seconds
-         Mission.TurnCounter = 0;
-         Mission.i = Mission.i + 1;
-         --print("i = " .. Mission.i);
-         if(Mission.i >= 70)then
-            Mission._Text7 = "Establishing Connection: Failed";
-            Mission.counter2 = false;
-            Mission.ObjectiveNine = true;
-            Mission.i = 0;
-            Mission.ObjectiveEight = true;
-            --print("OBJ 9: " .. Mission.ObjectiveNine)
-         else
-            Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
-         end
-         ClearObjectives();
-         AddObjective(Mission._Text7, "white", 15.0);
-      end
-
-      --[[
-      Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
-      if(Mission.counter == false)then
-         if (Mission.SurvivalWaveTime30 >= SecondsToTurns(2)) then --- iterates every 2 seconds
-            Mission.SurvivalWaveTime30 = 0;
-            Mission.i = Mission.i + 1;
-            print("i = " .. Mission.i);
-            if(Mission.i >= 8)then
-               ClearObjectives();
-               Mission._Text7 = "Establishing Connection: Failed";
-               AddObjective(Mission._Text7, "white", 15.0)
-               Mission.counter = true;
-            end
-            ClearObjectives();
-            AddObjective(Mission._Text7, "white", 15.0);
-         end
-      end
-      ]]--
-
-   end
-
-   if(Mission.ObjectiveNine == true)then
-      --build scion stronghold.
-
-      Mission.Warrior = BuildObject("fvtank",6,"warriorSL_spawn");
-      Mission.Scout = BuildObject("fvscout",6,"scoutSL_spawn");
-      Mission.Sentry = BuildObject("fvsent",6,"sentrySL_spawn");
-      Mission.Lancer = BuildObject("fvarch",6,"lancerSL_spawn");
-      Mission.Titan = BuildObject("fvatank",6,"titanSL_spawn");
-      Mission.Gaurdian = BuildObject("fvturr",6,"gaurdianSL_spawn");
-      Mission.GunSpire = BuildObject("fbspir",6,"gunSL_spawn");
-      Mission.RelaySpecial = BuildObject("fbover",6,"specialSL_spawn"); --specialSL_spawn  fbover
-      SetObjectiveOn(Mission.RelaySpecial)
-      --print ("play audio 10");
-	  AudioMessage("R_NFPhase8higgs7.wav");
-      ClearObjectives();
-      AddObjective(Mission._Text8, "yellow", 15.0);
-      Mission.ObjectiveNine = false;
-      Mission.ObjectiveTen = true;
-   end
-
+	if (Mission.ObjectiveNine == true) then
+		ai.buildUnits("fvtank", 6, "warriorSL_spawn", 1);
+		ai.buildUnits("fvscout", 6, "scoutSL_spawn", 1);
+		ai.buildUnits("fvsent", 6, "sentrySL_spawn", 1);
+		ai.buildUnits("fvarch", 6, "lancerSL_spawn", 1);
+		ai.buildUnits("fvatank", 6, "titanSL_spawn", 1);
+		ai.buildUnits("fvturr", 6, "gaurdianSL_spawn", 1);
+		ai.buildUnits("fbspir", 6, "gunSL_spawn", 1);
+		Mission.RelaySpecial = BuildObject("fbover", 6,"specialSL_spawn");
+		SetObjectiveOn(Mission.RelaySpecial)
+		AudioMessage("R_NFPhase8higgs7.wav");
+		ClearObjectives();
+		AddObjective(Mission._Text8, "yellow", 15.0);
+		Mission.ObjectiveNine = false;
+		Mission.ObjectiveTen = true;
+	end
 end
 
 function AttackScionSpecial()
-
-   --Check of the Scion building is gone
-   if(Mission.ObjectiveTen == true)then
-      if (not IsAlive(Mission.RelaySpecial))then -- Scion Antenna
-         print("Player is in phase 6 on Night Fall Mission");
-         ClearObjectives();
-         --AddObjective(Mission._Text8, "green", 15.0);
-         Mission.ObjectiveEleven = true;
-         --print("play audio 11");
+	-- Check of the Scion building is gone
+	if (Mission.ObjectiveTen == true) then
+		if (not IsAlive(Mission.RelaySpecial)) then -- Scion Antenna
+		 print("Player is in phase 6 on Night Fall Mission");
+		 ClearObjectives();
+		 Mission.ObjectiveEleven = true;
 		 AudioMessage("R_NFPhase9higgs8.wav");
-         Mission.ObjectiveTen = false;
-      end
-   end
+		 Mission.ObjectiveTen = false;
+		end
+	end
 end
 
-
 function TransmitterSuccess()
-
-   if(Mission.ObjectiveEleven == true)then
-      if (Mission.counter3 == false) and (Mission.TurnCounter >= SecondsToTurns(4)) then --- iterates every 4 seconds
-
-         Mission.TurnCounter = 0;
-         Mission.i = Mission.i + 1;
-         --print("p i = " .. Mission.i);
-         Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
-         ClearObjectives();
-         AddObjective(Mission._Text7, "white", 15.0);
-         if(Mission.i >= 99)then --99
-            Mission._Text7 = "Establishing Connection: Success \n";
-            Mission.counter3 = true;
-            ClearObjectives();
-            AddObjective(Mission._Text7 .. Mission._Text9, "green", 15.0);
-            print("Player is in that last phase of Night Fall Mission");
-            --print("play audio 12");
-			AudioMessage("NF_010.wav");
-            SucceedMission(GetTime() + 15.0, "night.des")
-            Mission.ObjectiveEleven = false
-         end
-         --ClearObjectives();
-         --AddObjective(Mission._Text9, "green", 15.0);
-      end
-   end
+	if (Mission.ObjectiveEleven == true) then
+		if (Mission.counter3 == false) and (Mission.TurnCounter >= SecondsToTurns(4)) then -- iterates every 4 seconds
+			Mission.TurnCounter = 0;
+			Mission.i = Mission.i + 1;
+			Mission._Text7 = "Establishing Connection: " .. Mission.i .. "%";
+			ClearObjectives();
+			AddObjective(Mission._Text7, "white", 15.0);
+			if (Mission.i >= 99) then --99
+				Mission._Text7 = "Establishing Connection: Success \n";
+				Mission.counter3 = true;
+				ClearObjectives();
+				AddObjective(Mission._Text7 .. Mission._Text9, "green", 15.0);
+				print("Player(s) is in that last phase of Night Fall Mission");
+				AudioMessage("NF_010.wav");
+				SucceedMission(GetTime() + 15.0, "night.des")
+				Mission.ObjectiveEleven = false
+			end
+		end
+	end
 end
 
 function FailConditions()
-
-   if((Mission.TurnCounter > SecondsToTurns(10)) )then
-      if ( (Mission.notAroundBool == false) and not IsAlive(Mission.Higgs))then -- Higgs
-         ClearObjectives();
-         print("Higgs Died");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text12, "red", 15.0);
-         FailMission(GetTime() + 15.0, "higgs.des")
-         Mission.notAroundBool = true;
-      end
-
-      if ((Mission.notAroundBool == false) and not IsAlive(Mission.Covell))then -- Covell
-         ClearObjectives();
-         print("Covell Died");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text13, "red", 15.0);
-         FailMission(GetTime() + 15.0, "covell.des")
-         Mission.notAroundBool = true;
-      end
-
-      if ((Mission.notAroundBool == false) and not IsAlive(Mission.Transmitter))then -- Transmitter
-         ClearObjectives();
-         print("Transmitter Died");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text14, "red", 15.0);
-         FailMission(GetTime() + 15.0, "transm.des")
-         Mission.notAroundBool = true;
-      end
-
-   end
-
-   if(Mission.checkConStatus == true)then
-      if ((Mission.notAroundBool == false) and not IsAlive(Mission.Cons1))then -- con1
-         ClearObjectives();
-         print("Cons1 Died");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text15, "red", 15.0);
-         FailMission(GetTime() + 15.0, "cons.des")
-         Mission.notAroundBool = true;
-      end
-
-      if ((Mission.notAroundBool == false) and not IsAlive(Mission.Cons2))then -- con2
-         ClearObjectives();
-         print("Cons2 Died");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text15, "red", 15.0);
-         FailMission(GetTime() + 15.0, "cons.des")
-         Mission.notAroundBool = true;
-      end
-   end
-
-if(Mission.TurnCounter > SecondsToTurns(5))then -- Destroyed Enemy Recycler
-	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then
-		ClearObjectives();
-         print("The player destroyed enemy recycler");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text11, "red", 15.0);
-         FailMission(GetTime() + 5.0)
-         Mission.notAroundBool = true;
-	end
+	if ((Mission.TurnCounter > SecondsToTurns(10))) then
+		ai.checkMissionObjectStatus(ai, Mission.Higgs, "Captain Higgs is Dead", "failmessage.wav", Mission._Text12, "higgs.des", 15.0);
+		ai.checkMissionObjectStatus(ai, Mission.Covell, "Cmdr. Covell is Died", "failmessage.wav", Mission._Text13, "covell.des", 15.0);
+		ai.checkMissionObjectStatus(ai, Mission.Transmitter, "Transmitter is Died", "failmessage.wav", Mission._Text14, "transm.des", 15.0);
 	end
 
+	if (Mission.checkConStatus == true) then
+		ai.checkMissionObjectStatus(ai, Mission.Cons1, "Constructor 1 is Died", "failmessage.wav", Mission._Text15, "cons.des", 15.0);
+		ai.checkMissionObjectStatus(ai, Mission.Cons2, "Constructor 2 is Died", "failmessage.wav", Mission._Text15, "cons.des", 15.0);
+	end
+
+	if (Mission.TurnCounter > SecondsToTurns(5)) then
+		ai.checkMissionObjectStatus(ai, Mission.EnemyRecycler, "The player destroyed enemy recycler", "failmessage.wav", Mission._Text11, "", 5.0);
+	end
 end
 
 function SurvivalLogic()
-
 	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
-        AddHealth(Mission.EnemyRecycler, 100);
+		AddHealth(Mission.EnemyRecycler, 100);
 	end
 
-   if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
+	ai.spawnObjectsAtRepeatTimeWithOrder(Mission.TurnCounter, 120, 2, unitList, 1, 2);
+	ai.spawnObjectsAtRepeatTimeWithOrder(Mission.TurnCounter, 120, 1, unitList, 3, 3);
 
-      local AttackUnits = 2
-      for i = 1, AttackUnits  do
-         Goto(BuildObject("fvscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
-         Goto(BuildObject("fvtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
-         --print("Enemy spawned to attack at 2 minute marker");
-      end
-
-      local AttackUnits = 1
-      for i = 1, AttackUnits  do
-         Goto(BuildObject("fvarch",6, GetPositionNear("spawn1.2", 0 , 10, 50)), "spawn1c");
-      end
-   end
-
-   if((attackGreenSquad == true) and (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0))then
-
-      local AttackUnits = 2
-      for i = 1, AttackUnits  do
-         Goto(BuildObject("fvtank",6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a");
-         Goto(BuildObject("fvtank",6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b");
-         --print("Enemy spawned to attack at 2 minute marker");
-      end
-
-   end
+	if((attackGreenSquad == true) and (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0)) then
+		local AttackUnits = 2
+		for i = 1, AttackUnits  do
+		 Goto(BuildObject("fvtank",6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a");
+		 Goto(BuildObject("fvtank",6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b");
+		end
+	end
 end
 
 

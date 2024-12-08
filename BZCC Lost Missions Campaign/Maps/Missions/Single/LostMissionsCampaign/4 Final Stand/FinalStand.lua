@@ -11,8 +11,20 @@ Battlezone Lost Missions Campaign | Mission 5: Final Stand
 Event Scripting: Ethan Herndon "F9bomber"
 Map Design and SFX: SirBramley
 Voice Acting: Ken Miller, Nathan Mates, and SirBramley
-
 ]] --
+
+local ai = require("ai_functions");
+
+unitList = {
+	function() return Goto(BuildObject("fvarch", 6, GetPositionNear("l1spawn", 0, 10, 50)), "attackrun1") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("w1spawn", 0, 10, 50)), "attackrun1") end, 
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("w2spawn", 0, 10, 50)), "attackrun1") end,
+	function() return Goto(BuildObject("fvarch", 6, GetPositionNear("l2spawn", 0, 10, 50)), "attackrun2") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("w3spawn", 0, 10, 50)), "attackrun2") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("w4spawn", 0, 10, 50)), "attackrun2") end,	 
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("w1spawn", 0, 10, 50)), "attackrun3") end,
+	function() return Goto(BuildObject("fvwalk", 6, GetPositionNear("m1spawn", 0, 10, 50)), "attackrun3") end,
+}
 
 local Mission = {
     --Integers--
@@ -40,98 +52,91 @@ local Mission = {
     testBool = false,
     setRumble = false,
     setExplosion = false,
-    --ISDF--
+    
+	-- ISDF
     PlayerH = GetPlayerHandle(),
     HumanRecycler = GetHandle("Recycler"),
     navpoint,
     comBunker,
-    --------
 
-    --Red Squad--
+    -- Red Squad
     covell,
     scout1,
     scout2,
-    -------------
 
-    --Green Squad--
+    -- Green Squad
     mates,
     tank1,
     tank2,
     cons,
     cons2,
-    ---------------
 
-    --Scions--
+    -- Scions
     Warrior,
     Scout,
     Sentry,
     AlienStructure,
     EnemyRecycler = GetHandle("Matriarch"),
-    ---------------
 
-    --Orange Squad--
+    -- Orange Squad
     katherlyn,
     commTower,
     dabombdotcom,
     oRecy
-
-    ---------------
-
-    ---------------------
 }
 
 function Save()
-    return Mission
+	return Mission
 end
 
 function Load(...)
-    if select("#", ...) > 0 then
-        Mission = ...
-    end
+	if select("#", ...) > 0 then
+		Mission = ...
+	end
 end
 
 function AddObject(h)
-    if (IsOdf(h, "ivrecy")) then
-        Mission.Recycler = h
-        AddScrap(1, 40)
-    end
+	if (IsOdf(h, "ivrecy")) then
+		Mission.Recycler = h
+		AddScrap(1, 40)
+	end
 
-    if (IsOdf(h, "ibrecy")) then
-        Mission.Recycler = h
-    end
+	if (IsOdf(h, "ibrecy")) then
+		Mission.Recycler = h
+	end
 
-    if (IsOdf(h, "fvrecy")) then
-        Mission.EnemyRecycler = h
-    end
+	if (IsOdf(h, "fvrecy")) then
+		Mission.EnemyRecycler = h
+	end
 
-    if (IsOdf(h, "fbrecy")) then
-        Mission.EnemyRecycler = h
-    end
+	if (IsOdf(h, "fbrecy")) then
+		Mission.EnemyRecycler = h
+	end
 end
 
-function DeleteObject(h) --This function is called when an object is deleted in the game.
+function DeleteObject(h) -- This function is called when an object is deleted in the game.
 end
 
 function InitialSetup()
-    Mission.TPS = EnableHighTPS()
-    AllowRandomTracks(true)
+	Mission.TPS = EnableHighTPS()
+	AllowRandomTracks(true)
 
-    local preloadODF = {
-        "ivrecy",
-        "fvrecy",
-        "ibrecy",
-        "fvrecy"
-    }
+	local preloadODF = {
+		"ivrecy",
+		"fvrecy",
+		"ibrecy",
+		"fvrecy"
+	}
 
-    for k, v in pairs(preloadODF) do
-        PreloadODF(v)
-    end
+	for k, v in pairs(preloadODF) do
+		PreloadODF(v)
+	end
 
-    AddScrap(1, 40)
-    AddScrap(6, 40)
+	AddScrap(1, 40)
+	AddScrap(6, 40)
 end
 
-function Start() --This function is called upon the first frame
+function Start() -- This function is called upon the first frame
     SetAutoGroupUnits(false)
 
     AddScrap(1, 40)
@@ -143,31 +148,20 @@ function Start() --This function is called upon the first frame
     print("Special thanks to Ken Miller, Nathan Mates, and SirBramley for voice acting")
 
     Mission.HumanRecycler = BuildObject("ivrecy", 1, "rec")
-     --
-    --print("recycler is " .. tostring(Mission.HumanRecycler));
-    --print("my handle is " .. tostring(Mission.PlayerH));
+   
+    -- Orange Squad
+	SetTeamColor(13, SetVector(230, 92, 0))
 
-    --------------------------------------------------------
-    ------------Colors Done by Ethan Herndon-----1/10/21----
-    --Coronavirus
-    --------------------------------------------------------
+    -- Red Squad
+	SetTeamColor(15, SetVector(171, 0, 0))
 
-    --[[Orange Squad]] SetTeamColor(13, SetVector(230, 92, 0))
-     --
-
-    --[[Red Squad]] SetTeamColor(15, SetVector(171, 0, 0))
-     --
-
-    --[[Green Squad]] SetTeamColor(14, SetVector(0, 153, 0))
+    -- Green Squad
+	SetTeamColor(14, SetVector(0, 153, 0))
     SetTeamColor(12, SetVector(0, 153, 0))
-     --
 
-    --[[Gray Enemy Color]] SetTeamColor(6, SetVector(128, 128, 128))
-     --
+    -- Blue Squad
+	SetTeamColor(1, SetVector(77, 210, 255))
 
-    --[[Blue Squad]] SetTeamColor(1, SetVector(77, 210, 255))
-
-    --------------------------------------------------------
     Ally(1, 14)
     Ally(1, 15)
     Ally(1, 13)
@@ -178,9 +172,9 @@ function Start() --This function is called upon the first frame
     Ally(14, 12)
     Ally(13, 12)
     Ally(15, 12)
-     --
 
-    --[[Spawn Local Units]] Mission.covell = BuildObject("ivtank", 15, "cspawn")
+    -- Spawn Local Units
+	Mission.covell = BuildObject("ivtank", 15, "cspawn")
     SetObjectiveName(Mission.covell, "Cmdr. Covell")
     Mission.mates = BuildObject("ivtank", 14, "mspawn")
     SetObjectiveName(Mission.mates, "Sgt. Mates")
@@ -202,261 +196,205 @@ function Start() --This function is called upon the first frame
     SetAIP("stock_if1.aip", 14)
     SetAIP("stock_if1.aip", 15)
 
-    local SpawnScavUnits = 6
-    local SpawnConsUnits = 1
-    for i = 1, SpawnScavUnits do
-        local spawnScavs = BuildObject("fvscav", 6, "RecyclerEnemy")
-    end
-
-    for i = 1, SpawnConsUnits do
-        local spawnScavs = BuildObject("fvcons", 6, "RecyclerEnemy")
-    end
+	ai.buildUnitsAtStart("fvscav", 6, "RecyclerEnemy", 6);
+	ai.buildUnitsAtStart("fvcons", 6, "RecyclerEnemy", 1);
 end
 
 function Update() --This function runs on every frame.
-    Mission.TurnCounter = Mission.TurnCounter + 1
+	Mission.TurnCounter = Mission.TurnCounter + 1
 
-    SurvivalLogic() -- Ethan Herndon
-    objectiveSetup() -- Ethan Herndon
-    GreenSquadSetup() -- Ethan Herndon
-    createForwardPosition() -- Ethan Herndon
-    failConditions() -- Ethan Herndon
+	SurvivalLogic() -- Ethan Herndon
+	objectiveSetup() -- Ethan Herndon
+	GreenSquadSetup() -- Ethan Herndon
+	createForwardPosition() -- Ethan Herndon
+	failConditions() -- Ethan Herndon
 end
 
 function objectiveSetup()
-    if ((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(3)) then --5 Seconds
-        print("Player is in phase 1 on Final Stand Mission")
-        --print("play audio 1");
-        AudioMessage("FS_finalstand_harper_1a.wav")
-        AddObjective(Mission._Text1, "yellow", 15.0)
-        Patrol(Mission.covell, "cpatrol", 1)
-        Patrol(Mission.mates, "mpatrol", 1)
-        Patrol(Mission.katherlyn, "kpatrol", 1)
-        Patrol(Mission.tank1, "upatrol", 1)
-        Patrol(Mission.tank2, "upatrol", 1)
-        Patrol(Mission.scout1, "upatrol", 1)
-        Patrol(Mission.scout2, "upatrol", 1)
-        Mission.ObjectiveZero = true
-    end
+	if ((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(3)) then -- 5 Seconds
+		print("Player is in phase 1 on Final Stand Mission")
+		AudioMessage("FS_finalstand_harper_1a.wav")
+		AddObjective(Mission._Text1, "yellow", 15.0)
+		Patrol(Mission.covell, "cpatrol", 1)
+		Patrol(Mission.mates, "mpatrol", 1)
+		Patrol(Mission.katherlyn, "kpatrol", 1)
+		Patrol(Mission.tank1, "upatrol", 1)
+		Patrol(Mission.tank2, "upatrol", 1)
+		Patrol(Mission.scout1, "upatrol", 1)
+		Patrol(Mission.scout2, "upatrol", 1)
+		Mission.ObjectiveZero = true
+	end
 
-    if ((Mission.ObjectiveOne == false) and Mission.TurnCounter == SecondsToTurns(900)) then
-        print("Player is in phase 2 on Final Stand Mission")
-        --print("play audio 2");
-        AudioMessage("FS_Line4.wav")
-        ClearObjectives()
-        AddObjective(Mission._Text2, "yellow", 15.0)
-        Mission.navpoint = BuildObject("ibnav", 1, "comnav")
-        SetObjectiveName(Mission.navpoint, "Forward Position")
-        SetObjectiveOn(Mission.navpoint)
-        Mission.ObjectiveOne = true
-    end
+	if ((Mission.ObjectiveOne == false) and Mission.TurnCounter == SecondsToTurns(900)) then
+		print("Player is in phase 2 on Final Stand Mission")
+		AudioMessage("FS_Line4.wav")
+		ClearObjectives()
+		AddObjective(Mission._Text2, "yellow", 15.0)
+		Mission.navpoint = BuildObject("ibnav", 1, "comnav")
+		SetObjectiveName(Mission.navpoint, "Forward Position")
+		SetObjectiveOn(Mission.navpoint)
+		Mission.ObjectiveOne = true
+	end
 
-    if ((Mission.ObjectiveThree == false) and (not IsAlive(Mission.AlienStructure))) then -- Key alien structure
-        print("Player is in phase 4 on Final Stand Mission")
-        ClearObjectives()
-        AddObjective(Mission._Text4, "green", 15.0)
-        --print("play audio 4");
-        AudioMessage("FS_finalstand_harper_4c.wav")
-        Mission.ObjectiveThree = true
-    end
+	if ((Mission.ObjectiveThree == false) and (not IsAlive(Mission.AlienStructure))) then -- Key alien structure
+		print("Player is in phase 4 on Final Stand Mission")
+		ClearObjectives()
+		AddObjective(Mission._Text4, "green", 15.0)
+		AudioMessage("FS_finalstand_harper_4c.wav")
+		Mission.ObjectiveThree = true
+	end
 
-    if ((Mission.ObjectiveThree == true) and (Mission.ObjectiveFour == false) and (not IsAlive(Mission.AlienStructure))) then -- Key alien structure
-        print("Player is in last phase on Final Stand Mission")
-        ClearObjectives()
-        Mission.dabombdotcom = BuildObject("dabomb", 1, "kspawn")
-        SetObjectiveName(Mission.dabombdotcom, "The Bomb")
-        SetObjectiveOn(Mission.dabombdotcom)
-        Mission.navpoint = BuildObject("ibnav", 1, "hold3")
-        SetObjectiveName(Mission.navpoint, "Evac Site")
-        SetObjectiveOn(Mission.navpoint)
-        AddObjective(Mission._Text5, "yellow", 15.0)
-        --print("play audio 5");
-        AudioMessage("FS_010.wav")
+	if ((Mission.ObjectiveThree == true) and (Mission.ObjectiveFour == false) and (not IsAlive(Mission.AlienStructure))) then -- Key alien structure
+		print("Player is in last phase on Final Stand Mission")
+		ClearObjectives()
+		Mission.dabombdotcom = BuildObject("dabomb", 1, "kspawn")
+		SetObjectiveName(Mission.dabombdotcom, "The Bomb")
+		SetObjectiveOn(Mission.dabombdotcom)
+		Mission.navpoint = BuildObject("ibnav", 1, "hold3")
+		SetObjectiveName(Mission.navpoint, "Evac Site")
+		SetObjectiveOn(Mission.navpoint)
+		AddObjective(Mission._Text5, "yellow", 15.0)
+		AudioMessage("FS_010.wav")
 
-        rumbleTime = GetTime() + 25.0
-        explosionTime = GetTime() + 29.35
-        Mission.setExplosion = true
-        Mission.setRumble = true
+		rumbleTime = GetTime() + 25.0
+		explosionTime = GetTime() + 29.35
+		Mission.setExplosion = true
+		Mission.setRumble = true
 
-        SucceedMission(GetTime() + 29.5, "final.des")
-        Mission.ObjectiveFour = true
-    end
+		SucceedMission(GetTime() + 29.5, "final.des")
+		Mission.ObjectiveFour = true
+	end
 
-    if Mission.setRumble == true and Mission.TurnCounter == SecondsToTurns(rumbleTime) then
-        StartEarthQuake(30.0)
-        Mission.setRumble = false
-    end
+	if Mission.setRumble == true and Mission.TurnCounter == SecondsToTurns(rumbleTime) then
+		StartEarthQuake(30.0)
+		Mission.setRumble = false
+	end
 
-    if Mission.setExplosion == true and Mission.TurnCounter == SecondsToTurns(rumbleTime) then
-        SetColorFade(1, 0.1, "white")
-        Mission.setRumble = false
-    end
+	if Mission.setExplosion == true and Mission.TurnCounter == SecondsToTurns(rumbleTime) then
+		SetColorFade(1, 0.1, "white")
+		Mission.setRumble = false
+	end
 end
 
 function GreenSquadSetup()
-    if (Mission.TurnCounter == SecondsToTurns(1)) then
-        Mission.cons = BuildObject("ivcons", 12, "con1")
-        Mission.cons2 = BuildObject("ivcons", 12, "con2")
-        SetLabel(Mission.cons, "GreenSquadCons")
-        Goto(Mission.cons, "con1build")
-        SetLabel(Mission.cons2, "GreenSquadCons1")
-        Goto(Mission.cons2, "con2build")
-    end
+	if (Mission.TurnCounter == SecondsToTurns(1)) then
+		Mission.cons = BuildObject("ivcons", 12, "con1")
+		Mission.cons2 = BuildObject("ivcons", 12, "con2")
+		SetLabel(Mission.cons, "GreenSquadCons")
+		Goto(Mission.cons, "con1build")
+		SetLabel(Mission.cons2, "GreenSquadCons1")
+		Goto(Mission.cons2, "con2build")
+	end
 
-    if (Mission.TurnCounter == SecondsToTurns(30)) then --- 30 secs
-        local cons = Mission.cons
-        local cons2 = Mission.cons2
-        cons = GetHandle("GreenSquadCons")
-        cons2 = GetHandle("GreenSquadCons1")
-        if (cons ~= nil) then
-            --print("G Handle ");
-            Build(cons, "ibgtoww2", 1)
-            Build(cons2, "ibgtoww2", 1)
-        --print("build ");
-        end
-    end
+	if (Mission.TurnCounter == SecondsToTurns(30)) then
+		local cons = Mission.cons
+		local cons2 = Mission.cons2
+		cons = GetHandle("GreenSquadCons")
+		cons2 = GetHandle("GreenSquadCons1")
+		if (cons ~= nil) then
+			Build(cons, "ibgtoww2", 1)
+			Build(cons2, "ibgtoww2", 1)
+		end
+	end
 
-    if (Mission.TurnCounter == SecondsToTurns(35)) then --- 35 secs
-        local cons = Mission.cons
-        local cons2 = Mission.cons2
-        cons = GetHandle("GreenSquadCons")
-        cons2 = GetHandle("GreenSquadCons1")
-        if (cons ~= nil) then
-            Dropoff(cons, "con1build")
-            Dropoff(cons2, "con2build")
-        end
-    end
+	if (Mission.TurnCounter == SecondsToTurns(35)) then
+		local cons = Mission.cons
+		local cons2 = Mission.cons2
+		cons = GetHandle("GreenSquadCons")
+		cons2 = GetHandle("GreenSquadCons1")
+		if (cons ~= nil) then
+			Dropoff(cons, "con1build")
+			Dropoff(cons2, "con2build")
+		end
+	end
 
-    if (Mission.TurnCounter == SecondsToTurns(60)) then --- 60 secs
-        local cons = Mission.cons
-        local cons2 = Mission.cons2
-        cons = GetHandle("GreenSquadCons")
-        cons2 = GetHandle("GreenSquadCons1")
-        if (cons ~= nil) then
-            Goto(cons, "mspawn")
-            Goto(cons2, "mspawn")
-        end
-    end
+	if (Mission.TurnCounter == SecondsToTurns(60)) then
+		local cons = Mission.cons
+		local cons2 = Mission.cons2
+		cons = GetHandle("GreenSquadCons")
+		cons2 = GetHandle("GreenSquadCons1")
+		if (cons ~= nil) then
+			Goto(cons, "mspawn")
+			Goto(cons2, "mspawn")
+		end
+	end
 end
 
 function createForwardPosition()
-    if (Mission.TurnCounter == SecondsToTurns(900)) then --900
-        BuildObject("ivturr", 14, "fodder1")
-        BuildObject("ivturr", 14, "fodder6")
-        local FodderUnits = 3
-        for i = 1, FodderUnits do
-            BuildObject("ivtank", 14, "fodder1")
-            BuildObject("ivtank", 14, "fodder2")
-            BuildObject("ivtank", 14, "fodder3")
-            BuildObject("ivscout", 14, "fodder4")
-            BuildObject("ivscout", 14, "fodder5")
-            --print("15 minute marker");
-        end
+	if (Mission.TurnCounter == SecondsToTurns(900)) then
+		BuildObject("ivturr", 14, "fodder1")
+		BuildObject("ivturr", 14, "fodder6")
+		local FodderUnits = 3
+		for i = 1, FodderUnits do
+			BuildObject("ivtank", 14, "fodder1")
+			BuildObject("ivtank", 14, "fodder2")
+			BuildObject("ivtank", 14, "fodder3")
+			BuildObject("ivscout", 14, "fodder4")
+			BuildObject("ivscout", 14, "fodder5")
+		end
 
-        local cons = Mission.cons
-        cons = GetHandle("GreenSquadCons")
-        SetObjectiveOn(cons)
-        Goto(cons, "comnav")
-    end
-    --(GetDistance(Mission.HumanRecycler,"nav1") < 100.0))
-    --if (Mission.TurnCounter == SecondsToTurns(1320)) then --1320 secs
-    if (GetDistance(Mission.cons, "comnav") == 10.0) then
-        local cons = Mission.cons
-        cons = GetHandle("GreenSquadCons")
-        if (cons ~= nil) then
-            --print("G Handle ");
-            Build(cons, "ibgtoww2", 1)
-        --print("build ");
-        end
-    end
+		local cons = Mission.cons
+		cons = GetHandle("GreenSquadCons")
+		SetObjectiveOn(cons)
+		Goto(cons, "comnav")
+	end
+	
+	--(GetDistance(Mission.HumanRecycler,"nav1") < 100.0))
+	--if (Mission.TurnCounter == SecondsToTurns(1320)) then --1320 secs
+	if (GetDistance(Mission.cons, "comnav") == 10.0) then
+		local cons = Mission.cons
+		cons = GetHandle("GreenSquadCons")
+		if (cons ~= nil) then
+			Build(cons, "ibgtoww2", 1)
+		end
+	end
 
-    --if (Mission.TurnCounter == SecondsToTurns(1380)) then --- 1380 secs
-    if (GetDistance(Mission.cons, "comnav") <= 5.0) then
-        local cons = Mission.cons
-        cons = GetHandle("GreenSquadCons")
+	--if (Mission.TurnCounter == SecondsToTurns(1380)) then --- 1380 secs
+	if (GetDistance(Mission.cons, "comnav") <= 5.0) then
+		local cons = Mission.cons
+		cons = GetHandle("GreenSquadCons")
 
-        if (Mission.testBool == false) then
-            --print("play audio 3");
-            AudioMessage("FS_finalstand_harper_3a.wav")
-            print("Player is in phase 3 on Final Stand Mission")
-            Mission.testBool = true
-        end
+		if (Mission.testBool == false) then
+			AudioMessage("FS_finalstand_harper_3a.wav")
+			print("Player is in phase 3 on Final Stand Mission")
+			Mission.testBool = true
+		end
 
-        if (cons ~= nil) then
-            Dropoff(cons, "comnav")
-            ClearObjectives()
-            SetObjectiveOff(Mission.navpoint)
-            SetObjectiveOff(Mission.commTower)
-            AddObjective(Mission._Text3, "green", 15.0)
-            SetObjectiveOff(cons)
-            Mission.ObjectiveTwo = true -- Stops attacking humans
-        end
-    end
+		if (cons ~= nil) then
+			Dropoff(cons, "comnav")
+			ClearObjectives()
+			SetObjectiveOff(Mission.navpoint)
+			SetObjectiveOff(Mission.commTower)
+			AddObjective(Mission._Text3, "green", 15.0)
+			SetObjectiveOff(cons)
+			Mission.ObjectiveTwo = true -- Stops attacking humans
+		end
+	end
 end
 
 function failConditions()
-    if ((Mission.TurnCounter > SecondsToTurns(100)) and (Mission.TurnCounter <= SecondsToTurns(1000))) then --1000
-        Mission.cons = GetHandle("GreenSquadCons")
-        if ((Mission.notAroundBool == false) and not IsAlive(Mission.cons)) then -- Cons1
-            ClearObjectives()
-            print("cons is Dead")
-            AudioMessage("failmessage.wav")
-            AddObjective(Mission._Text6, "red", 15.0)
-            FailMission(GetTime() + 15.0, "cons.des")
-            Mission.notAroundBool = true
-        end
+    if ((Mission.TurnCounter > SecondsToTurns(100)) and (Mission.TurnCounter <= SecondsToTurns(1000))) then -- 1000
+        Mission.cons = GetHandle("GreenSquadCons")		
+		ai.checkMissionObjectStatus(ai, Mission.cons, "Constructor is Died", "failmessage.wav", Mission._Text6, "cons.des", 15.0);
     end
-    if ((Mission.TurnCounter > SecondsToTurns(5)) and (Mission.TurnCounter <= SecondsToTurns(900))) then --900
-        if ((Mission.notAroundBool == false) and not IsAlive(Mission.commTower)) then -- HQ
-            ClearObjectives()
-            print("HQ is Dead")
-            AudioMessage("failmessage.wav")
-            AddObjective(Mission._Text7, "red", 15.0)
-            FailMission(GetTime() + 15.0, "hq.des")
-            Mission.notAroundBool = true
-        end
+	
+    if ((Mission.TurnCounter > SecondsToTurns(5)) and (Mission.TurnCounter <= SecondsToTurns(900))) then -- 900
+		ai.checkMissionObjectStatus(ai, Mission.commTower, "HQ is Dead", "failmessage.wav", Mission._Text7, "hq.des", 15.0);
     end
 
-    if (Mission.TurnCounter > SecondsToTurns(5)) and (Mission.TurnCounter < SecondsToTurns(1000)) then -- Destroyed Enemy Recycler
-        if ((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler)) then
-            ClearObjectives()
-            print("The player destroyed enemy recycler")
-            AudioMessage("failmessage.wav")
-            AddObjective(Mission._Text8, "red", 15.0)
-            FailMission(GetTime() + 5.0)
-            Mission.notAroundBool = true
-        end
+    if (Mission.TurnCounter > SecondsToTurns(5)) then -- Destroyed Enemy Recycler
+        ai.checkMissionObjectStatus(ai, Mission.EnemyRecycler, "The player destroyed enemy recycler", "failmessage.wav", Mission._Text8, "", 5.0);
     end
 end
 
 function SurvivalLogic()
-    if (Mission.ObjectiveTwo == false) and (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
-        local AttackUnits = 1 --attackrun1
-        for i = 1, AttackUnits do
-            Goto(BuildObject("fvarch", 6, GetPositionNear("l1spawn", 0, 10, 50)), "attackrun1")
-            Goto(BuildObject("fvtank", 6, GetPositionNear("w1spawn", 0, 10, 50)), "attackrun1")
-            Goto(BuildObject("fvtank", 6, GetPositionNear("w2spawn", 0, 10, 50)), "attackrun1")
-            --print("Enemy spawned to attack at 2 min marker");
-        end
-
-        local AttackUnits = 1 --attackrun2
-        for i = 1, AttackUnits do
-            Goto(BuildObject("fvarch", 6, GetPositionNear("l2spawn", 0, 10, 50)), "attackrun2")
-            Goto(BuildObject("fvtank", 6, GetPositionNear("w3spawn", 0, 10, 50)), "attackrun2")
-            Goto(BuildObject("fvtank", 6, GetPositionNear("w4spawn", 0, 10, 50)), "attackrun2")
-            --print("Enemy spawned to attack at 2 minute marker");
-        end
+	if (Mission.ObjectiveTwo == false) then -- 2 minutes
+		ai.spawnObjectsAtRepeatTimeWithOrder(Mission.TurnCounter, 120, 1, unitList, 1, 6);
     end
 
     if (Mission.ObjectiveTwo == false) and (math.fmod(Mission.TurnCounter, SecondsToTurns(300)) == 0) then --- 5 minutes
-        local AttackUnits = 1 --attackrun3
-        for i = 1, AttackUnits do
-            Goto(BuildObject("fvtank", 6, GetPositionNear("w1spawn", 0, 10, 50)), "attackrun3") --Original was w5spawn -EH
-            Goto(BuildObject("fvwalk", 6, GetPositionNear("m1spawn", 0, 10, 50)), "attackrun3")
-            --print("Enemy spawned to attack at 5 minute marker");
-        end
+		ai.spawnObjectsAtRepeatTimeWithOrder(Mission.TurnCounter, 300, 1, unitList, 7, 8);
     end
-
     --[[ --With stock units given, it makes it difficult to combat the scion gunship
    if (Mission.ObjectiveTwo == false) and (math.fmod(Mission.TurnCounter, SecondsToTurns(300)) == 0) then --- 5 minutes
 
@@ -466,6 +404,5 @@ function SurvivalLogic()
          print("5 min marker");
       end
    end
-   ]]
- --
+   ]]--
 end

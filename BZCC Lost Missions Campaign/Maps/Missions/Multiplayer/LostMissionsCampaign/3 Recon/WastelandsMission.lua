@@ -11,9 +11,37 @@ Battlezone Lost Missions Campaign | Mission 4: Recon
 Event Scripting: Ethan Herndon "F9bomber"
 Map Design and SFX: SirBramley
 Voice Acting: Ken Miller, Nathan Mates, and SirBramley
-
 ]]--
+
 assert(load(assert(LoadFile("_requirefix.lua")),"_requirefix.lua"))();
+
+local ai = require("ai_functions");
+
+local unitList = {
+	function() return BuildObject("fvtank", 6, "attack1_0") end,
+	function() return BuildObject("fvscout", 6, "attack1_1") end,
+	function() return BuildObject("fvsent", 6, "attack1_2") end,
+	function() return BuildObject("fvtank", 6, "attack1_0") end,
+	function() return BuildObject("fvscout", 6, "attack1_1") end,
+	function() return BuildObject("fvsent", 6, "attack1_2") end,
+	function() return BuildObject("fvtank", 6, "attack2_0") end,
+	function() return BuildObject("fvscout", 6, "attack2_1") end,
+	function() return BuildObject("fvsent", 6, "attack2_2") end,	
+	function() return BuildObject("fvtank", 6, "attack2_0") end,
+	function() return BuildObject("fvscout", 6, "attack2_1") end,
+	function() return BuildObject("fvsent", 6, "attack2_2") end,
+	function() return BuildObject("fvtank", 6, "attack3_0") end,
+	function() return BuildObject("fvscout", 6, "attack3_1") end,
+	function() return BuildObject("fvsent", 6, "attack3_2") end,
+	function() return BuildObject("fvtank", 6, "attack4_0") end,
+	function() return BuildObject("fvtank", 6, "attack1_0") end,
+	function() return BuildObject("fvscout", 6, "attack1_1") end,
+	function() return BuildObject("fvsent", 6, "attack1_2") end,
+	function() return BuildObject("fvtank", 6, "attack1_0") end,
+	function() return BuildObject("fvtank", 6, "attack1_0") end,
+	function() return BuildObject("fvscout", 6, "attack1_1") end,
+	function() return BuildObject("fvsent", 6, "attack1_2") end,
+}
 
 local _StartingVehicles = require("_StartingVehicles");
 
@@ -85,142 +113,130 @@ local TAUNTS_Random = 6;
 local AIPTypeExtensions = '0123als';
 
 local Mission = {
-   -- iVars and Timers
-   DidInit = false,
-   KillLimit = 0,
-   TotalGameTime = 0,
-   PointsForAIKill = 0,
-   KillForAIKill = 0,
-   RespawnWithSniper = 0,
-   TurretAISkill = 0,
-   NonTurretAISkill = 0,
-   StartingVehiclesMask = 0,
-   IsFriendlyFireOn = 0,
-   ElapsedGameTime = 0,
-   RemainingGameTime = 0,
-   TimeCount = 0,
+	-- iVars and Timers
+	DidInit = false,
+	KillLimit = 0,
+	TotalGameTime = 0,
+	PointsForAIKill = 0,
+	KillForAIKill = 0,
+	RespawnWithSniper = 0,
+	TurretAISkill = 0,
+	NonTurretAISkill = 0,
+	StartingVehiclesMask = 0,
+	IsFriendlyFireOn = 0,
+	ElapsedGameTime = 0,
+	RemainingGameTime = 0,
+	TimeCount = 0,
 
-   -- Handles
-   HumanRecycler =  nil,
+	-- Handles
+	HumanRecycler =  nil,
 
-   -- Ints
-   SiegeCounter = 0,
-   AssaultCounter = 0,
-   TurnCounter = 0,
-   FirstAIPSwitchTime = 0,
+	-- Ints
+	SiegeCounter = 0,
+	AssaultCounter = 0,
+	TurnCounter = 0,
+	FirstAIPSwitchTime = 0,
 
-   -- Tables
-   RecyclerHandles = {},
-   SpawnedAtTime = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }, --KM
-   TeamIsSetUp = {},
-   TeamPos = {},
-   NotedRecyclerLocation = {},
+	-- Tables
+	RecyclerHandles = {},
+	SpawnedAtTime = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }, --KM
+	TeamIsSetUp = {},
+	TeamPos = {},
+	NotedRecyclerLocation = {},
 
-   -- Strat Team Variables
-   NumHumans = 0,
-   StratTeam = 1,
-   HumanForce = 0,
-   HumanReinforcementTime = 2500;
+	-- Strat Team Variables
+	NumHumans = 0,
+	StratTeam = 1,
+	HumanForce = 0,
+	HumanReinforcementTime = 2500;
 
-   -- Booleans
-   StartDone = false,
-   HumanTeamRace = false,
-   CreatingStartingVehicles = false,
-   RespawnAtLowAltitude = false,
-   GameOver = false,
-   HadMultipleFunctioningTeams = false,
-   PastAIP0 = false,
-   LateGame = false,
-   SiegeOn = false,
-   setFirstAIP = false,
-   AntiAssault = false,
+	-- Booleans
+	StartDone = false,
+	HumanTeamRace = false,
+	CreatingStartingVehicles = false,
+	RespawnAtLowAltitude = false,
+	GameOver = false,
+	HadMultipleFunctioningTeams = false,
+	PastAIP0 = false,
+	LateGame = false,
+	SiegeOn = false,
+	setFirstAIP = false,
+	AntiAssault = false,
 
-   LastCPUPlan = 0,
-   CustomAIPNameBase = nil,
+	LastCPUPlan = 0,
+	CustomAIPNameBase = nil,
 
-   -- CPU Variables
-   CPUHasArmory = false,
-   CPUTeamRace = nil,
-   CPUTeamNum = 6,
-   NumCPUScavs = 0,
-   CPUCommBunkerCount = 0,
+	-- CPU Variables
+	CPUHasArmory = false,
+	CPUTeamRace = nil,
+	CPUTeamNum = 6,
+	NumCPUScavs = 0,
+	CPUCommBunkerCount = 0,
 
-   CPURecycler = nil,
-   CPUScavList = {},
+	CPURecycler = nil,
+	CPUScavList = {},
 
-   CPUForce = 0,
-   CPUTurretAISkill = 0,
-   CPUNonTurretAISkill = 0,
-   CPUReinforcementTime = 2000;
+	CPUForce = 0,
+	CPUTurretAISkill = 0,
+	CPUNonTurretAISkill = 0,
+	CPUReinforcementTime = 2000;
 
-   --Mission Variables--
-   _Text1 = "OBJECTIVE: Escort the transport. It must survive!\n\nDo not deploy recycler.";
-   _Text2 = "Scion presence confirmed. Protect that transport!";
-   _Text3 = "Keep your eyes open, this area is getting hot.";
-   _Text4 = "The Scions heavy presences confirms that this planet is where they are gathering morphing resources.";
-   _Text5 = "Green Squad will cover your position. Ensure the transport makes it back to landing zone.";
-   _Text6 = "Congratulations! Hang tight will Blue, Red, and Green Squad will come for base deployment";
-   _Text7 = "You disobeyed a direct order. Consider the mission a failure.";
-   _Text8 = "Mission Failed! Consider the objective scrubbed.\n\nTransport has died.";
-
-
-   SurvivalWaveTime30 = 0;
-   SurvivalWaveTime33 = 0;
-   i = 0;
-
-   ObjectiveZero = false;
-   ObjectiveOne = false;
-   ObjectiveTwo = false;
-   ObjectiveThree = false;
-   ObjectiveFour = false;
-   ObjectiveFive = false;
-   ObjectiveSix = false;
-   ObjectiveSeven = false;
-   ObjectiveEight = false;
-   notAroundBool = false;
-
-   --ISDF--
-   PlayerH;
-   rec ="ibrecy";
-   --------
-
-   --Red Squad--
-   transport;
-   covell;
-   turret;
-   -------------
-
-   --Green Squad--
-   mates;
-   gTank;
-   gScout;
-   gScout1;
-   ---------------
-
-   --Scions--
-   Warrior;
-   Scout;
-   Sentry;
-   AlienStructure;
-   EnemyRecycler = GetHandle("Matriarch");
-   ---------------
-
-   --Blue Squad--
-
-   ---------------
-
-   ---------------------
+	--Mission Variables--
+	_Text1 = "OBJECTIVE: Escort the transport. It must survive!\n\nDo not deploy recycler.";
+	_Text2 = "Scion presence confirmed. Protect that transport!";
+	_Text3 = "Keep your eyes open, this area is getting hot.";
+	_Text4 = "The Scions heavy presences confirms that this planet is where they are gathering morphing resources.";
+	_Text5 = "Green Squad will cover your position. Ensure the transport makes it back to landing zone.";
+	_Text6 = "Congratulations! Hang tight will Blue, Red, and Green Squad will come for base deployment";
+	_Text7 = "You disobeyed a direct order. Consider the mission a failure.";
+	_Text8 = "Mission Failed! Consider the objective scrubbed.\n\nTransport has died.";
 
 
+	SurvivalWaveTime30 = 0;
+	SurvivalWaveTime33 = 0;
+	i = 0;
+
+	ObjectiveZero = false;
+	ObjectiveOne = false;
+	ObjectiveTwo = false;
+	ObjectiveThree = false;
+	ObjectiveFour = false;
+	ObjectiveFive = false;
+	ObjectiveSix = false;
+	ObjectiveSeven = false;
+	ObjectiveEight = false;
+	notAroundBool = false;
+
+	-- ISDF
+	PlayerH;
+	rec ="ibrecy";
+
+	-- Red Squad
+	transport;
+	covell;
+	turret;
+	
+	-- Green Squad
+	mates;
+	gTank;
+	gScout;
+	gScout1;
+	
+	-- Scions
+	Warrior;
+	Scout;
+	Sentry;
+	AlienStructure;
+	EnemyRecycler = GetHandle("Matriarch");
 }
 
 local CheckedSVar3 = false;
 local debug = false;
 
 function InitialSetup()
-   GameTPS = EnableHighTPS();
+	GameTPS = EnableHighTPS();
 
-   WantBotKillMessages();
+	WantBotKillMessages();
 
 	local preloadODF = {
 		"ivrecy",
@@ -232,26 +248,25 @@ function InitialSetup()
 	for k,v in pairs(preloadODF) do
 		PreloadODF(v)
 	end
-	
 
-   CreateObjectives();
+	CreateObjectives();
 end
 
 function Save()
-   return Mission, _StartingVehicles.Save();
+	return Mission, _StartingVehicles.Save();
 end
 
 function Load(MissionData, StartingVehicleData)
-   GameTPS = EnableHighTPS();
-   SetAutoGroupUnits(false);
+	GameTPS = EnableHighTPS();
+	SetAutoGroupUnits(false);
 
-   WantBotKillMessages();
+	WantBotKillMessages();
 
-   Mission = MissionData;
+	Mission = MissionData;
 
-   _StartingVehicles.Load(StartingVehicleData);
+	_StartingVehicles.Load(StartingVehicleData);
 
-   CreateObjectives();
+	CreateObjectives();
 end
 
 function CreateObjectives()
@@ -260,20 +275,18 @@ function CreateObjectives()
 end
 
 function AddObject(h, IsStartingVehicles)
-
    local ODFName = GetCfg(h);
    local ObjClass = GetClassLabel(h);
 
    local fRandomNum = GetRandomFloat(1.0);
 
- if (IsOdf(h, "fvrecy")) then
-   Mission.EnemyRecycler = h
-end
+	if (IsOdf(h, "fvrecy")) then
+		Mission.EnemyRecycler = h
+	end
 
-if (IsOdf(h, "fbrecy")) then
-   Mission.EnemyRecycler = h
-   
-end
+	if (IsOdf(h, "fbrecy")) then
+		Mission.EnemyRecycler = h
+	end
 
 
    if (Mission.TurnCounter < 2) then
@@ -540,53 +553,42 @@ function Start()
 
    DoTaunt(TAUNTS_GameStart);
 
-   if (debug) then
-      Ally(Mission.StratTeam, Mission.CPUTeamNum);
-      Ally(Mission.CPUTeamNum, Mission.StratTeam);
-   end
+	if (debug) then
+		Ally(Mission.StratTeam, Mission.CPUTeamNum);
+		Ally(Mission.CPUTeamNum, Mission.StratTeam);
+	end
 
-   --------------------------------------------------------
-   ------------Colors Done by Ethan Herndon-----1/10/21----
-   --Coronavirus
-   --------------------------------------------------------
+	-- Orange Squad 
+	SetTeamColor(1, SetVector(230, 92, 0));
 
-   --[[Orange Squad]]--
-   SetTeamColor(1, SetVector(230, 92, 0));
-   SetTeamColor(2, SetVector(230, 92, 0));
-   SetTeamColor(3, SetVector(230, 92, 0));
-   SetTeamColor(4, SetVector(230, 92, 0));
+	-- Red Squad
+	SetTeamColor(15, SetVector(171, 0, 0));
 
-   --[[Red Squad]]--
-   SetTeamColor(15, SetVector(171, 0, 0));
+	-- Green Squad
+	SetTeamColor(14, SetVector(0, 153, 0));
 
-   --[[Green Squad]]--
-   SetTeamColor(14, SetVector(0, 153, 0));
+	--[[Gray Enemy Color]]--
+	SetTeamColor(6, SetVector(128, 128, 128));
 
-   --[[Gray Enemy Color]]--
-   SetTeamColor(6, SetVector(128, 128, 128));
+	Ally(1, 14)
+	Ally(2, 14)
+	Ally(3, 14)
+	Ally(4, 14)
+	Ally(1, 15)
+	Ally(2, 15)
+	Ally(3, 15)
+	Ally(4, 15)
+	Ally(14, 15)
 
-   --------------------------------------------------------
-   Ally(1, 14)
-   Ally(2, 14)
-   Ally(3, 14)
-   Ally(4, 14)
-   Ally(1, 15)
-   Ally(2, 15)
-   Ally(3, 15)
-   Ally(4, 15)
-   Ally(14, 15)
-
-   --[[Spawn Local Units]]--
-   Mission.transport=BuildObject("ivstasM3",15,"tspawn");
+   -- Spawn Local Units
+   Mission.transport = BuildObject("ivstasM3", 15, "tspawn");
    SetObjectiveName(Mission.transport, "Sonar Surveyor Vessel");
-   Mission.covell=BuildObject("ivtank_c",15,"cspawn");
+   Mission.covell = BuildObject("ivtank_c", 15, "cspawn");
    SetObjectiveName(Mission.covell, "Cmdr. Covell");
-   Mission.mates=BuildObject("ivtank_mates",14,"mspawn");
+   Mission.mates = BuildObject("ivtank_mates", 14, "mspawn");
    SetObjectiveName(Mission.mates, "Sgt. Mates");
-   Mission.turret=BuildObject("ivturr",15,"t1spawn");
-   Mission.turret=BuildObject("ivturr",15,"t2spawn");
-
-
+   Mission.turret = BuildObject("ivturr", 15, "t1spawn");
+   Mission.turret = BuildObject("ivturr", 15, "t2spawn");
 end
 
 function Update()
@@ -621,199 +623,116 @@ function Update()
 end
 
 function objectiveSetup()
-
-   if((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(3))then --5 Seconds
-      print("Player is in phase 1 on Recon Mission");
-      --print("play audio 1");
-	  AudioMessage("RC_001.wav");
-      SetObjectiveOn(Mission.transport)
-      AddObjective(Mission._Text1, "yellow", 15.0);
-      Follow(Mission.covell,Mission.transport);
-      Follow(Mission.mates,Mission.covell);
-      Goto(Mission.transport, "troute");
-      Mission.ObjectiveZero = true;
-   end
-
-   if((Mission.TurnCounter > SecondsToTurns(5)) )then
-      if ((Mission.notAroundBool == false) and  not IsAlive(Mission.transport))then -- Transport
-         ClearObjectives();
-         print("Transport is Dead");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text8, "red", 15.0);
-         DoGameover(15.0);
-         Mission.notAroundBool = true;
-      end
-
-      if ((Mission.notAroundBool == false) and IsBuilding(Mission.HumanRecycler))then -- Deployed Recycler
-         ClearObjectives();
-         print("The player deployed the recycler");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text7, "red", 15.0);
-         DoGameover(15.0);
-         Mission.notAroundBool = true;
-      end
-
-	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
-		ClearObjectives();
-         print("The player destroyed enemy recycler");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text7, "red", 15.0);
-         FailMission(GetTime() + 5.0)
-         Mission.notAroundBool = true;
+	if ((Mission.ObjectiveZero == false) and Mission.TurnCounter == SecondsToTurns(3)) then -- 5 Seconds
+		print("Player is in phase 1 on Recon Mission");
+		AudioMessage("RC_001.wav");
+		SetObjectiveOn(Mission.transport)
+		AddObjective(Mission._Text1, "yellow", 15.0);
+		Follow(Mission.covell,Mission.transport);
+		Follow(Mission.mates,Mission.covell);
+		Goto(Mission.transport, "troute");
+		Mission.ObjectiveZero = true;
 	end
-
-
-   end
-
-
+	
+	if ((Mission.TurnCounter > SecondsToTurns(5)) )then
+		ai.checkMissionObjectStatus(ai, Mission.transport, "Transport is Dead", "failmessage.wav", Mission._Text8, "transpo.des", 15.0);
+		ai.checkMissionObjectStatus(ai, Mission.EnemyRecycler, "The player destroyed enemy recycler", "failmessage.wav", Mission._Text7, "", 5.0);
+		
+		if ((Mission.notAroundBool == false) and IsBuilding(Mission.HumanRecycler)) then -- Deployed Recycler
+			ClearObjectives();
+			print("The player deployed the recycler");
+			AudioMessage("failmessage.wav");
+			AddObjective(Mission._Text7, "red", 15.0);
+			FailMission(GetTime() + 15.0, "recycler.des")
+			Mission.notAroundBool = true;
+		end
+	end
 end
 
 function SurvivalLogic()
-
 	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
-        AddHealth(Mission.EnemyRecycler, 100);
+		AddHealth(Mission.EnemyRecycler, 100);
 	end
 
-   if((Mission.ObjectiveOne == false) and GetDistance(Mission.transport,"check1") < 80.0)then
-      ClearObjectives();
-      --print("play audio 2");
-	  AudioMessage("RC_001_MajCollins.wav");
-      print("Player is in phase 2 on Recon Mission");
-      Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack1_1");
-      Mission.Sentry=BuildObject("fvsent",6,"attack1_2");
-      SetObjectiveOn(Mission.Warrior)
-      SetObjectiveOn(Mission.Scout)
-      SetObjectiveOn(Mission.Sentry)
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      AddObjective(Mission._Text2, "white", 15.0);
-      Mission.ObjectiveOne = true;
-   end
+	if ((Mission.ObjectiveOne == false) and GetDistance(Mission.transport, "check1") < 80.0) then
+		ClearObjectives();
+		AudioMessage("RC_001_MajCollins.wav");
+		print("Player is in phase 2 on Recon Mission");
+		ai.spawnHighlightAttackerObjects(unitList, 1, Mission.transport, 1, 3);
+		AddObjective(Mission._Text2, "white", 15.0);
+		Mission.ObjectiveOne = true;
+	end
 
-   if((Mission.ObjectiveTwo == false) and GetDistance(Mission.transport,"check2") < 100.0)then
-      ClearObjectives();
-      --print("play audio 3");
-      print("Player is in phase 3 on Recon Mission");
-	  Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack1_1");
-      Mission.Sentry=BuildObject("fvsent",6,"attack1_2");
-      SetObjectiveOn(Mission.Warrior)
-      SetObjectiveOn(Mission.Scout)
-      SetObjectiveOn(Mission.Sentry)
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      Mission.ObjectiveTwo = true;
-   end
+	if ((Mission.ObjectiveTwo == false) and GetDistance(Mission.transport, "check2") < 100.0) then
+		ClearObjectives();
+		print("Player is in phase 3 on Recon Mission");
+		ai.spawnHighlightAttackerObjects(unitList, 1, Mission.transport, 4, 6);
+		Mission.ObjectiveTwo = true;
+	end
 
-   if((Mission.ObjectiveThree == false) and GetDistance(Mission.transport,"check3") < 80.0)then
-      ClearObjectives();
-      --print("play audio 4");
-	  AudioMessage("R_recon_harper_3.wav");
-      print("Player is in phase 4 on Recon Mission");
-      Mission.Warrior=BuildObject("fvtank",6,"attack2_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack2_1");
-      Mission.Sentry=BuildObject("fvsent",6,"attack2_2");
-      SetObjectiveOn(Mission.Warrior)
-      SetObjectiveOn(Mission.Scout)
-      SetObjectiveOn(Mission.Sentry)
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      AddObjective(Mission._Text3, "white", 15.0);
-      Mission.ObjectiveThree = true;
-   end
+	if ((Mission.ObjectiveThree == false) and GetDistance(Mission.transport, "check3") < 80.0) then
+		ClearObjectives();
+		AudioMessage("R_recon_harper_3.wav");
+		print("Player is in phase 4 on Recon Mission");
+		ai.spawnHighlightAttackerObjects(unitList, 1, Mission.transport, 7, 9);
+		AddObjective(Mission._Text3, "white", 15.0);
+		Mission.ObjectiveThree = true;
+	end
 
+	if ((Mission.ObjectiveFour == false) and GetDistance(Mission.transport, "check4") < 30.0) then
+		ClearObjectives();
+		print("Player is in phase 5 on Recon Mission");
+		AudioMessage("R_recon_harper_4.wav");
+		ai.spawnAttackerbjects(unitList, 1, Mission.transport, 10, 12);
+		Mission.AlienStructure = BuildObject("ibtele", 6, "alien");
+		SetObjectiveName(Mission.AlienStructure, "Key Alien Structure");
+		SetObjectiveOn(Mission.AlienStructure)
+		AddObjective(Mission._Text4, "white", 15.0);
+		Mission.ObjectiveFour = true;
+	end
 
-   if((Mission.ObjectiveFour == false) and GetDistance(Mission.transport,"check4") < 30.0)then
-      ClearObjectives();
-      --print("play audio 5");
-      print("Player is in phase 5 on Recon Mission");
-	  AudioMessage("R_recon_harper_4.wav");
-	  Mission.Warrior=BuildObject("fvtank",6,"attack2_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack2_1");
-      Mission.Sentry=BuildObject("fvsent",6,"attack2_2");
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      Mission.AlienStructure=BuildObject("ibtele",6,"alien");
-      SetObjectiveName(Mission.AlienStructure, "Key Alien Structure");
-      SetObjectiveOn(Mission.AlienStructure)
-      AddObjective(Mission._Text4, "white", 15.0);
-      Mission.ObjectiveFour = true;
-   end
+	if ((Mission.ObjectiveFive == false) and GetDistance(Mission.transport, "check5") < 60.0) then
+		ClearObjectives();
+		AudioMessage("R_Line3.wav")
+		print("Player is in phase 6 on Recon Mission");
+		SetObjectiveOff(Mission.AlienStructure)
+		Mission.gScout = BuildObject("ivscout", 14, "gsspawn1");
+		SetObjectiveName(Mission.gScout, "Lt. Bramley");
+		Mission.gScout1 = BuildObject("ivscout", 14, "gsspawn2");
+		SetObjectiveName(Mission.gScout1, "Cpt. Herndon");
+		Mission.gTank = BuildObject("ivtank", 14, "gtspawn");
+		SetObjectiveName(Mission.gTank, "Cmdr. Durango");
+		Goto(Mission.gScout, "ghold");
+		Goto(Mission.gScout1, "ghold");
+		Goto(Mission.gTank, "ghold");
+		ai.spawnHighlightAttackerObjects(unitList, 1, Mission.transport, 13, 15);
+		AddObjective(Mission._Text5, "white", 15.0);
+		Mission.ObjectiveFive = true;
+	end
 
+	if ((Mission.ObjectiveSix == false) and GetDistance(Mission.transport, "check6") < 60.0) then
+		ClearObjectives();
+		print("Player is in phase 7 on Recon Mission");
+		ai.spawnAttackerbjects(unitList, 1, Mission.transport, 16, 19);
+		Mission.ObjectiveSix = true;
+	end
 
-   if((Mission.ObjectiveFive == false) and GetDistance(Mission.transport,"check5") < 60.0)then
-      ClearObjectives();
-      --print("play audio 6");
-	  AudioMessage("R_Line3.wav")
-      print("Player is in phase 6 on Recon Mission");
-      SetObjectiveOff(Mission.AlienStructure)
-      Mission.gScout=BuildObject("ivscout",14,"gsspawn1");
-      SetObjectiveName(Mission.gScout, "Lt. Bramley");
-      Mission.gScout1=BuildObject("ivscout",14,"gsspawn2");
-      SetObjectiveName(Mission.gScout1, "Cpt. Herndon");
-      Mission.gTank=BuildObject("ivtank",14,"gtspawn");
-      SetObjectiveName(Mission.gTank, "Cmdr. Durango");
-      Goto(Mission.gScout, "ghold");
-      Goto(Mission.gScout1, "ghold");
-      Goto(Mission.gTank, "ghold");
-      Mission.Warrior=BuildObject("fvtank",6,"attack3_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack3_1");
-      Mission.Sentry=BuildObject("fvsent",6,"attack3_2");
-      SetObjectiveOn(Mission.Warrior)
-      SetObjectiveOn(Mission.Scout)
-      SetObjectiveOn(Mission.Sentry)
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      AddObjective(Mission._Text5, "white", 15.0);
-      Mission.ObjectiveFive = true;
-   end
+	if ((Mission.ObjectiveSeven == false) and GetDistance(Mission.transport, "check7") < 30.0) then
+		ClearObjectives();
+		print("Player is in phase 8 on Recon Mission");
+		ai.spawnAttackerbjects(unitList, 1, Mission.transport, 20, 23);
+		Mission.ObjectiveSeven = true;
+	end
 
-
-   if((Mission.ObjectiveSix == false) and GetDistance(Mission.transport,"check6") < 60.0)then
-      ClearObjectives();
-      print("Player is in phase 7 on Recon Mission");
-      Mission.Warrior=BuildObject("fvtank",6,"attack4_0");
-      Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack1_1");
-      Mission.Sentry=BuildObject("fvsent",6,"attack1_2");
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      Attack(Mission.Warrior, Mission.transport,1);
-      Mission.ObjectiveSix = true;
-   end
-
-   if((Mission.ObjectiveSeven == false) and GetDistance(Mission.transport,"check7") < 30.0)then
-      ClearObjectives();
-      print("Player is in phase 8 on Recon Mission");
-      Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
-      Mission.Warrior=BuildObject("fvtank",6,"attack1_0");
-      Mission.Scout=BuildObject("fvscout",6,"attack1_1");
-	  Mission.Sentry=BuildObject("fvsent",6,"attack1_2");
-      Attack(Mission.Warrior, Mission.transport,1);
-      Attack(Mission.Scout, Mission.transport,1);
-      Attack(Mission.Sentry, Mission.transport,1);
-      Attack(Mission.Warrior, Mission.transport,1);
-      Mission.ObjectiveSeven = true;
-   end
-
-   if((Mission.ObjectiveEight == false) and GetDistance(Mission.transport,"check8") < 30.0)then
-      ClearObjectives();
-      print("Player is in last phase on Recon Mission");
-	  AudioMessage("R_recon_harper_6.wav");
-      AddObjective(Mission._Text6, "green", 15.0);
-      DoGameover(10.0);
-      Mission.ObjectiveEight = true;
-   end
-
+	if ((Mission.ObjectiveEight == false) and GetDistance(Mission.transport, "check8") < 30.0) then
+		ClearObjectives();
+		print("Player is in last phase on Recon Mission");
+		AudioMessage("R_recon_harper_6.wav");
+		AddObjective(Mission._Text6, "green", 15.0);
+		SucceedMission(GetTime() + 10.0, "Reco.des")
+		Mission.ObjectiveEight = true;
+	end
 end
-
 
 function AddPlayer(id, Team, IsNewPlayer)
    if (IsNewPlayer) then

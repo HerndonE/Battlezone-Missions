@@ -10,41 +10,47 @@ Battlezone Lost Missions Campaign | Mission 1: Hold Out
 
 Event Scripting: Ethan Herndon "F9bomber"
 Voice Acting: SirBramley and Tasia Valenza (Commander Shabayev)
-
 ]]--
+
 assert(load(assert(LoadFile("_requirefix.lua")),"_requirefix.lua"))();
+local ai = require("ai_functions");
+
+local unitList = {
+	function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn1", 0, 10, 50)), "spawn1a") end,
+    function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn1.1", 0, 10, 50)), "spawn1b") end,
+	function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("spawnT", 0 , 10, 50)), "spawnT.1") end,
+	function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b") end,
+	function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn3", 0 , 10, 50)), "spawn3a") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("spawn3.1", 0 , 10, 50)), "spawn3b") end,
+	function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a") end,
+	function() return Goto(BuildObject("fvatank", 6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a") end,
+	function() return Goto(BuildObject("fvtank", 6, GetPositionNear("spawn4.1", 0 , 10, 50)), "spawn4b") end,
+}
 
 local _StartingVehicles = require("_StartingVehicles");
-
 local DoEjectPilot = 0; -- Do 'standard' eject
 local DoRespawnSafest = 1; -- Respawn a 'PLAYER' at safest spawnpoint
 local DLLHandled = 2; -- DLL handled actions. Do nothing ingame
 local DoGameOver = 3; -- Game over, man.
-
 local VEHICLE_SPACING_DISTANCE = 20.0
-
 local PRESNIPE_KILLPILOT = 0;
 local PRESNIPE_ONLYBULLETHIT = 1;
-
 local PREPICKUPPOWERUP_DENY = 0;
 local PREPICKUPPOWERUP_ALLOW = 1;
-
 local PREGETIN_DENY = 0;
 local PREGETIN_ALLOW = 1;
-
 local GameTPS = 20;
-
 local MIN_CPU_SCAVS_AFTER_CLEANUP = 5;
 local MAX_CPU_SCAVS = 15;
-
 local MAX_TEAMS = 16;
-
 local SIEGE_DISTANCE = 250.0;
 
 -- How far allies will be from the commander's position
 local AllyMinRadiusAway = 30.0;
 local AllyMaxRadiusAway = 60.0;
-
 local AIPType0 = 0;
 local AIPType1 = 1;
 local AIPType2 = 2;
@@ -53,12 +59,10 @@ local AIPTypeA = 4;
 local AIPTypeL = 5;
 local AIPTypeS = 6;
 local MAX_AIP_TYPE = 7;
-
 local TEAMRELATIONSHIP_INVALIDHANDLE = 0;
 local TEAMRELATIONSHIP_SAMETEAM = 1;
 local TEAMRELATIONSHIP_ALLIEDTEAM = 2;
 local TEAMRELATIONSHIP_ENEMYTEAM = 3;
-
 local DLL_TEAM_SLOT_RECYCLER = 1;
 local DLL_TEAM_SLOT_FACTORY = 2;
 
@@ -84,92 +88,92 @@ local TAUNTS_Random = 6;
 local AIPTypeExtensions = '0123als';
 
 local Mission = {
-   -- iVars and Timers
-   DidInit = false,
-   KillLimit = 0,
-   TotalGameTime = 0,
-   PointsForAIKill = 0,
-   KillForAIKill = 0,
-   RespawnWithSniper = 0,
-   TurretAISkill = 0,
-   NonTurretAISkill = 0,
-   StartingVehiclesMask = 0,
-   IsFriendlyFireOn = 0,
-   ElapsedGameTime = 0,
-   RemainingGameTime = 0,
-   TimeCount = 0,
+	-- iVars and Timers
+	DidInit = false,
+	KillLimit = 0,
+	TotalGameTime = 0,
+	PointsForAIKill = 0,
+	KillForAIKill = 0,
+	RespawnWithSniper = 0,
+	TurretAISkill = 0,
+	NonTurretAISkill = 0,
+	StartingVehiclesMask = 0,
+	IsFriendlyFireOn = 0,
+	ElapsedGameTime = 0,
+	RemainingGameTime = 0,
+	TimeCount = 0,
 
-   hour = 1200; --3600
+	hour = 1200; --3600
 
-   -- Handles
-   HumanRecycler =  nil,
+	-- Handles
+	HumanRecycler =  nil,
 
-   -- Ints
-   SiegeCounter = 0,
-   AssaultCounter = 0,
-   TurnCounter = 0,
-   FirstAIPSwitchTime = 0,
+	-- Ints
+	SiegeCounter = 0,
+	AssaultCounter = 0,
+	TurnCounter = 0,
+	FirstAIPSwitchTime = 0,
 
-   -- Tables
-   RecyclerHandles = {},
-   SpawnedAtTime = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }, --KM
-   TeamIsSetUp = {},
-   TeamPos = {},
-   NotedRecyclerLocation = {},
+	-- Tables
+	RecyclerHandles = {},
+	SpawnedAtTime = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }, -- KM
+	TeamIsSetUp = {},
+	TeamPos = {},
+	NotedRecyclerLocation = {},
 
-   -- Strat Team Variables
-   NumHumans = 0,
-   StratTeam = 1,
-   HumanForce = 0,
-   HumanReinforcementTime = 2500;
+	-- Strat Team Variables
+	NumHumans = 0,
+	StratTeam = 1,
+	HumanForce = 0,
+	HumanReinforcementTime = 2500;
 
-   -- Booleans
-   StartDone = false,
-   HumanTeamRace = false,
-   CreatingStartingVehicles = false,
-   RespawnAtLowAltitude = false,
-   GameOver = false,
-   HadMultipleFunctioningTeams = false,
-   PastAIP0 = false,
-   LateGame = false,
-   SiegeOn = false,
-   setFirstAIP = false,
-   AntiAssault = false,
-   notAroundBool = false;
+	-- Booleans
+	StartDone = false,
+	HumanTeamRace = false,
+	CreatingStartingVehicles = false,
+	RespawnAtLowAltitude = false,
+	GameOver = false,
+	HadMultipleFunctioningTeams = false,
+	PastAIP0 = false,
+	LateGame = false,
+	SiegeOn = false,
+	setFirstAIP = false,
+	AntiAssault = false,
+	notAroundBool = false;
 
-   LastCPUPlan = 0,
-   CustomAIPNameBase = nil,
+	LastCPUPlan = 0,
+	CustomAIPNameBase = nil,
 
-   -- CPU Variables
-   CPUHasArmory = false,
-   CPUTeamRace = nil,
-   CPUTeamNum = 6,
-   NumCPUScavs = 0,
-   CPUCommBunkerCount = 0,
+	-- CPU Variables
+	CPUHasArmory = false,
+	CPUTeamRace = nil,
+	CPUTeamNum = 6,
+	NumCPUScavs = 0,
+	CPUCommBunkerCount = 0,
 
-   CPURecycler = nil,
-   CPUScavList = {},
+	CPURecycler = nil,
+	CPUScavList = {},
 
-   CPUForce = 0,
-   CPUTurretAISkill = 0,
-   CPUNonTurretAISkill = 0,
-   CPUReinforcementTime = 2000;
+	CPUForce = 0,
+	CPUTurretAISkill = 0,
+	CPUNonTurretAISkill = 0,
+	CPUReinforcementTime = 2000;
 
-   _text1 = "OBJECTIVE: You and or your crew MUST hold out until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
-   _Text7 = "You disobeyed a direct order. Consider the mission a failure.";
+	_text1 = "OBJECTIVE: You and or your crew MUST hold out until Major Manson arrives! - ISDF Human Resources \n\nGreen Squad will periodically help your situation.";
+	_Text7 = "You disobeyed a direct order. Consider the mission a failure.";
 
-   --Squad Units--
-   Zdarko;
-   Masiker;
-   minion1;
-   minion2;
-   minion3;
-   minion4;
-   Collins;
-   Shabayev;
-   
-   --Scions--
-   EnemyRecycler = GetHandle("Matriarch");
+	--Squad Units--
+	Zdarko;
+	Masiker;
+	minion1;
+	minion2;
+	minion3;
+	minion4;
+	Collins;
+	Shabayev;
+
+	--Scions--
+	EnemyRecycler = GetHandle("Matriarch");
 
 }
 
@@ -177,8 +181,8 @@ local CheckedSVar3 = false;
 local debug = false;
 
 function InitialSetup()
-   GameTPS = EnableHighTPS();
-local preloadODF = {
+	GameTPS = EnableHighTPS();
+	local preloadODF = {
 		"ivrecy",
 		"fvrecy",
 		"ibrecy",
@@ -189,87 +193,86 @@ local preloadODF = {
 		PreloadODF(v)
 	end
 
-   WantBotKillMessages();
+	WantBotKillMessages();
 
-   CreateObjectives();
+	CreateObjectives();
 end
 
 function Save()
-   return Mission, _StartingVehicles.Save();
+	return Mission, _StartingVehicles.Save();
 end
 
 function Load(MissionData, StartingVehicleData)
-   GameTPS = EnableHighTPS();
-   SetAutoGroupUnits(false);
+	GameTPS = EnableHighTPS();
+	SetAutoGroupUnits(false);
 
-   WantBotKillMessages();
+	WantBotKillMessages();
 
-   Mission = MissionData;
+	Mission = MissionData;
 
-   _StartingVehicles.Load(StartingVehicleData);
+	_StartingVehicles.Load(StartingVehicleData);
 
-   CreateObjectives();
+	CreateObjectives();
 end
 
 function CreateObjectives()
-   ClearObjectives();
-   --AddObjective("mpobjective_st.otf", "WHITE", -1.0);
+	ClearObjectives();
+	--AddObjective("mpobjective_st.otf", "WHITE", -1.0);
 end
 
 function AddObject(h, IsStartingVehicles)
-   local ODFName = GetCfg(h);
-   local ObjClass = GetClassLabel(h);
+	local ODFName = GetCfg(h);
+	local ObjClass = GetClassLabel(h);
 
-   local fRandomNum = GetRandomFloat(1.0);
+	local fRandomNum = GetRandomFloat(1.0);
 
- if (IsOdf(h, "fvrecy")) then
-   Mission.EnemyRecycler = h
-end
+	if (IsOdf(h, "fvrecy")) then
+		Mission.EnemyRecycler = h
+	end
 
-if (IsOdf(h, "fbrecy")) then
-   Mission.EnemyRecycler = h
-   
-end
+	if (IsOdf(h, "fbrecy")) then
+		Mission.EnemyRecycler = h
+	end
 
    if (Mission.TurnCounter < 2) then
-      if (GetTeamNum(h) == 1) then
-         local HumanRecyRace = IsRecyclerODF(h);
+	if (GetTeamNum(h) == 1) then
+	 local HumanRecyRace = IsRecyclerODF(h);
 
-         if (HumanRecyRace ~= 0) then
-            Mission.HumanTeamRace = HumanRecyRace;
-            Mission.HumanRecycler = h;
-         end
+	 if (HumanRecyRace ~= 0) then
+		Mission.HumanTeamRace = HumanRecyRace;
+		Mission.HumanRecycler = h;
+	 end
 
-         local ShellRace = GetVarItemInt("network.session.ivar13");
+	 local ShellRace = GetVarItemInt("network.session.ivar13");
 
-         if (ShellRace > 0) then
-            --[[ if  (ShellRace == 102) then
-            ShellRace = 'f';
+	 if (ShellRace > 0) then
+		--[[ if  (ShellRace == 102) then
+		ShellRace = 'f';
 
-         elseif  (ShellRace == 101) then
-            ShellRace = 'e';
+	 elseif  (ShellRace == 101) then
+		ShellRace = 'e';
 
-         else
-            ShellRace = 'i';
-            --]]
-            ShellRace = 'f';
-            --end
+	 else
+		ShellRace = 'i';
+		--]]
+		ShellRace = 'f';
+		--end
 
-            Mission.CPUTeamRace = ShellRace;
-         else
-            local h = GetObjectByTeamSlot(Mission.CPUTeamNum, DLL_TEAM_SLOT_RECYCLER);
+		Mission.CPUTeamRace = ShellRace;
+	 else
+		local h = GetObjectByTeamSlot(Mission.CPUTeamNum, DLL_TEAM_SLOT_RECYCLER);
 
-            if (IsAround(h)) then
-               local cpuRace = IsRecyclerODF(h);
+		if (IsAround(h)) then
+		   local cpuRace = IsRecyclerODF(h);
 
-               if (cpuRace ~= 0) then
-                  Mission.CPUTeamRace = cpuRace;
-               end
-            else
-               Mission.CPUTeamRace = "i";
-            end
-         end
-      end
+		   if (cpuRace ~= 0) then
+			  Mission.CPUTeamRace = cpuRace;
+		   end
+		else
+		   Mission.CPUTeamRace = "i";
+		end
+	 end
+	end
    end
 
    local IsTurret = (ObjClass == "CLASS_TURRETTANK");
@@ -406,236 +409,210 @@ function DeleteObject(h)
 end
 
 function Start()
-   --_StartingVehicles.Start();
+	ai.helloWorld()
 
-   print("Hold Out mission by F9bomber");
-   print("Special thanks to SirBramley and Tasia Valenza (Commander Shabayev) for voice acting");
-   print("File: mpinstant.lua converted by AI_Unit");
-   
-   local mapTrnFile = GetMapTRNFilename();
-   Mission.RespawnAtLowAltitude = GetODFBool(mapTrnFile, "DLL", "RespawnAtLowAltitude", false);
+	print("Hold Out mission by F9bomber");
+	print("Special thanks to SirBramley and Tasia Valenza (Commander Shabayev) for voice acting");
+	print("File: mpinstant.lua converted by AI_Unit");
 
-   Mission.DidInit = true;
-   Mission.KillLimit = GetVarItemInt("network.session.ivar0");
-   Mission.TotalGameTime = GetVarItemInt("network.session.ivar1");
-   Mission.StartingVehiclesMask = GetVarItemInt("network.session.ivar7");
-   Mission.PointsForAIKill = GetVarItemInt("network.session.ivar14");
-   Mission.KillForAIKill = GetVarItemInt("network.session.ivar15");
-   Mission.RespawnWithSniper = GetVarItemInt("network.session.ivar16");
-   Mission.IsFriendlyFireOn = GetVarItemInt("network.session.ivar32");
+	local mapTrnFile = GetMapTRNFilename();
+	Mission.RespawnAtLowAltitude = GetODFBool(mapTrnFile, "DLL", "RespawnAtLowAltitude", false);
 
-   -- MPI Stuff:
-   Mission.HumanForce = GetVarItemInt("network.session.ivar23");
-   Mission.CPUForce = GetVarItemInt("network.session.ivar24");
+	Mission.DidInit = true;
+	Mission.KillLimit = GetVarItemInt("network.session.ivar0");
+	Mission.TotalGameTime = GetVarItemInt("network.session.ivar1");
+	Mission.StartingVehiclesMask = GetVarItemInt("network.session.ivar7");
+	Mission.PointsForAIKill = GetVarItemInt("network.session.ivar14");
+	Mission.KillForAIKill = GetVarItemInt("network.session.ivar15");
+	Mission.RespawnWithSniper = GetVarItemInt("network.session.ivar16");
+	Mission.IsFriendlyFireOn = GetVarItemInt("network.session.ivar32");
 
-   Mission.TurretAISkill = GetVarItemInt("network.session.ivar17");
-   if (Mission.TurretAISkill < 0) then
-      Mission.TurretAISkill = 0;
-   elseif (Mission.TurretAISkill > 3) then
-      Mission.TurretAISkill = 3;
-   end
+	-- MPI Stuff:
+	Mission.HumanForce = GetVarItemInt("network.session.ivar23");
+	Mission.CPUForce = GetVarItemInt("network.session.ivar24");
 
-   Mission.NonTurretAISkill = GetVarItemInt("network.session.ivar18");
-   if (Mission.NonTurretAISkill < 0) then
-      Mission.NonTurretAISkill = 0;
-   elseif (Mission.NonTurretAISkill > 3) then
-      Mission.NonTurretAISkill = 3;
-   end
+	Mission.TurretAISkill = GetVarItemInt("network.session.ivar17");
+	if (Mission.TurretAISkill < 0) then
+		Mission.TurretAISkill = 0;
+	elseif (Mission.TurretAISkill > 3) then
+		Mission.TurretAISkill = 3;
+	end
 
-   Mission.CPUTurretAISkill = GetVarItemInt("network.session.ivar21");
-   if (Mission.CPUTurretAISkill < 0) then
-      Mission.CPUTurretAISkill = 0;
-   elseif (Mission.CPUTurretAISkill > 3) then
-      Mission.CPUTurretAISkill = 3;
-   end
+	Mission.NonTurretAISkill = GetVarItemInt("network.session.ivar18");
+	if (Mission.NonTurretAISkill < 0) then
+		Mission.NonTurretAISkill = 0;
+	elseif (Mission.NonTurretAISkill > 3) then
+		Mission.NonTurretAISkill = 3;
+	end
 
-   Mission.CPUNonTurretAISkill = GetVarItemInt("network.session.ivar22");
-   if (Mission.CPUNonTurretAISkill < 0) then
-      Mission.CPUNonTurretAISkill = 0;
-   elseif (Mission.CPUNonTurretAISkill > 3) then
-      Mission.CPUNonTurretAISkill = 3;
-   end
+	Mission.CPUTurretAISkill = GetVarItemInt("network.session.ivar21");
+	if (Mission.CPUTurretAISkill < 0) then
+		Mission.CPUTurretAISkill = 0;
+	elseif (Mission.CPUTurretAISkill > 3) then
+		Mission.CPUTurretAISkill = 3;
+	end
 
-   Mission.FirstAIPSwitchTime = GetVarItemInt("network.session.ivar26");
-   if (Mission.FirstAIPSwitchTime == 0) then
-      Mission.FirstAIPSwitchTime = 180;
-   elseif (Mission.FirstAIPSwitchTime > 0) then
-      Mission.FirstAIPSwitchTime = GameTPS;
-   end
+	Mission.CPUNonTurretAISkill = GetVarItemInt("network.session.ivar22");
+	if (Mission.CPUNonTurretAISkill < 0) then
+		Mission.CPUNonTurretAISkill = 0;
+	elseif (Mission.CPUNonTurretAISkill > 3) then
+		Mission.CPUNonTurretAISkill = 3;
+	end
 
-   Mission.NumHumans = CountPlayers();
+	Mission.FirstAIPSwitchTime = GetVarItemInt("network.session.ivar26");
+	if (Mission.FirstAIPSwitchTime == 0) then
+		Mission.FirstAIPSwitchTime = 180;
+	elseif (Mission.FirstAIPSwitchTime > 0) then
+		Mission.FirstAIPSwitchTime = GameTPS;
+	end
 
-   -- Handle the players.
-   local PlayerEntryH = GetPlayerHandle();
-   if (IsAround(PlayerEntryH)) then
-      RemoveObject(PlayerEntryH);
-   end
+	Mission.NumHumans = CountPlayers();
 
-   if ((ImServer()) or (not IsNetworkOn())) then
-      Mission.ElapsedGameTime = 0;
+	-- Handle the players.
+	local PlayerEntryH = GetPlayerHandle();
+	if (IsAround(PlayerEntryH)) then
+		RemoveObject(PlayerEntryH);
+	end
 
-      if (Mission.RemainingGameTime == 0) then
-         Mission.RemainingGameTime = Mission.TotalGameTime * 60 * GameTPS;
-      end
-   end
+	if ((ImServer()) or (not IsNetworkOn())) then
+		Mission.ElapsedGameTime = 0;
 
-   local LocalTeamNum = GetLocalPlayerTeamNumber();
-   local PlayerH = SetupPlayer(LocalTeamNum);
-   SetAsUser(PlayerH, LocalTeamNum);
-   AddPilotByHandle(PlayerH);
+		if (Mission.RemainingGameTime == 0) then
+			Mission.RemainingGameTime = Mission.TotalGameTime * 60 * GameTPS;
+		end
+	end
 
-   CreateObjectives();
+	local LocalTeamNum = GetLocalPlayerTeamNumber();
+	local PlayerH = SetupPlayer(LocalTeamNum);
+	SetAsUser(PlayerH, LocalTeamNum);
+	AddPilotByHandle(PlayerH);
 
-   DoTaunt(TAUNTS_GameStart);
+	CreateObjectives();
 
-   if (debug) then
-      Ally(Mission.StratTeam, Mission.CPUTeamNum);
-      Ally(Mission.CPUTeamNum, Mission.StratTeam);
-   end
+	DoTaunt(TAUNTS_GameStart);
 
-   --------------------------------------------------------
+	if (debug) then
+		Ally(Mission.StratTeam, Mission.CPUTeamNum);
+		Ally(Mission.CPUTeamNum, Mission.StratTeam);
+	end
 
-   ------------Colors Done by Ethan Herndon-----1/13/20----
+	-- Blue Squad
+	SetTeamColor(2, SetVector(77, 210, 255));
+	SetTeamColor(3, SetVector(77, 210, 255));
+	SetTeamColor(4, SetVector(77, 210, 255));
+	-- Orange Squad
+	SetTeamColor(1, SetVector(230, 92, 0));
+	SetTeamColor(14, SetVector(230, 92, 0));
+	-- Green Squad
+	SetTeamColor(15, SetVector(0, 153, 0));
+	-- Gray Enemy Color
+	SetTeamColor(6, SetVector(128, 128, 128));
 
-   --------------------------------------------------------
+	Ally(1, 2)
+	Ally(1, 15)
+	Ally(2, 15)
+	Ally(3, 15)
+	Ally(4, 15)
 
-   --[[Blue Squad]]--
-   --SetTeamColor(0, SetVector(77, 210, 255));
-   SetTeamColor(2, SetVector(77, 210, 255));
-   SetTeamColor(3, SetVector(77, 210, 255));
-   SetTeamColor(4, SetVector(77, 210, 255));
-   --[[Orange Squad]]--
-   SetTeamColor(1, SetVector(230, 92, 0));
-   SetTeamColor(14, SetVector(230, 92, 0));
-   --[[Green Squad]]--
-   SetTeamColor(15, SetVector(0, 153, 0));
-   --[[Gray Enemy Color]]--
-   SetTeamColor(6, SetVector(128, 128, 128));
+	Ally(1, 14)
+	Ally(2, 14)
+	Ally(3, 14)
+	Ally(4, 14)
 
+	Ally(14,15)
 
-   --------------------------------------------------------
-   Ally(1, 2)
-   Ally(1, 15)
-   Ally(2, 15)
-   Ally(3, 15)
-   Ally(4, 15)
-   
-   Ally(1, 14)
-   Ally(2, 14)
-   Ally(3, 14)
-   Ally(4, 14)
-   
-   Ally(14,15)
-   
+	StartCockpitTimer(Mission.hour, 420,  300)
+	AddObjective( Mission._text1, "yellow", 15.0);
+	
+   ai.buildUnitsAtStart(Mission.CPUTeamRace .. "vscav", 6, "RecyclerEnemy", 6);
+   ai.buildUnitsAtStart(Mission.CPUTeamRace .. "vcons", 6, "RecyclerEnemy", 1);
 
-   StartCockpitTimer(Mission.hour, 420,  300) --StartCockpitTimer(Mission.hour, 900,  300)
-   AddObjective( Mission._text1, "yellow", 15.0);
-
-   local SpawnScavUnits = 6
-   local SpawnConsUnits = 1
-   for i = 1, SpawnScavUnits  do
-      local spawnScavs = BuildObject(Mission.CPUTeamRace .. "vscav",6, "RecyclerEnemy");
-   end
-
-   for i = 1, SpawnConsUnits  do
-      local spawnScavs = BuildObject(Mission.CPUTeamRace .. "vcons",6, "RecyclerEnemy");
-   end
-
-   Mission.Zdarko=BuildObject("ivtank",2,"Zdarko_start");
+   Mission.Zdarko = BuildObject("ivtank", 2, "Zdarko_start");
    SetObjectiveName(Mission.Zdarko, "Sgt. Zdarko");
-   Mission.minion1=BuildObject("ivscout",2,"Zdarko_escort1");
+   Mission.minion1 = BuildObject("ivscout", 2, "Zdarko_escort1");
    SetObjectiveName(Mission.minion1, "Cpt. Herndon");
    Follow(Mission.minion1,Mission.Zdarko);
-   Mission.minion2=BuildObject("ivscout",2,"Zdarko_escort2");
+   Mission.minion2 = BuildObject("ivscout", 2, "Zdarko_escort2");
    SetObjectiveName(Mission.minion2, "Pvt. J O'Neill");
    Follow(Mission.minion2,Mission.Zdarko);
 
-   Mission.Masiker=BuildObject("ivtank",2,"Masiker_start");
+   Mission.Masiker = BuildObject("ivtank", 2, "Masiker_start");
    SetObjectiveName(Mission.Masiker, "Sgt. Masiker");
-   Mission.minion3=BuildObject("ivscout",2,"Masiker_escort1");
+   Mission.minion3 = BuildObject("ivscout", 2, "Masiker_escort1");
    SetObjectiveName(Mission.minion3, "Cpt. Bramley");
    Follow(Mission.minion3,Mission.Masiker);
-   Mission.minion4=BuildObject("ivtank",2,"Masiker_escort2");
+   Mission.minion4 = BuildObject("ivtank", 2, "Masiker_escort2");
    SetObjectiveName(Mission.minion4, "Lt. Durango");
    Follow(Mission.minion4,Mission.Masiker);
 
-   Mission.Collins=BuildObject("ivtank",14,"Collins_start");
+   Mission.Collins = BuildObject("ivtank", 14, "Collins_start");
    SetObjectiveName(Mission.Collins, "Mjr. Collins");
    SetObjectiveOn(Mission.Collins)
-   
-   Mission.Shabayev=BuildObject("ivtank",14,"spawnNav");
+
+   Mission.Shabayev = BuildObject("ivtank", 14, "spawnNav");
    SetObjectiveName(Mission.Shabayev, "Cmdr. Shabayev");
    SetObjectiveOn(Mission.Shabayev)
 end
 
-
-
 function Update()
-
-   -- Increment this once per tick
    Mission.TurnCounter = Mission.TurnCounter + 1;
    DoGenericStrategy(Mission.TeamIsSetUp, Mission.RecyclerHandles);
 
    ExecuteCheckIfGameOver();
    UpdateGameTime();
 
-   if ((Mission.TurnCounter % (10 * GameTPS)) == 0) then
-      for i = 1, MAX_TEAMS do
-         local h = GetPlayerHandle(i);
+	if ((Mission.TurnCounter % (10 * GameTPS)) == 0) then
+		for i = 1, MAX_TEAMS do
+			local h = GetPlayerHandle(i);
+			if (IsAround(h)) then
+				local Grp = WhichTeamGroup(i);
+				if (Grp ~= 0) then
+				   Damage(h, 9999);
+				   AddToMessagesBox("MPI is limited to 5 humans! No joining the CPU team!");
+				end
+			end
+		end
+	end
 
-         if (IsAround(h)) then
-            local Grp = WhichTeamGroup(i);
-
-            if (Grp ~= 0) then
-               Damage(h, 9999);
-               AddToMessagesBox("MPI is limited to 5 humans! No joining the CPU team!");
-            end
-         end
-      end
-   end
-
-
-   if(Mission.TurnCounter == SecondsToTurns(1200))then --3600 secs
-      local blah3 = BuildObject("ivdrop_land",2,"landpoint");
-      SetAngle(blah3, 90)
-      StartEmitter(blah3, 1)
-      StartEmitter(blah3, 2)
-      SetAnimation(blah3, "land", 1)
-   end
+	if(Mission.TurnCounter == SecondsToTurns(1200))then
+		local blah3 = BuildObject("ivdrop_land", 2, "landpoint");
+		SetAngle(blah3, 90)
+		StartEmitter(blah3, 1)
+		StartEmitter(blah3, 2)
+		SetAnimation(blah3, "land", 1)
+	end
 
    local blah4;
-   if (Mission.TurnCounter == SecondsToTurns(1214)) then --- 3614 secs
-      print("Player(s) is at the last phase of Hold Out Mission");
-      local AttackUnits = 1
-      for i = 1, AttackUnits  do
-         local foo = GetHandle("unnamed_ivdrop_land")
-         RemoveObject(foo)
-         --print("1214 sec marker ");
-      end
-      blah4 = BuildObject("ivdrop",0,"spawnpoint");
-      SetAngle(blah4, 90)
-      SetAnimation(blah4, "deploy", 1)
-      SetObjectiveOn(blah4)
-      StartSoundEffect("dropdoor.wav", blah4)
+   if (Mission.TurnCounter == SecondsToTurns(1214)) then
+		print("Player(s) is at the last phase of Hold Out Mission");
+		local AttackUnits = 1
+		for i = 1, AttackUnits  do
+			local foo = GetHandle("unnamed_ivdrop_land")
+			RemoveObject(foo)
+		end
+		blah4 = BuildObject("ivdrop", 0, "spawnpoint");
+		SetAngle(blah4, 90)
+		SetAnimation(blah4, "deploy", 1)
+		SetObjectiveOn(blah4)
+		StartSoundEffect("dropdoor.wav", blah4)
    end
 
-   if (Mission.TurnCounter == SecondsToTurns(1213.5)) then --- 3613.5 secs
-      
-      local nav = BuildObject("ibnav",1,"spawnNav");
-      SetObjectiveName(nav, "Meet Up");
-      SetObjectiveOn(nav)
-      local blah5 = BuildObject("ivtank_m",2,"spawnpoint");
-      SetObjectiveOn(blah5)
-      Goto(blah5,"spawnNav");
-      AudioMessage("m_CatchUpHereProceed.wav");
-      --print("1213.5 sec marker ");
-      DoGameover(18.0);
+   if (Mission.TurnCounter == SecondsToTurns(1213.5)) then
+		local nav = BuildObject("ibnav",1,"spawnNav");
+		SetObjectiveName(nav, "Meet Up");
+		SetObjectiveOn(nav)
+		local blah5 = BuildObject("ivtank_m",2,"spawnpoint");
+		SetObjectiveOn(blah5)
+		Goto(blah5,"spawnNav");
+		AudioMessage("m_CatchUpHereProceed.wav");
+		--print("1213.5 sec marker ");
+		DoGameover(18.0);
    end
 
-   if (Mission.TurnCounter == SecondsToTurns(1215)) then --- 3615 secs
-      blah4 = GetHandle("unnamed_ivdrop")
-      SetObjectiveOff(blah4)
-      SetAnimation(blah4,"takeoff",1);
+   if (Mission.TurnCounter == SecondsToTurns(1215)) then
+		blah4 = GetHandle("unnamed_ivdrop")
+		SetObjectiveOff(blah4)
+		SetAnimation(blah4,"takeoff",1);
    end
 
    -- Call your custom method here
@@ -652,24 +629,24 @@ function GreenSquadSetup()
       local cons = BuildObject("ivcons",15, "spawnpoint");
       SetLabel(cons, "GreenSquadCons");
       Goto(cons,"buildFact");
-      Goto(BuildObject("ivturr",15, "spawnpoint"), "turret1Deploy");
-      Goto(BuildObject("ivturr",15, "spawnpoint"), "turret2Deploy");
-      Goto(BuildObject("ivturr",15, "spawnpoint"), "turret3Deploy");
+      Goto(BuildObject("ivturr", 15, "spawnpoint"), "turret1Deploy");
+      Goto(BuildObject("ivturr", 15, "spawnpoint"), "turret2Deploy");
+      Goto(BuildObject("ivturr", 15, "spawnpoint"), "turret3Deploy");
    end
    
    if(Mission.TurnCounter == SecondsToTurns(2))then
-    AudioMessage("shabeyevCameo_fix1.wav");
+		AudioMessage("shabeyevCameo_fix1.wav");
    end
    
    if (Mission.TurnCounter == SecondsToTurns(30)) then --- 20 secs
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
          --print("G Handle ");
-         Build(cons,"ibpgen_gs",1)
+         Build(cons,"ibpgen_gs", 1)
          --print("build ");
       end
    end
-   if (Mission.TurnCounter == SecondsToTurns(35)) then --- 20 secs
+   if (Mission.TurnCounter == SecondsToTurns(35)) then -- 20 secs
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
          Dropoff(cons,"buildFact");
@@ -687,7 +664,7 @@ function GreenSquadSetup()
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
          --print("G Handle ");
-         Build(cons,"ibcbun_gs",1)
+         Build(cons,"ibcbun_gs", 1)
          --print("build ");
       end
    end
@@ -695,21 +672,21 @@ function GreenSquadSetup()
    if (Mission.TurnCounter == SecondsToTurns(60)) then
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         Dropoff(cons,"bunker");
+         Dropoff(cons, "bunker");
       end
    end
 
    if (Mission.TurnCounter == SecondsToTurns(110)) then
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         Goto(cons,"guntower");
+         Goto(cons, "guntower");
       end
    end
 
    if (Mission.TurnCounter == SecondsToTurns(115)) then
       local cons = GetHandle("GreenSquadCons")
       if (cons ~= nil) then
-         Build(cons,"ibgtow_gs",1)
+         Build(cons, "ibgtow_gs",1)
       end
    end
 
@@ -720,294 +697,179 @@ function GreenSquadSetup()
       end
 
    end
-
-
-
 end
 
 function GreenSquadDeployment()
-   ------------------------------------------------------------------------
-   --[[Green Squad Deployment]]--
+	-------
+	--Wave 1
+	-------
+	if (Mission.TurnCounter == SecondsToTurns(120)) then -- 2 minutes
+		local green1 = BuildObject("ivdrop_land",15,"landpoint");
+		SetAngle(green1, 90)
+		StartEmitter(green1, 1)
+		StartEmitter(green1, 2)
+		SetAnimation(green1, "land", 1)
+		--print("Green Squad has landed at 2 minutes");
+	end
 
-   -------
-   --Wave 1
-   -------
-   if (Mission.TurnCounter == SecondsToTurns(120)) then --- 2 minute
-      local green1 = BuildObject("ivdrop_land",15,"landpoint");
-      SetAngle(green1, 90)
-      StartEmitter(green1, 1)
-      StartEmitter(green1, 2)
-      SetAnimation(green1, "land", 1)
-      --print("Green Squad has landed at 2 minutes");
-   end
-
-   local green2;
-   local greenLeader;
-   local greenWing1;
-   local greenWing2;
+	local green2;
+	local greenLeader;
+	local greenWing1;
+	local greenWing2;
 
    if (Mission.TurnCounter == SecondsToTurns(134)) then
-
-      local AttackUnits = 1
-      for i = 1, AttackUnits  do
-         local foo = GetHandle("unnamed_ivdrop_land")
-         RemoveObject(foo)
-
-      end
-      green2 = BuildObject("ivdrop",0,"spawnpoint");
-      SetAngle(green2, 90)
-      SetAnimation(green2, "deploy", 1)
-      StartSoundEffect("dropdoor.wav", green2)
-
+		local AttackUnits = 1
+		for i = 1, AttackUnits  do
+			local foo = GetHandle("unnamed_ivdrop_land")
+			RemoveObject(foo)
+		end
+		green2 = BuildObject("ivdrop",0,"spawnpoint");
+		SetAngle(green2, 90)
+		SetAnimation(green2, "deploy", 1)
+		StartSoundEffect("dropdoor.wav", green2)
    end
 
-   if (Mission.TurnCounter == SecondsToTurns(133.25)) then
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 133.25, "ivtank", 15, "greenpath", "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 133.50, "ivtank", 15, "greenpath", "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 133.75, "ivtank", 15, "greenpath", "RecyclerEnemy");
 
-      Goto(BuildObject("ivtank",15, "greenpath"), "RecyclerEnemy");
+	if (Mission.TurnCounter == SecondsToTurns(150)) then
+		green2 = GetHandle("unnamed_ivdrop")
+		SetObjectiveOff(green2)
+		SetAnimation(green2,"takeoff",1);
+	end
 
-   end
-   if (Mission.TurnCounter == SecondsToTurns(133.50)) then
+	if (Mission.TurnCounter == SecondsToTurns(160)) then
+		green2 = GetHandle("unnamed_ivdrop")
+		RemoveObject(green2)
+	end
 
-      Goto(BuildObject("ivtank",15, "greenpath"), "RecyclerEnemy");
+	-------
+	--Wave 2
+	-------
+	if (Mission.TurnCounter == SecondsToTurns(420)) then -- 7 minutes
+		local green1 = BuildObject("ivdrop_land",15,"landpoint");
+		SetAngle(green1, 90)
+		StartEmitter(green1, 1)
+		StartEmitter(green1, 2)
+		SetAnimation(green1, "land", 1)
+	end
 
-   end
-   if (Mission.TurnCounter == SecondsToTurns(133.75)) then
+	if (Mission.TurnCounter == SecondsToTurns(434)) then
+		local AttackUnits = 1
+		for i = 1, AttackUnits  do
+			 local foo = GetHandle("unnamed_ivdrop_land")
+			 RemoveObject(foo)
+		end
+		green2 = BuildObject("ivdrop",0,"spawnpoint");
+		SetAngle(green2, 90)
+		SetAnimation(green2, "deploy", 1)
+		StartSoundEffect("dropdoor.wav", green2)
+	end
 
-      Goto(BuildObject("ivtank",15, "greenpath"), "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 433.25, "ivtank", 15, "greenpath", "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 433.50, "ivmisl", 15, "greenpath", "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 433.75, "ivscout", 15, "greenpath", "RecyclerEnemy");
 
-   end
+	if (Mission.TurnCounter == SecondsToTurns(450)) then
+		green2 = GetHandle("unnamed_ivdrop")
+		SetObjectiveOff(green2)
+		SetAnimation(green2,"takeoff",1);
+	end
 
-   if (Mission.TurnCounter == SecondsToTurns(150)) then
-      green2 = GetHandle("unnamed_ivdrop")
-      SetObjectiveOff(green2)
-      SetAnimation(green2,"takeoff",1);
-   end
+	if (Mission.TurnCounter == SecondsToTurns(460)) then
+		green2 = GetHandle("unnamed_ivdrop")
+		RemoveObject(green2)
+	end
+	
+	-------
+	--Wave 3
+	-------
+	if (Mission.TurnCounter == SecondsToTurns(660)) then -- 11 minutes
+		print("Player(s) is at phase 2 of Hold Out Mission");
+		local green1 = BuildObject("ivdrop_land",15,"landpoint");
+		SetAngle(green1, 90)
+		StartEmitter(green1, 1)
+		StartEmitter(green1, 2)
+		SetAnimation(green1, "land", 1)
+	end
 
-   if (Mission.TurnCounter == SecondsToTurns(160)) then
-      green2 = GetHandle("unnamed_ivdrop")
-      RemoveObject(green2)
-   end
+	if (Mission.TurnCounter == SecondsToTurns(674)) then
+		local AttackUnits = 1
+		for i = 1, AttackUnits  do
+			local foo = GetHandle("unnamed_ivdrop_land")
+			RemoveObject(foo)
+		end
+		green2 = BuildObject("ivdrop",0,"spawnpoint");
+		SetAngle(green2, 90)
+		SetAnimation(green2, "deploy", 1)
+		StartSoundEffect("dropdoor.wav", green2)
+	end
 
-   -------
-   --Wave 2
-   -------
-   if (Mission.TurnCounter == SecondsToTurns(420)) then --- 7 minute
-      local green1 = BuildObject("ivdrop_land",15,"landpoint");
-      SetAngle(green1, 90)
-      StartEmitter(green1, 1)
-      StartEmitter(green1, 2)
-      SetAnimation(green1, "land", 1)
-      --print("Green Squad has landed at 7 minutes");
-   end
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 673.25, "ivtank", 15, "greenpath", "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 673.50, "ivscout", 15, "greenpath", "RecyclerEnemy");
+	ai.spawnObjectAtTimeWithOrder(Mission.TurnCounter, 673.75, "ivscout", 15, "greenpath", "RecyclerEnemy");
 
-   if (Mission.TurnCounter == SecondsToTurns(434)) then
+	if (Mission.TurnCounter == SecondsToTurns(690)) then
+		green2 = GetHandle("unnamed_ivdrop")
+		SetObjectiveOff(green2)
+		SetAnimation(green2,"takeoff",1);
+	end
 
-      local AttackUnits = 1
-      for i = 1, AttackUnits  do
-         local foo = GetHandle("unnamed_ivdrop_land")
-         RemoveObject(foo)
+	if (Mission.TurnCounter == SecondsToTurns(700)) then
+		green2 = GetHandle("unnamed_ivdrop")
+		RemoveObject(green2)
+	end
 
-      end
-      green2 = BuildObject("ivdrop",0,"spawnpoint");
-      SetAngle(green2, 90)
-      SetAnimation(green2, "deploy", 1)
-      StartSoundEffect("dropdoor.wav", green2)
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(433.25)) then
-
-      Goto(BuildObject("ivtank",15, "greenpath"), "RecyclerEnemy");
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(433.50)) then
-
-      Goto(BuildObject("ivmisl",15, "greenpath"), "RecyclerEnemy");
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(433.75)) then
-
-      Goto(BuildObject("ivscout",15, "greenpath"), "RecyclerEnemy");
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(450)) then
-      green2 = GetHandle("unnamed_ivdrop")
-      SetObjectiveOff(green2)
-      SetAnimation(green2,"takeoff",1);
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(460)) then
-      green2 = GetHandle("unnamed_ivdrop")
-      RemoveObject(green2)
-   end
-   -------
-   --Wave 3
-   -------
-   if (Mission.TurnCounter == SecondsToTurns(660)) then --- 11 minute
-      print("Player(s) is at phase 2 of Hold Out Mission");
-      local green1 = BuildObject("ivdrop_land",15,"landpoint");
-      SetAngle(green1, 90)
-      StartEmitter(green1, 1)
-      StartEmitter(green1, 2)
-      SetAnimation(green1, "land", 1)
-      --print("Green Squad has landed at 11 minutes");
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(674)) then
-
-      local AttackUnits = 1
-      for i = 1, AttackUnits  do
-         local foo = GetHandle("unnamed_ivdrop_land")
-         RemoveObject(foo)
-
-      end
-      green2 = BuildObject("ivdrop",0,"spawnpoint");
-      SetAngle(green2, 90)
-      SetAnimation(green2, "deploy", 1)
-      StartSoundEffect("dropdoor.wav", green2)
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(673.25)) then
-
-      Goto(BuildObject("ivtank",15, "greenpath"), "RecyclerEnemy");
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(673.50)) then
-
-      Goto(BuildObject("ivscout",15, "greenpath"), "RecyclerEnemy");
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(673.75)) then
-
-      Goto(BuildObject("ivscout",15, "greenpath"), "RecyclerEnemy");
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(690)) then
-      green2 = GetHandle("unnamed_ivdrop")
-      SetObjectiveOff(green2)
-      SetAnimation(green2,"takeoff",1);
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(700)) then
-      green2 = GetHandle("unnamed_ivdrop")
-      RemoveObject(green2)
-   end
-   
-   if (Mission.TurnCounter == SecondsToTurns(2820)) then
-      AudioMessage("isdf1027.wav");
-   end
-
+	if (Mission.TurnCounter == SecondsToTurns(2820)) then
+		AudioMessage("isdf1027.wav");
+	end
 end
 
 function SurvivalLogic()
-
-	if(Mission.TurnCounter > SecondsToTurns(5))then
-	if((Mission.notAroundBool == false) and not IsAlive(Mission.EnemyRecycler))then -- Destroyed Enemy Recycler
-		ClearObjectives();
-         print("The player destroyed enemy recycler");
-         AudioMessage("failmessage.wav");
-         AddObjective(Mission._Text7, "red", 15.0);
-         FailMission(GetTime() + 5.0)
-         Mission.notAroundBool = true;
-	end
-	end 
-
-
 	if (GetHealth(Mission.Collins) < 0.7) then
-        AddHealth(Mission.Collins, 100);
-    end
-	
+		AddHealth(Mission.Collins, 100);
+	end
+
 	if (GetHealth(Mission.Shabayev) < 0.7) then
-        AddHealth(Mission.Shabayev, 100);
-    end
+		AddHealth(Mission.Shabayev, 100);
+	end
 
 	if (GetHealth(Mission.EnemyRecycler) < 0.7) then
-        AddHealth(Mission.EnemyRecycler, 100);
+		AddHealth(Mission.EnemyRecycler, 100);
+	end
+	
+	if (Mission.TurnCounter == SecondsToTurns(10)) then
+		SetObjectiveOff(Mission.Collins)
+		SetObjectiveOff(Mission.Shabayev)
+		AudioMessage("isdf0614.wav");
 	end
 
-   if (Mission.TurnCounter == SecondsToTurns(10)) then --- 10 secs
-	  SetObjectiveOff(Mission.Collins)
-	  SetObjectiveOff(Mission.Shabayev)
-      local AttackUnits = 1
-      for i = 1, AttackUnits  do
-         Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
-         AudioMessage("isdf0614.wav");
-         --print("10 second marker ");
-      end
-
-   end
-
-   if (Mission.TurnCounter == SecondsToTurns(15)) then --- 15 secs
-      AudioMessage("b_WeMustHoldThisPosition.wav");
-   end
-
-   ------------------------------------------------------------------------
-   if (math.fmod(Mission.TurnCounter, SecondsToTurns(120)) == 0) then --- 2 minutes
-
-      local AttackUnits = 2
-      for i = 1, AttackUnits  do
-         Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn1", 0 , 10, 50)), "spawn1a");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn1.1", 0 , 10, 50)), "spawn1b");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawnT", 0 , 10, 50)), "spawnT.1");
-         --print("Enemy spawned to attack at 2 minute marker ");
-      end
-   end
-
-
-   ------------------------------------------------------------------------
-   if (Mission.TurnCounter == SecondsToTurns(180)) then --- 3 minutes
-      local AttackUnits = 3
-      for i = 1, AttackUnits  do
-         Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn2", 0 , 10, 50)), "spawn2a");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn2.1", 0 , 10, 50)), "spawn2b");
-         --print("Enemy spawned to attack at 3 minute marker ");
-      end
-   end
-
-   ------------------------------------------------------------------------
-   if (math.fmod(Mission.TurnCounter, SecondsToTurns(180)) == 0) then --- 3 minutes
-      local AttackUnits = 5
-      for i = 1, AttackUnits  do
-         Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn3", 0 , 10, 50)), "spawn3a");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn3.1", 0 , 10, 50)), "spawn3b");
-         --print("Enemy spawned to attack at 3 minute marker");
-      end
-   end
-
-   ------------------------------------------------------------------------
-   if (Mission.TurnCounter == SecondsToTurns(600)) then --- 10 minutes
-      local AttackUnits = 2
-      for i = 1, AttackUnits  do
-         Goto(BuildObject(Mission.CPUTeamRace .. "vscout",6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vatank",6, GetPositionNear("spawn4", 0 , 10, 50)), "spawn4a");
-         Goto(BuildObject(Mission.CPUTeamRace .. "vtank",6, GetPositionNear("spawn4.1", 0 , 10, 50)), "spawn4b");
-         --print("Enemy spawned to attack at 10 minute marker ");
-      end
-   end
-
+	ai.spawnObjectsAtTimeWithOrder(Mission.TurnCounter, 10, 1, unitList, 1, 2); -- 10 secs
+	
+	if (Mission.TurnCounter == SecondsToTurns(15)) then --- 15 secs
+	  AudioMessage("b_WeMustHoldThisPosition.wav");
+	end
+	
+	ai.spawnObjectsAtRepeatTimeWithOrder(Mission.TurnCounter, 120, 2, unitList, 3, 5); -- 2 minutes
+	ai.spawnObjectsAtTimeWithOrder(Mission.TurnCounter, 180, 3, unitList, 6, 7); -- 3 minutes
+	ai.spawnObjectsAtRepeatTimeWithOrder(Mission.TurnCounter, 180, 5, unitList, 8, 9); -- 3 minutes
+	ai.spawnObjectsAtTimeWithOrder(Mission.TurnCounter, 600, 2, unitList, 10, 12) -- 10 minutes
 end
 
-
 function AddPlayer(id, Team, IsNewPlayer)
-   if (IsNewPlayer) then
-      local PlayerH = SetupPlayer(Team);
-      SetAsUser(PlayerH, Team);
-      AddPilotByHandle(PlayerH);
+	if (IsNewPlayer) then
+		local PlayerH = SetupPlayer(Team);
+		SetAsUser(PlayerH, Team);
+		AddPilotByHandle(PlayerH);
 
-      DoTaunt(TAUNTS_NewHuman);
-   end
-
-   return true;
+		DoTaunt(TAUNTS_NewHuman);
+	end
+	return true;
 end
 
 function DeletePlayer(id)
-   DoTaunt(TAUNTS_LeftHuman);
+	DoTaunt(TAUNTS_LeftHuman);
 end
 
 function PlayerEjected(DeadObjectHandle)
