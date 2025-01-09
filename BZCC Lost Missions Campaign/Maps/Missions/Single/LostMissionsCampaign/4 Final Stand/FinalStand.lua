@@ -13,6 +13,7 @@ Map Design and SFX: SirBramley
 Voice Acting: Ken Miller, Nathan Mates, and SirBramley
 ]] --
 
+assert(load(assert(LoadFile("_requirefix.lua")),"_requirefix.lua"))();
 local ai = require("ai_functions");
 
 unitList = {

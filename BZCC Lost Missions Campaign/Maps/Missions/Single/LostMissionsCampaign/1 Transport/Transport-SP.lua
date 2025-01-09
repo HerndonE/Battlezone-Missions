@@ -13,6 +13,7 @@ Map Design and SFX: SirBramley
 Voice Acting: PredaHunter, Ken Miller, SirBramley, Shock, and Firefly
 ]]--
 
+assert(load(assert(LoadFile("_requirefix.lua")),"_requirefix.lua"))();
 local ai = require("ai_functions");
 
 local unitList = {

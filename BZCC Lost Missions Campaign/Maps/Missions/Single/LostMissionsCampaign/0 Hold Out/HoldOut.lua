@@ -12,9 +12,8 @@ Event Scripting: Ethan Herndon "F9bomber"
 Voice Acting: SirBramley and Tasia Valenza (Commander Shabayev)
 ]]--
 
-
+assert(load(assert(LoadFile("_requirefix.lua")),"_requirefix.lua"))();
 local ai = require("ai_functions");
-
 
 local unitList = {
 	function() return Goto(BuildObject("fvscout", 6, GetPositionNear("spawn1", 0, 10, 50)), "spawn1a") end,
@@ -102,7 +101,7 @@ function Start() --This function is called upon the first frame
    AddScrap(1, 40)
    AddScrap(6, 40)
    SetAIP("stock_fi1.aip", 6)
-   
+
    print("Hold Out mission by F9bomber");
    print("Special thanks to SirBramley and Tasia Valenza (Commander Shabayev) for voice acting");
 
