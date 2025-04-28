@@ -68,4 +68,4 @@ This mod is available on to play on Steam <a href="https://steamcommunity.com/sh
 
 ![](https://img.shields.io/steam/views/3472163513?logo=steam) ![](https://img.shields.io/steam/subscriptions/3472163513?logo=steam)
 ![](https://img.shields.io/steam/favorites/3472163513?logo=steam)
-![](https://img.shields.io/steam/downloads/2550917282?logo=steam)
+![](https://img.shields.io/steam/downloads/3472163513?logo=steam)
