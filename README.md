@@ -1,4 +1,12 @@
-# Custom Battlezone Missions
+<div align="center">
+  <h1>Custom Battlezone Missions</h1>
+  <p align="center">
+   <a href = ""><img src="https://img.shields.io/github/languages/top/HerndonE/Battlezone-Missions" alt="Languages" /></a>
+   <a href = ""><img src="https://img.shields.io/github/repo-size/HerndonE/Battlezone-Missions" alt="Code Size" /></a>
+   <a href = ""><img src="https://img.shields.io/github/last-commit/HerndonE/Battlezone-Missions" alt="Last Commit" /></a>
+  </p>
+</div>
+
 Welcome to my Battlezone Missions! This repo will showcase new Battlezone missions while utilizing Lua and providing content to the Battlezone community.    
 If you don't have Battlezone Combat Commander, you can get this game on the Steam store <a href="https://store.steampowered.com/app/624970/Battlezone_Combat_Commander//">here</a>.    
 You can also check out my Steam workshop <a href="https://steamcommunity.com/profiles/76561198026325621/myworkshopfiles/">page</a> here for updates and releases!    
@@ -39,3 +47,25 @@ A short mission demonstration of dropships deploying ISDF Sabre tanks in a "Norm
 Click this picture to watch mission.
 
 [![](https://i.ytimg.com/vi/OkigEPNHm8I/hq720.jpg?sqp=-oaymwEcCOgCEMoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDzR8WzTsd4BRnAXk-x_banGBi-bA)](https://www.youtube.com/watch?v=OkigEPNHm8I) 
+
+# Battlezone Flight Simulator
+Pursue your dream of an aviation career with Battlezone Flight Simulator 2025.
+
+<table>
+  <tr>
+    <td><img src="BZCC Flight Simulator/Images/pic1.jpg" width="150"/></td>
+    <td><img src="BZCC Flight Simulator/Images/pic2.jpg" width="150"/></td>
+    <td><img src="BZCC Flight Simulator/Images/pic3.jpg" width="150"/></td>
+  </tr>
+  <tr>
+    <td><img src="BZCC Flight Simulator/Images/pic4.jpg" width="150"/></td>
+    <td><img src="BZCC Flight Simulator/Images/pic5.jpg" width="150"/></td>
+    <td><img src="BZCC Flight Simulator/Images/pic6.jpg" width="150"/></td>
+  </tr>
+</table>
+
+This mod is available on to play on Steam <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3472163513">here</a>.
+
+![](https://img.shields.io/steam/views/3472163513?logo=steam) ![](https://img.shields.io/steam/subscriptions/3472163513?logo=steam)
+![](https://img.shields.io/steam/favorites/3472163513?logo=steam)
+![](https://img.shields.io/steam/downloads/2550917282?logo=steam)
