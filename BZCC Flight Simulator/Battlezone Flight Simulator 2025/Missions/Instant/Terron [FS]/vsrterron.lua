@@ -78,7 +78,9 @@ function DeleteObject(h)
 end
 
 function Start()
-	IFace_EnterMenuMode();
+	--IFace_EnterMenuMode();
+	IFace_Exec("telemetry.cfg")
+	IFace_Exec("scout_logo.cfg")
 	IFace_Exec("sim_menu.cfg")
 	IFace_Exec("retry_menu.cfg")
 	IFace_Activate("SimMenu")
@@ -92,9 +94,7 @@ end
 function ProcessCommand (crc)
 	if crc == script_confirm then
 		IFace_Deactivate("RetryMenu")
-		IFace_ExitMenuMode();
-		IFace_Exec("telemetry.cfg")
-		IFace_Exec("scout_logo.cfg")
+		--IFace_ExitMenuMode();
 		OneTimeUiClosed = true
 	end
 	
