@@ -258,15 +258,15 @@ function SpawnRings(selectionChoice, xIncrement)
 	local xSpace = 0
 	local amplitude = 80
 	local frequency = 0.5
-	local groundClearance = 10
+	local groundClearance = 20
 	local waveChoice = math.random(1, 3) -- 1 = sine, 2 = cosine, 3 = tangent
 	
 	for i = 2, 20 do
 		xSpace = xSpace + xIncrement
 		Mission.xPos = playerPos.x + xSpace
 		Mission.zPos = playerPos.z
-
-		local probe = BuildObject("dummy", 0, SetVector(Mission.xPos, 130, Mission.zPos))
+		
+		local probe = BuildObject("dummy", 0, SetVector(Mission.xPos, TerrainFindFloor(playerPos) + 130, Mission.zPos))
 		local probePos = GetPosition(probe)
 		RemoveObject(probe)
 

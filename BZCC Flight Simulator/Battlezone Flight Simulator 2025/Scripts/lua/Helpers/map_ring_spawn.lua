@@ -21,6 +21,17 @@ function M.SpawnRingsFromOffset(mapBZNName)
 	local mapsOptions = {
 		{"vsrterron.bzn", 50}, -- Map name, xOffset for player
 		{"vsroverlook.bzn", -50},
+		{"FS-MPIDark Halls.bzn", 50},
+		{"FS-MPIGlacier.bzn", 50},
+		{"FS-MPIGround One.bzn", 50},
+		{"FS-MPILake Side.bzn", 50},
+		{"FS-MPIMolten Field.bzn", -50},
+		{"FS-MPIOasis.bzn", -45},
+		{"FS-SHound.bzn", 42},
+		{"FS-Money_Pit.bzn", -50},
+		{"FS-MPIGround Bravo.bzn", 50},
+		{"FS-MPIAN.bzn", 50},
+		{"FS-MPIWild Lands.bzn", 47},
 	}
 
 	local mapOffset = 0
