@@ -13,25 +13,28 @@ Event Scripting: F9bomber
 local mrs = require("map_ring_spawn");
 
 local Mission = {
-	TPS = 0;
 	RingCollectionTable = {};
+	CompassDir = {};
+	ActivatedRings = {};
 	isISDF = false;
 	isSCION = false;
 	isHADEAN = false;
 	isFREEFORM = false;
 	isNOTFREEFORM = false;
 	isRings = false;
+	OneTimeUiClosed = false;
+	PassedHoverCourse = false;
+	Player = nil;
+	TPS = 0;
 	Tolerance = 45.0;
 	xPos = 0;
 	zPos = 0;
-	Player = nil;
 	PlayerVeloc = 0;
 	PlayerSpeed = 0;
 	PlayerFront = 0;
 	PlayerFrontDegrees = 0;
+	PreviousCount = 0;
 	CompassList = { "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S*" };
-	CompassDir = {};
-	OneTimeUiClosed = false;
 }
 
 local script_confirm = CalcCRC("script.confirm.agreed");
@@ -69,6 +72,9 @@ function InitialSetup()
 		"ring_big",
 		"ring_small",
 		"ring_medium",
+		"ivscout_vsr",
+		"fvscout_vsr",
+		"evscout_vsr",
 	}
 
 	for k, v in pairs(preloadODF) do
@@ -83,15 +89,17 @@ function Start()
 	end
 
 	IFace_Exec("telemetry.cfg");
+	IFace_Exec("ring_count.cfg");
 	IFace_Exec("scout_logo.cfg");
 	IFace_Exec("sim_menu.cfg");
 	IFace_Exec("retry_menu.cfg");
-	IFace_Activate("SimMenu");
+	IFace_Activate("SimMenu");	
 end
 
 function Update()
 	Mission.Player = GetPlayerHandle(1);
-	Menu();
+	Menu(Mission.Player);
+	StopCheats()
 end
 
 function ProcessCommand(crc)
@@ -131,22 +139,49 @@ function OutputFormatting(num)
 	return string.format("%3.2f", num);
 end
 
-function Menu()
-	if (Mission.OneTimeUiClosed == false) then
-		FreeCamera()
-	else
-		if (CheckFreeForm() == true) then
-			FreeCamera()
-		else
-			FreeFinish()
-			Telemetry()
-			PlayerRoll()
-			CheckShipSelection()
-			checkPlayerShip()
-			-- barrierCheck(player, Mission.ringCollectionTable) -- This function works but will need to be expanded for proper use cases	
-			-- SetVelocity(player, SetVector(0, 0, 0)) -- To lock player in one position
-		end
+function Menu(player)
+    if not Mission.OneTimeUiClosed then
+        FreeCamera()
+        return
+    end
+
+    local int1 = GetVarItemInt("options.instant.int1")
+    local int2 = GetVarItemInt("options.instant.int2")
+
+    if not Mission.isNOTFREEFORM then
+        if int1 == 0 then
+            print("1A: Player has selected 'YES' to Free Form | Value: " .. int1)
+            if not Mission.isRings and int2 >= 1 and int2 <= 4 then
+                print("2A: Player has selected 'YES' to Hover Course | Value: " .. int2)
+                IFace_Deactivate("SimMenu")
+                IFace_Activate("RetryMenu")
+                Mission.isFREEFORM = true
+                FreeCamera()
+                return
+            end
+        else
+            print("1B: Player has selected 'NO' to Free Form | Value: " .. int1)
+            if not Mission.isRings and (int2 == 0 or (int2 >= 1 and int2 <= 4)) then
+                print("2B: Player has selected 'YES' to Hover Course | Value: " .. int2)
+                Mission.RingCollectionTable = SpawnRings(int2)
+                Mission.isNOTFREEFORM = true
+                FreeCamera()
+                return
+            end
+        end
+    end
+	
+	if int2 ~= 0 then
+		BarrierCheck(player, Mission.RingCollectionTable);
 	end
+	
+	FreeFinish();
+	Telemetry();
+	PlayerRoll();
+	CheckShipSelection();
+	CheckPlayerShip();
+	
+	-- SetVelocity(player, SetVector(0, 0, 0)) -- To lock player in one position
 end
 
 function PlayerRoll()
@@ -214,45 +249,16 @@ function CheckShipSelection()
 	end
 end
 
-function CheckFreeForm()
-	local int1 = GetVarItemInt("options.instant.int1");
+function SpawnRings(selectionChoice)
+	print("Player is on: " .. GetMissionFilename())
 
-	-- If the player selects YES in free form but Yes to Ring Size
-	if (Mission.isNOTFREEFORM == false) then
-		local int2 = GetVarItemInt("options.instant.int2");
-
-		if (int1 == 0) then
-			print("Player has selected 'YES' to Free Form | Value: " .. int1);
-
-			if (Mission.isRings == false and (int2 >= 1 and int2 <= 4)) then
-				print("Player has selected 'YES' to Hover Course | Value: " .. int2);
-				IFace_Deactivate("SimMenu");
-				IFace_Activate("RetryMenu");
-				Mission.isFREEFORM = true
-			else
-				Mission.isNOTFREEFORM = true;
-			end
-		else
-			print("Player has selected 'NO' to Free Form | Value: " .. int1);
-			if (Mission.isRings == false and (int2 == 0 or (int2 >= 1 and int2 <= 4))) then
-				print("Player has selected 'YES' to Hover Course | Value: " .. int2);
-				print("Player is on: " .. GetMissionFilename())
-				Mission.RingCollectionTable = SpawnRings(int2, mrs.SpawnRingsFromOffset(GetMissionFilename()));
-				Mission.isNOTFREEFORM = true;
-			end
-		end
-	end
-end
-
-function SpawnRings(selectionChoice, xIncrement)
 	local ringTypes = {
 		[1] = "ring_small",
 		[2] = "ring_medium",
 		[3] = "ring_big"
 	}
 
-	local selectedRingType = ringTypes[selectionChoice] or "ring_small" -- fallback to "ring_small" if invalid
-
+	local selectedRingType = ringTypes[selectionChoice] or "ring_small" -- Fallback to "ring_small" if invalid
 	local playerPos = GetPosition(Mission.Player)
 	local ringCollection = {}
 	local xSpace = 0
@@ -260,8 +266,9 @@ function SpawnRings(selectionChoice, xIncrement)
 	local frequency = 0.5
 	local groundClearance = 20
 	local waveChoice = math.random(1, 3) -- 1 = sine, 2 = cosine, 3 = tangent
+	local xIncrement = mrs.SpawnRingsFromOffset(GetMissionFilename())
 	
-	for i = 2, 20 do
+	for i = 1, 20 do
 		xSpace = xSpace + xIncrement
 		Mission.xPos = playerPos.x + xSpace
 		Mission.zPos = playerPos.z
@@ -292,19 +299,59 @@ function SpawnRings(selectionChoice, xIncrement)
 	end
 
 	return ringCollection
-
 end
 
 function BarrierCheck(player, ringTable)
-	for i = 2, #ringTable do
-		local handle = ringTable[i];
-		if (GetDistance(player, handle) < 5.0) then
-			handle = SetTeamColor(i, SetVector(0, 153, 0))
+	local totalRings = #ringTable;
+	local count = 0;
+	for i = 1, totalRings do
+		local handle = ringTable[i]
+
+		if not Mission.ActivatedRings[handle] then
+			local ringPosition = GetPosition(handle)
+			local playerPosition = GetPosition(player)
+
+			-- Euclidean distance formula
+			local dx = playerPosition.x - ringPosition.x
+			local dy = playerPosition.y - ringPosition.y
+			local dz = playerPosition.z - ringPosition.z
+			local distance = math.sqrt(dx * dx + dy * dy + dz * dz)
+
+			if distance <= 10.0 then
+				SetTeamNum(handle, 2)
+				SetTeamColor(2, SetVector(0, 153, 0))
+				Ally(1, 2)
+				Mission.ActivatedRings[handle] = true
+			end
 		end
+
+		-- Count all activated rings
+		if Mission.ActivatedRings[handle] then
+			count = count + 1
+		end
+	end
+
+	if count ~= Mission.previousCount then
+		ShowRingCount(count .. " / " .. totalRings .. " Rings", 7);
+		IFace_Activate("playerRingCount");
+		Mission.previousCount = count
+	end
+	
+	if count == totalRings and Mission.PassedHoverCourse == false then
+		AudioMessage("hooray.wav");	
+		Mission.PassedHoverCourse = true;
+		-- TODO: new menu to reset count
 	end
 end
 
-function checkPlayerShip()
+function ShowRingCount(num1, totalWidth)
+	local str1 = tostring(num1)
+	local padding = totalWidth - #str1
+	IFace_ClearListBox("playerRingCount");
+	return IFace_AddTextItem("playerRingCount", string.rep(" ", padding) .. str1);
+end
+
+function CheckPlayerShip()
 	if IsOdf(Mission.Player, "ivscout") or IsOdf(Mission.Player, "ivscout_vsr") then
 		IFace_Activate("scoutISDF")
 	else
@@ -346,7 +393,7 @@ function Telemetry()
 	local playerMoveDegrees = playerMoveDir * (180 / math.pi);
 
 	if (playerMoveDegrees < 0) then
-		-- make full 360 degree circle where 0 is at "E"
+		-- Make full 360 degree circle where 0 is at "E"
 		playerMoveDegrees = 360 + playerMoveDegrees;
 	end
 
@@ -369,41 +416,37 @@ function Telemetry()
 	ShowPlayerHeading(formattedFrontDegrees, compassFrontStr)
 end
 
-function UiDivider(content)
-	return content;
-end
-
 function ShowSpeedCFG(mySpeed)
 	IFace_ClearListBox("SpeedBox");
-	local speed = math.ceil(mySpeed)
+	local speed = math.ceil(mySpeed);
 
-	-- flip speed negative if we're going in reverse.
+	-- Flip speed negative if we're going in reverse.
 	if (DotProduct(GetVelocity(Mission.Player), GetFront(Mission.Player)) < 0) then
 		speed = -speed;
 	end
 
-	ShowSpeed("   SPD", 9)
+	ShowSpeed("   SPD", 9);
 
-	if (speed % 2 == 0) then -- alternate based on even/odd value, simulates scrolling.
-		ShowSpeed("--- " .. speed + 4, 9)
-		UiDivider(ShowSpeed("-- " .. speed + 3, 12))
-		ShowSpeed("--- " .. speed + 2, 9)
-		UiDivider(ShowSpeed("-- " .. speed + 1, 12))
-		ShowSpeed(">  " .. speed, 9)
-		UiDivider(ShowSpeed("-- " .. speed - 1, 12))
-		ShowSpeed("--- " .. speed - 2, 9)
-		UiDivider(ShowSpeed("-- " .. speed - 3, 12))
-		ShowSpeed("--- " .. speed - 4, 9)
+	if (speed % 2 == 0) then -- Alternate based on even/odd value, simulates scrolling.
+		ShowSpeed("--  " .. speed + 4, 9);
+		ShowSpeed("--  " .. speed + 3, 12);
+		ShowSpeed("--  " .. speed + 2, 9);
+		ShowSpeed("--  " .. speed + 1, 12);
+		ShowSpeed(">  " .. speed, 12);
+		ShowSpeed("--  " .. speed - 1, 12);
+		ShowSpeed("--  " .. speed - 2, 9);
+		ShowSpeed("--  " .. speed - 3, 12);
+		ShowSpeed("--  " .. speed - 4, 9);
 	else
-		UiDivider(ShowSpeed("-- " .. speed + 4, 12))
-		ShowSpeed("--- " .. speed + 3, 9)
-		UiDivider(ShowSpeed("-- " .. speed + 2, 12))
-		ShowSpeed("--- " .. speed + 1, 9)
-		ShowSpeed(">  " .. speed, 12)
-		ShowSpeed("--- " .. speed - 1, 9)
-		UiDivider(ShowSpeed("-- " .. speed - 2, 12))
-		ShowSpeed("--- " .. speed - 3, 9)
-		UiDivider(ShowSpeed("-- " .. speed - 4, 12))
+		ShowSpeed("--  " .. speed + 4, 12);
+		ShowSpeed("--  " .. speed + 3, 9);
+		ShowSpeed("--  " .. speed + 2, 12);
+		ShowSpeed("--  " .. speed + 1, 9);
+		ShowSpeed(">  " .. speed, 12);
+		ShowSpeed("--  " .. speed - 1, 9);
+		ShowSpeed("--  " .. speed - 2, 12);
+		ShowSpeed("--  " .. speed - 3, 9);
+		ShowSpeed("--  " .. speed - 4, 12);
 	end
 
 	IFace_Activate("SpeedBox")
@@ -416,45 +459,45 @@ function ShowSpeed(num1, totalWidth)
 end
 
 function ShowAltCFG(myAltitude)
-	IFace_ClearListBox("AltBox"); -- clear the listbox
+	IFace_ClearListBox("AltBox"); -- Clear the listbox
 
-	local altitude = math.ceil(myAltitude)
-	ShowAlt("ALT   ", 9)
+	local altitude = math.ceil(myAltitude);
+	ShowAlt("ALT   ", 9);
 
-	if (altitude % 2 == 0) then -- alternate readout based on even/odd values, simulates scrolling.
-		ShowAlt(altitude + 4 .. " ---", 9)
-		UiDivider(ShowAlt(altitude + 3 .." --", 12))
-		ShowAlt(altitude + 2 .. " ---", 9)
-		UiDivider(ShowAlt(altitude + 1 .. " --", 12))
-		ShowAlt(altitude .. "  <", 9)
-		UiDivider(ShowAlt(altitude + 1 .. " --", 12))
-		ShowAlt(altitude - 2 .. " ---", 9)
-		UiDivider(ShowAlt(altitude + 3 .. " --", 12))
-		ShowAlt(altitude - 4 .. " ---", 9)
+	if (altitude % 2 == 0) then -- Alternate readout based on even/odd values, simulates scrolling.
+		ShowAlt(altitude + 4 .. "  --", 9);
+		ShowAlt(altitude + 3 .. "  --", 12);
+		ShowAlt(altitude + 2 .. "  --", 9);
+		ShowAlt(altitude + 1 .. "  --", 12);
+		ShowAlt(altitude .. "  <", 12);
+		ShowAlt(altitude - 1 .. "  --", 12);
+		ShowAlt(altitude - 2 .. "  --", 9);
+		ShowAlt(altitude - 3 .. "  --", 12);
+		ShowAlt(altitude - 4 .. "  --", 9);
 	else
-		UiDivider(ShowAlt(altitude + 4 .. " --", 12))
-		ShowAlt(altitude + 3 .. " ---", 9)
-		UiDivider(ShowAlt(altitude + 2 .. " --", 12))
-		ShowAlt(altitude + 1 .. " ---", 9)
-		ShowAlt(altitude .. "  <", 12)
-		ShowAlt(altitude - 1 .. " ---", 9)
-		UiDivider(ShowAlt(altitude - 2 .. " --", 12))
-		ShowAlt(altitude - 3 .. " ---", 9)
-		UiDivider(ShowAlt(altitude - 4 .. " --", 12))
+		ShowAlt(altitude + 4 .. "  --", 12);
+		ShowAlt(altitude + 3 .. "  --", 9);
+		ShowAlt(altitude + 2 .. "  --", 12);
+		ShowAlt(altitude + 1 .. "  --", 9);
+		ShowAlt(altitude .. "  <", 12);
+		ShowAlt(altitude - 1 .. "  --", 9);
+		ShowAlt(altitude - 2 .. "  --", 12);
+		ShowAlt(altitude - 3 .. "  --", 9);
+		ShowAlt(altitude - 4 .. "  --", 12);
 	end
 
 	IFace_Activate("AltBox");
 end
 
 function ShowAlt(num1, totalWidth)
-	local str1 = tostring(num1)
-	local padding = totalWidth - #str1
+	local str1 = tostring(num1);
+	local padding = totalWidth - #str1;
 	return IFace_AddTextItem("AltBox", string.rep(" ", padding) .. str1);
 end
 
 function ShowPlayerHeading(playerFrontDegrees, playerCompassFrontStr)
 	ShowHeading(math.ceil(playerFrontDegrees), 7);
-	UiDivider(ShowHeading("V", 7));
+	ShowHeading("V", 7);
 	ShowHeading(playerCompassFrontStr, 7);
 
 	IFace_Activate("playerHeadingBox");
